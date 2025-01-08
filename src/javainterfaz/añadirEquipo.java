@@ -74,7 +74,7 @@ public class añadirEquipo extends JFrame {
 		JPanel panel_4 = new JPanel();
 		panel_3.add(panel_4, BorderLayout.NORTH);
 		
-		JLabel lblFechaFun = new JLabel("Fecha de fundación");
+		JLabel lblFechaFun = new JLabel("Fechaaa de fundación");
 		panel_4.add(lblFechaFun);
 		
 		leerFecha = new JTextField();
