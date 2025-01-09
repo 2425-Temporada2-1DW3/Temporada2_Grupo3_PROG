@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import javax.swing.ImageIcon;
 
 public class EquiposWindow extends JFrame {
 
@@ -50,7 +51,8 @@ public class EquiposWindow extends JFrame {
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel = new JLabel("foto");
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(EquiposWindow.class.getResource("/img/imagenes/logotxurdi.png")));
 		panel.add(lblNewLabel);
 		
 		JPanel panel_1 = new JPanel();

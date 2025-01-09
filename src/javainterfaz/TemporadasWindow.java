@@ -11,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.ImageIcon;
 
 public class TemporadasWindow extends JFrame {
 
@@ -49,7 +50,8 @@ public class TemporadasWindow extends JFrame {
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel = new JLabel("Foto");
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(TemporadasWindow.class.getResource("/img/imagenes/logotxurdi.png")));
 		panel.add(lblNewLabel);
 		
 		JPanel panel_1 = new JPanel();

@@ -1,82 +1,96 @@
 package javainterfaz;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class gestionAdmin extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					gestionAdmin frame = new gestionAdmin();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                gestionAdmin frame = new gestionAdmin();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-	/**
-	 * Create the frame.
-	 */
-	public gestionAdmin() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    /**
+     * Create the frame.
+     */
+    public gestionAdmin() {
+        setTitle("Gestión Administrativa - Txurdi Liga");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(500, 400); // Ajustar tamaño de la ventana
+        setLocationRelativeTo(null); // Centrar ventana
 
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
-		
-		JLabel lblLogo = new JLabel("LOGO");
-		contentPane.add(lblLogo, BorderLayout.NORTH);
-		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.CENTER);
-		panel.setLayout(new BorderLayout(0, 0));
-		
-		JPanel panel_1 = new JPanel();
-		panel.add(panel_1, BorderLayout.NORTH);
-		
-		JButton btnGestEq = new JButton("Gestionar equipos");
-		btnGestEq.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		panel_1.add(btnGestEq);
-		
-		JButton btnGestRes = new JButton("Gestionar resultados");
-		panel_1.add(btnGestRes);
-		
-		JPanel panel_2 = new JPanel();
-		panel.add(panel_2, BorderLayout.CENTER);
-		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		JButton btnGestJug = new JButton("Gestionar jugadores");
-		panel_2.add(btnGestJug);
-		
-		JButton btnGestTemp = new JButton("Gestionar temporadas");
-		panel_2.add(btnGestTemp);
-		
-		JButton btnCerrar = new JButton("Cerrar sesión");
-		contentPane.add(btnCerrar, BorderLayout.SOUTH);
-	}
+        contentPane = new JPanel(new GridBagLayout());
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        setContentPane(contentPane);
 
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Logo
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JLabel lblLogo = new JLabel(new ImageIcon(gestionAdmin.class.getResource("/img/imagenes/logotxurdi.png")));
+        lblLogo.setHorizontalAlignment(SwingConstants.CENTER);
+        contentPane.add(lblLogo, gbc);
+
+        // Botón "Gestionar equipos"
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+
+        JButton btnGestEq = new JButton("Gestionar equipos");
+        contentPane.add(btnGestEq, gbc);
+
+        // Botón "Gestionar resultados"
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+
+        JButton btnGestRes = new JButton("Gestionar resultados");
+        contentPane.add(btnGestRes, gbc);
+
+        // Botón "Gestionar jugadores"
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+
+        JButton btnGestJug = new JButton("Gestionar jugadores");
+        contentPane.add(btnGestJug, gbc);
+
+        // Botón "Gestionar temporadas"
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+
+        JButton btnGestTemp = new JButton("Gestionar temporadas");
+        contentPane.add(btnGestTemp, gbc);
+
+        // Botón "Cerrar sesión"
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JButton btnCerrar = new JButton("Cerrar sesión");
+        contentPane.add(btnCerrar, gbc);
+    }
 }

@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.ImageIcon;
 
 public class JugadoresWindow extends JFrame {
 
@@ -52,7 +53,8 @@ public class JugadoresWindow extends JFrame {
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel = new JLabel("foto");
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(JugadoresWindow.class.getResource("/img/imagenes/logotxurdi.png")));
 		panel.add(lblNewLabel);
 		
 		JPanel panel_1 = new JPanel();
