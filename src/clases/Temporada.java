@@ -10,11 +10,23 @@ public class Temporada {
     private List<Equipo> equipos;
     private List<Partido> partidos;
 
+ // Constructor completo
     public Temporada(int numero, boolean enCurso) {
         this.numero = numero;
         this.enCurso = enCurso;
         this.equipos = new ArrayList<>();
         this.partidos = new ArrayList<>();
+    }
+    
+ // Constructor con equipos y partidos vacíos
+    public Temporada(int numero) {
+        this(numero, false);
+    }
+    
+ // Métodos toString
+    @Override
+    public String toString() {
+        return "Temporada nº " + numero + " la cual esta " + enCurso;
     }
 
     // Getters y setters
