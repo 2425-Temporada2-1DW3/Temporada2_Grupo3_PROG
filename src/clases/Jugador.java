@@ -1,7 +1,7 @@
 package clases;
 
 public class Jugador {
-
+//a
 	private String nombre;
     private String posicion;
     private int edad;

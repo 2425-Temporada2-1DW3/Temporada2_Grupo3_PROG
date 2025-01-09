@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Equipo {
-
+	//a
 	private String nombre;
-    private String añoFundacion;
+    private String anoFundacion;
     private String pais;
     private List<Jugador> jugadores;
     
-    public Equipo(String nombre, String fechaFundacion, String pais) {
+    public Equipo(String nombre, String fechaFundacion, String pais, String anoFundacion) {
         this.nombre = nombre;
-        this.añoFundacion = añoFundacion;
+        this.anoFundacion = anoFundacion;
         this.pais = pais;
         this.jugadores = new ArrayList<>();
     }
@@ -27,11 +27,11 @@ public class Equipo {
     }
 
     public String getFechaFundacion() {
-        return añoFundacion;
+        return anoFundacion;
     }
 
     public void setFechaFundacion(String añoFundacion) {
-        this.añoFundacion = añoFundacion;
+        this.anoFundacion = añoFundacion;
     }
 
     public String getPais() {
