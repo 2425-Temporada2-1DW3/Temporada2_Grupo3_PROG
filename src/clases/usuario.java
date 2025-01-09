@@ -3,7 +3,7 @@ package clases;
 import java.util.Objects;
 
 public class usuario {
-	
+	//a
 	String nombre;
 	String contrasena;
     Integer rol;
