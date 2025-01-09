@@ -10,8 +10,11 @@ public class Equipo {
     private String pais;
     private List<Jugador> jugadores;
     
+<<<<<<< Updated upstream
     public Equipo(String nombre, String fechaFundacion, String pais, String anoFundacion) {
+=======
     public Equipo(String nombre, String fechaFundacion, String pais, String añoFundacion) {
+>>>>>>> Stashed changes
         this.nombre = nombre;
         this.anoFundacion = anoFundacion;
         this.pais = pais;
