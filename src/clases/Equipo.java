@@ -27,11 +27,11 @@ public class Equipo {
     }
 
     public String getFechaFundacion() {
-        return anoFundacion;
+        return getFechaFundacion();
     }
 
     public void setFechaFundacion(String añoFundacion) {
-        this.anoFundacion = añoFundacion;
+        this.fechaFundacion = añoFundacion;
     }
 
     public String getPais() {
