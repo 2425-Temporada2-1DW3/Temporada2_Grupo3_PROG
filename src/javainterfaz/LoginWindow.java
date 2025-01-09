@@ -2,6 +2,9 @@ package javainterfaz;
 
 import java.awt.EventQueue;
 import javax.swing.*;
+
+import clases.usuario;
+
 import java.awt.*;
 
 public class LoginWindow extends JFrame {
@@ -22,6 +25,11 @@ public class LoginWindow extends JFrame {
     }
 
     public LoginWindow() {
+    	
+    	usuario a1 = new usuario();
+        System.out.println(a1);
+        
+        
         setTitle("Inicio de Sesion - Txurdi Liga");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(450, 300);
