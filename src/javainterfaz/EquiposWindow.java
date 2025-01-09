@@ -102,6 +102,13 @@ public class EquiposWindow extends JFrame {
 		
 		JPanel panel_7 = new JPanel();
 		panel_5.add(panel_7, BorderLayout.CENTER);
+		panel_7.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_8 = new JPanel();
+		panel_7.add(panel_8, BorderLayout.SOUTH);
+		
+		JButton btnGuardar = new JButton("Guardar");
+		panel_8.add(btnGuardar);
 	}
 
 }
