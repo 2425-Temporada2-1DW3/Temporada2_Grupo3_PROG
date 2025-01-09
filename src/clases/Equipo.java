@@ -1,18 +1,17 @@
 package clases;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Equipo {
     private String nombre;
-    private String fechaFundacion;
+    private String añoFundacion;
     private String pais;
     private List<Jugador> jugadores;
 
     // Constructor completo
-    public Equipo(String nombre, String fechaFundacion, String pais, List<Jugador> jugadores) {
+    public Equipo(String nombre, String añoFundacion, String pais, List<Jugador> jugadores) {
         this.nombre = nombre;
-        this.fechaFundacion = fechaFundacion;
+        this.añoFundacion = añoFundacion;
         this.pais = pais;
         this.jugadores = jugadores;
     }
@@ -26,12 +25,12 @@ public class Equipo {
         this.nombre = nombre;
     }
 
-    public String getFechaFundacion() {
-        return getFechaFundacion();
+    public String getAñoFundacion() {
+        return añoFundacion;
     }
 
     public void setFechaFundacion(String añoFundacion) {
-        this.fechaFundacion = añoFundacion;
+        this.añoFundacion = añoFundacion;
     }
 
     public String getPais() {
