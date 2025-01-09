@@ -11,6 +11,7 @@ public class Equipo {
     private List<Jugador> jugadores;
     
     public Equipo(String nombre, String fechaFundacion, String pais, String anoFundacion) {
+    public Equipo(String nombre, String fechaFundacion, String pais, String añoFundacion) {
         this.nombre = nombre;
         this.anoFundacion = anoFundacion;
         this.pais = pais;
