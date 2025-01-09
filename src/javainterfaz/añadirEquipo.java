@@ -37,10 +37,6 @@ public class añadirEquipo extends JFrame {
         setSize(450, 400);
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
 
-        contentPane = new JPanel(new GridBagLayout());
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        setContentPane(contentPane);
-
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
