@@ -1,6 +1,11 @@
 package clases;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 public class usuario implements Serializable{
@@ -16,10 +21,11 @@ public class usuario implements Serializable{
     
    /*
     * Roles:
+    * Admin = 1
+    * 
     * 
     * Arbitro = 2
     * e
-    * Admin = 1
     * 
     * Usuario = 3
     * 
@@ -29,13 +35,13 @@ public class usuario implements Serializable{
     public usuario(){
     	nombre = "X";
     	contrasena = "";
-    	rol = 1;
+    	rol = 3;
 	}
     
     
  // copia
 	
-    usuario(usuario a){
+    public usuario(usuario a){
     	nombre = a.nombre;
     	contrasena = a.contrasena;
     	rol = a.rol;
@@ -98,6 +104,23 @@ public class usuario implements Serializable{
 		return "usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", rol=" + rol + "]";
 	}
 
+	
+	
+	// Guardar usuarios en el archivo
+    public static void guardarUsuarios(List<usuario> listaUsuarios) {
+        try (FileOutputStream fos = new FileOutputStream("usuarios.ser");
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
+            // Guardar cada usuario en el archivo
+            for (usuario usuario : listaUsuarios) {
+                oos.writeObject(usuario);
+            }
+            System.out.println("Usuarios guardados exitosamente.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     
     
 }

@@ -6,12 +6,19 @@ import javax.swing.*;
 import clases.usuario;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LoginWindow extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JTextField textUsuario;
     private JTextField textContrasena;
+    
+    //Crear lista donde se introduciran los usuarios traidos de XML
+    private DefaultListModel<usuario> dlmUsuarios; // Modelo para la lista de usuarios    
+    
+    
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -25,6 +32,9 @@ public class LoginWindow extends JFrame {
     }
 
     public LoginWindow() {
+    	
+        dlmUsuarios = cargarUsuariosDesdeXML("usuarios.xml"); // Cargar usuarios desde el XML
+
     	
     	usuario a1 = new usuario();
         System.out.println(a1);
@@ -116,6 +126,28 @@ public class LoginWindow extends JFrame {
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton btnIngresar = new JButton("Ingresar");
+        
+        
+        btnIngresar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		//Cojemos la informacion de los campos de texto y se guarda
+        		String nombreUsuario = textUsuario.getText();
+                String contraseña = textContrasena.getText();
+                
+                usuario usuarioIntroducido = validarCredenciales(nombreUsuario, contraseña);
+                
+                if (usuarioIntroducido != null) {
+                    // Aquí entra correctamente te lleva a su ventana correspondiente
+                	
+                	
+                } else {
+                    JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecta.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+        	}
+        });
+        
+        
         JButton btnInvitado = new JButton("Invitado");
         panelBotones.add(btnIngresar);
         panelBotones.add(btnInvitado);
@@ -132,6 +164,19 @@ public class LoginWindow extends JFrame {
         JLabel lblFooter = new JLabel("Txurdi Liga APP", SwingConstants.CENTER);
         lblFooter.setFont(new Font("Arial", Font.ITALIC, 12));
         contentPane.add(lblFooter, gbc);
+    }
+    
+    
+    
+    // VALIDAR CREDENCIALES
+    private usuario validarCredenciales(String nombreUsuario, String contraseña) {
+        for (int i = 0; i < dlmUsuarios.size(); i++) {
+            usuario u = dlmUsuarios.get(i);
+            if (u.getNombre().equals(nombreUsuario) && u.getContrasena().equals(contraseña)) {
+                return u;  // Si encuentra un usuario que coincide
+            }
+        }
+        return null;  // Si no se encuentra
     }
 
 }

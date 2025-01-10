@@ -48,6 +48,10 @@ public class Temporada implements Serializable{
     public void setNumero(int numero) {
         this.numero = numero;
     }
+    
+    public String setEstado(String estado) {
+        return this.estado = estado;
+    }
 
     public String getEstado(String estado) {
         return estado;
