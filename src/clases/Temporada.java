@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Temporada {
-
+//a
 	private int numero; // Ejemplo: 2023
     private boolean enCurso; // true si la temporada está activa, false si no ha comenzado
     private List<Equipo> equipos;

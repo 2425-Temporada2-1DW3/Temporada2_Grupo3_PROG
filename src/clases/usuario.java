@@ -13,7 +13,7 @@ public class usuario {
     * Roles:
     * 
     * Arbitro = 2
-    * 
+    * e
     * Admin = 1
     * 
     * Usuario = 3
