@@ -3,30 +3,27 @@ package clases;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class Temporada {
 //a
 	private int numero; // Ejemplo: 2023
-    private boolean enCurso; // true si la temporada está activa, false si no ha comenzado
+    private String estado; // true si la temporada está activa, false si no ha comenzado
     private List<Equipo> equipos;
     private List<Partido> partidos;
 
  // Constructor completo
-    public Temporada(int numero, boolean enCurso) {
+    public Temporada(int numero, String estado) {
         this.numero = numero;
-        this.enCurso = enCurso;
+        this.estado = estado;
         this.equipos = new ArrayList<>();
         this.partidos = new ArrayList<>();
-    }
-
- // Constructor con equipos y partidos vacíos
-    public Temporada(int numero) {
-        this(numero, false);
     }
     
  // Métodos toString
     @Override
     public String toString() {
-        return "Temporada " + numero + " - " + enCurso;
+        return "Temporada " + numero + " - " + estado;
     }
     
  // Métodos equals
@@ -47,12 +44,12 @@ public class Temporada {
         this.numero = numero;
     }
 
-    public boolean isEnCurso() {
-        return enCurso;
+    public String getEstado(String estado) {
+        return estado;
     }
 
-    public void setEnCurso(boolean enCurso) {
-        this.enCurso = enCurso;
+    public void setEnCurso(String estado) {
+        this.estado = estado;
     }
 
     public List<Equipo> getEquipos() {
