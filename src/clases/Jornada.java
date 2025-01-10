@@ -1,10 +1,15 @@
 package clases;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Jornada {
+public class Jornada implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3685474574515091709L;
 	private int numero; // Número de la jornada
     private List<Partido> partidos; // Lista de partidos en la jornada
     

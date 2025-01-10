@@ -1,8 +1,13 @@
 package clases;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Equipo {
+public class Equipo implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2642978724951727903L;
 	//a
 	private String nombre;
     private String anoFundacion;

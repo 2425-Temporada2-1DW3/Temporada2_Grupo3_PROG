@@ -1,12 +1,17 @@
 package clases;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class Temporada {
-//a
+public class Temporada implements Serializable{
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = -60062956683051207L;
+	//a
 	private int numero; // Ejemplo: 2023
     private String estado; // true si la temporada está activa, false si no ha comenzado
     private List<Equipo> equipos;

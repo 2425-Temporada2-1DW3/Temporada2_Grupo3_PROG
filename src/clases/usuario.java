@@ -1,8 +1,13 @@
 package clases;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class usuario {
+public class usuario implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4324653987752064090L;
 	//a
 	String nombre;
 	String contrasena;

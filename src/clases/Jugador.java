@@ -1,7 +1,13 @@
 package clases;
 
-public class Jugador {
-//a
+import java.io.Serializable;
+
+public class Jugador implements Serializable{
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = -906779548639525455L;
+	//a
 	private String nombre;
     private String posicion;
     private Equipo equipo;

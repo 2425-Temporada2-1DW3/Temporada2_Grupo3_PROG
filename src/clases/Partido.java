@@ -1,7 +1,13 @@
 package clases;
 
-public class Partido {
+import java.io.Serializable;
 
+public class Partido implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5678010098298026099L;
 	private String equipoLocal;
     private String equipoVisitante;
     private int golesLocal;
