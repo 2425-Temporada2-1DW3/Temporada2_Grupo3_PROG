@@ -8,12 +8,33 @@ public class Partido {
     private int golesVisitante;
     private String estado; // Puede ser: "Pendiente", "En curso", "Finalizado"
 
+ // Constructor completo
     public Partido(String equipoLocal, String equipoVisitante, int golesLocal, int golesVisitante, String estado) {
         this.equipoLocal = equipoLocal;
         this.equipoVisitante = equipoVisitante;
         this.golesLocal = golesLocal;
         this.golesVisitante = golesVisitante;
         this.estado = estado;
+    }
+    
+ // Constructor con goles en 0
+    public Partido(String equipoLocal, String equipoVisitante) {
+        this(equipoLocal, equipoVisitante, 0, 0, "Pendiente");
+    }
+    
+ // Métodos toString
+    @Override
+    public String toString() {
+        return equipoLocal + " vs " + equipoVisitante + " = " + golesLocal + "-" + golesVisitante + " (" + estado + ")";
+    }
+    
+ // Métodos equals
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Partido partido = (Partido) obj;
+        return equipoLocal.equals(partido.equipoLocal) && equipoVisitante.equals(partido.equipoVisitante);
     }
     
  // Getters y setters

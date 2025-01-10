@@ -10,6 +10,7 @@ public class Temporada {
     private List<Equipo> equipos;
     private List<Partido> partidos;
 
+ // Constructor completo
     public Temporada(int numero, boolean enCurso) {
         this.numero = numero;
         this.enCurso = enCurso;
@@ -17,6 +18,26 @@ public class Temporada {
         this.partidos = new ArrayList<>();
     }
 
+ // Constructor con equipos y partidos vacíos
+    public Temporada(int numero) {
+        this(numero, false);
+    }
+    
+ // Métodos toString
+    @Override
+    public String toString() {
+        return "Temporada " + numero + " - " + enCurso;
+    }
+    
+ // Métodos equals
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Temporada temporada = (Temporada) obj;
+        return numero == temporada.numero;
+    }
+    
     // Getters y setters
     public int getNumero() {
         return numero;
