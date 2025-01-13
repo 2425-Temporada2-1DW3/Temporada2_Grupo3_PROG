@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class LoginWindow extends JFrame {
@@ -12,7 +13,7 @@ public class LoginWindow extends JFrame {
     private static final long serialVersionUID = 1L;
     private JTextField textUsuario;      // Campo de texto para ingresar el nombre de usuario
     private JTextField textContrasena;   // Campo de texto para ingresar la contraseña
-    private DefaultListModel<usuario> dlmUsuarios; // Modelo para la lista de usuarios
+    private ArrayList<usuario> listaUsuarios; // Modelo para la lista de usuarios
 
     // Método principal que lanza la ventana de inicio de sesión
     public static void main(String[] args) {
@@ -30,10 +31,10 @@ public class LoginWindow extends JFrame {
     public LoginWindow() {
 
         // Inicialización del modelo de la lista de usuarios
-        dlmUsuarios = new DefaultListModel<>(); 
+        listaUsuarios = new ArrayList<>(); 
 
         // Cargar los usuarios desde el archivo de almacenamiento
-        dlmUsuarios = usuario.cargarUsuarios();
+        listaUsuarios = usuario.cargarUsuarios();
 
         // Configuración de la ventana
         setTitle("Inicio de Sesion - Txurdi Liga");  // Título de la ventana
@@ -134,7 +135,7 @@ public class LoginWindow extends JFrame {
                 String contraseña = textContrasena.getText();
 
                 // Validar las credenciales y obtener el rol
-                int rol = usuario.validarCredenciales(dlmUsuarios, nombreUsuario, contraseña);
+                int rol = usuario.validarCredenciales(listaUsuarios, nombreUsuario, contraseña);
 
                 // Dependiendo del rol, abrir una ventana diferente
                 switch (rol) {
