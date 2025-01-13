@@ -1,82 +1,66 @@
 package javainterfaz;
 import clases.usuario;
 
-
 import java.awt.EventQueue;
 import javax.swing.*;
-
-
 import java.awt.*;
 import java.awt.event.ActionListener;
-
 import java.awt.event.ActionEvent;
-
-
 
 public class LoginWindow extends JFrame {
 
-	
     private static final long serialVersionUID = 1L;
-    private JTextField textUsuario;
-    private JTextField textContrasena;
- // Mover la declaración de dlmUsuarios aquí para que sea accesible en toda la clase
+    private JTextField textUsuario;      // Campo de texto para ingresar el nombre de usuario
+    private JTextField textContrasena;   // Campo de texto para ingresar la contraseña
     private DefaultListModel<usuario> dlmUsuarios; // Modelo para la lista de usuarios
-    
-    
-    
- 
- 
 
+    // Método principal que lanza la ventana de inicio de sesión
     public static void main(String[] args) {
-
         EventQueue.invokeLater(() -> {
             try {
-                LoginWindow frame = new LoginWindow();
-                frame.setVisible(true);
+                LoginWindow frame = new LoginWindow();  // Crear una nueva ventana de login
+                frame.setVisible(true);  // Hacerla visible
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace();  // En caso de error, imprimirlo
             }
         });
     }
 
+    // Constructor de la clase LoginWindow
     public LoginWindow() {
-    	
-    	// Inicializar el DefaultListModel aquí, ya que ahora es un campo de instancia
+
+        // Inicialización del modelo de la lista de usuarios
         dlmUsuarios = new DefaultListModel<>(); 
-       
-        
-     // Cargar usuarios desde el archivo
+
+        // Cargar los usuarios desde el archivo de almacenamiento
         dlmUsuarios = usuario.cargarUsuarios();
-        
-        
-    	
-    	
-        
-        
-        setTitle("Inicio de Sesion - Txurdi Liga");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(450, 300);
-        setLocationRelativeTo(null); // Centrar ventana en la pantalla
 
+        // Configuración de la ventana
+        setTitle("Inicio de Sesion - Txurdi Liga");  // Título de la ventana
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Cerrar la aplicación al cerrar la ventana
+        setSize(450, 300);  // Establecer el tamaño de la ventana
+        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+
+        // Crear un panel con un diseño GridBagLayout para organizar los componentes
         JPanel contentPane = new JPanel(new GridBagLayout());
-        setContentPane(contentPane);
+        setContentPane(contentPane);  // Asignar este panel como el contenido de la ventana
 
-        GridBagConstraints gbc;
+        GridBagConstraints gbc;  // Restricciones para los componentes dentro del layout
 
-        // Título
+        // Título de la ventana
         gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
+        gbc.insets = new Insets(10, 10, 10, 10);  // Espaciado alrededor del componente
+        gbc.fill = GridBagConstraints.HORIZONTAL;  // El componente debe llenar el ancho disponible
+        gbc.gridx = 0;  // Posición en la grilla (columna)
+        gbc.gridy = 0;  // Posición en la grilla (fila)
+        gbc.gridwidth = 2;  // El componente ocupa dos columnas
 
         JLabel lblTitulo = new JLabel("Inicio de Sesion - Txurdi Liga", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-        contentPane.add(lblTitulo, gbc);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));  // Establecer el tipo de fuente
+        contentPane.add(lblTitulo, gbc);  // Añadir el título al panel
 
-        // Espacio para logo
-        gbc = new GridBagConstraints(); // Create a new instance to avoid reuse issues
+        // Espacio para el logo (si existe)
+        gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
@@ -84,11 +68,11 @@ public class LoginWindow extends JFrame {
         gbc.gridwidth = 2;
 
         JLabel lblLogo = new JLabel();
-        lblLogo.setIcon(new ImageIcon(LoginWindow.class.getResource("/img/imagenes/logotxurdi.png")));
-        lblLogo.setHorizontalAlignment(SwingConstants.CENTER);
+        lblLogo.setIcon(new ImageIcon(LoginWindow.class.getResource("/img/imagenes/logotxurdi.png")));  // Cargar el logo desde el recurso
+        lblLogo.setHorizontalAlignment(SwingConstants.CENTER);  // Centrar el logo
         contentPane.add(lblLogo, gbc);
 
-        // Usuario
+        // Campo para ingresar el nombre de usuario
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -97,19 +81,20 @@ public class LoginWindow extends JFrame {
         gbc.gridwidth = 1;
 
         JLabel lblUsuario = new JLabel("Usuario:");
-        lblUsuario.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblUsuario.setHorizontalAlignment(SwingConstants.RIGHT);  // Alinear el texto a la derecha
         contentPane.add(lblUsuario, gbc);
 
+        // Campo de texto donde el usuario ingresará su nombre
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 1;
         gbc.gridy = 2;
 
-        textUsuario = new JTextField();
-        contentPane.add(textUsuario, gbc);
+        textUsuario = new JTextField();  // Crear el campo de texto
+        contentPane.add(textUsuario, gbc);  // Añadir el campo al panel
 
-        // Contraseña
+        // Campo para ingresar la contraseña
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -120,16 +105,17 @@ public class LoginWindow extends JFrame {
         lblContrasena.setHorizontalAlignment(SwingConstants.RIGHT);
         contentPane.add(lblContrasena, gbc);
 
+        // Campo de texto donde el usuario ingresará su contraseña
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 1;
         gbc.gridy = 3;
 
-        textContrasena = new JPasswordField();
+        textContrasena = new JPasswordField();  // Crear el campo de contraseña (que oculta el texto)
         contentPane.add(textContrasena, gbc);
 
-        // Botones
+        // Crear un panel para los botones
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -137,75 +123,59 @@ public class LoginWindow extends JFrame {
         gbc.gridy = 4;
         gbc.gridwidth = 2;
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton btnIngresar = new JButton("Ingresar");
-        
-        
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));  // Crear un panel con flujo centrado
+        JButton btnIngresar = new JButton("Ingresar");  // Botón para ingresar
+
+        // Acción del botón "Ingresar"
         btnIngresar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		//Cojemos la informacion de los campos de texto y se guarda
-        		String nombreUsuario = textUsuario.getText();
+            public void actionPerformed(ActionEvent e) {
+                // Obtener los datos de los campos de texto
+                String nombreUsuario = textUsuario.getText();
                 String contraseña = textContrasena.getText();
-                
-             
-                
-             // Validar credenciales / Devuelve el valor del rol si esta bien, sino -1 o 0
+
+                // Validar las credenciales y obtener el rol
                 int rol = usuario.validarCredenciales(dlmUsuarios, nombreUsuario, contraseña);
-                
-                
+
+                // Dependiendo del rol, abrir una ventana diferente
                 switch (rol) {
-                case 1:
-                    // Abrir ventana para el rol 1 (Administrador, por ejemplo)
-                    JOptionPane.showMessageDialog(null, "Bienvenido, administrador.");
-                    // Aquí abrirías la ventana del administrador
-                    gestionAdmin ventanaAdmin = new gestionAdmin(); // Crea la ventana del administrador
-                    ventanaAdmin.setVisible(true); // Muestra la ventana
-                    dispose(); // Cierra esta ventana de login
-                    break;
-                    
-                case 2:
-                    // Abrir ventana para el rol 2 (Moderador, por ejemplo)
-                    JOptionPane.showMessageDialog(null, "Bienvenido, arbitro.");
-                    // Aquí abrirías la ventana del moderador
-                    JornadasWindow ventanaJornadas = new JornadasWindow(); // Crea la ventana del administrador
-                    ventanaJornadas.setVisible(true); // Muestra la ventana
-                    dispose(); // Cierra esta ventana de login
-                    break;
-                    
-                case 3:
-                    // Abrir ventana para el rol 3 (Usuario regular, por ejemplo)
-                    JOptionPane.showMessageDialog(null, "Bienvenido, usuario.");
-                    // Aquí abrirías la ventana del usuario
-                    JornadasWindow ventanaJornadasUsuario = new JornadasWindow(); // Crea la ventana del administrador
-                    ventanaJornadasUsuario.setVisible(true); // Muestra la ventana
-                    dispose(); // Cierra esta ventana de login
-                    break;
-                    
-                case 0:
-                    // Credenciales incorrectas
-                    JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
-                    break;
-                case -1:
-                    // Rol inválido
-                    JOptionPane.showMessageDialog(null, "Error en los datos del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
-                    break;
+                    case 1:
+                        JOptionPane.showMessageDialog(null, "Bienvenido, administrador.");
+                        gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana para el administrador
+                        ventanaAdmin.setVisible(true);  // Mostrar la ventana
+                        dispose();  // Cerrar la ventana de login
+                        break;
+
+                    case 2:
+                        JOptionPane.showMessageDialog(null, "Bienvenido, arbitro.");
+                        JornadasWindow ventanaJornadas = new JornadasWindow();  // Ventana para el árbitro
+                        ventanaJornadas.setVisible(true);  // Mostrar la ventana
+                        dispose();  // Cerrar la ventana de login
+                        break;
+
+                    case 3:
+                        JOptionPane.showMessageDialog(null, "Bienvenido, usuario.");
+                        JornadasWindow ventanaJornadasUsuario = new JornadasWindow();  // Ventana para el usuario
+                        ventanaJornadasUsuario.setVisible(true);  // Mostrar la ventana
+                        dispose();  // Cerrar la ventana de login
+                        break;
+
+                    case 0:
+                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case -1:
+                        JOptionPane.showMessageDialog(null, "Error en los datos del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                }
             }
-
-                
-                
-                
-                
-        	}
         });
-        
-        
-        JButton btnInvitado = new JButton("Invitado");
-        panelBotones.add(btnIngresar);
-        panelBotones.add(btnInvitado);
-        contentPane.add(panelBotones, gbc);
 
-        // Pie de página
+        // Botón para ingresar como invitado (sin validación)
+        JButton btnInvitado = new JButton("Invitado");
+        panelBotones.add(btnIngresar);  // Añadir el botón "Ingresar"
+        panelBotones.add(btnInvitado);  // Añadir el botón "Invitado"
+        contentPane.add(panelBotones, gbc);  // Añadir el panel de botones al contenido
+
+        // Pie de página de la ventana
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -213,14 +183,8 @@ public class LoginWindow extends JFrame {
         gbc.gridy = 5;
         gbc.gridwidth = 2;
 
-        JLabel lblFooter = new JLabel("Txurdi Liga APP", SwingConstants.CENTER);
-        lblFooter.setFont(new Font("Arial", Font.ITALIC, 12));
-        contentPane.add(lblFooter, gbc);
+        JLabel lblFooter = new JLabel("Txurdi Liga APP", SwingConstants.CENTER);  // Texto de pie de página
+        lblFooter.setFont(new Font("Arial", Font.ITALIC, 12));  // Establecer la fuente
+        contentPane.add(lblFooter, gbc);  // Añadir al panel
     }
-    
-   
-    
-    
- 
-
 }
