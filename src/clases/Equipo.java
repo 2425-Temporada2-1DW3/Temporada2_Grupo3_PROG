@@ -8,7 +8,7 @@ public class Equipo implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2642978724951727903L;
-	//a
+	//aa
 	private String nombre;
     private String anoFundacion;
     private String pais;
