@@ -1,26 +1,34 @@
 package javainterfaz;
+import clases.usuario;
+
 
 import java.awt.EventQueue;
 import javax.swing.*;
 
-import clases.usuario;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+
 import java.awt.event.ActionEvent;
+
+
 
 public class LoginWindow extends JFrame {
 
+	
     private static final long serialVersionUID = 1L;
     private JTextField textUsuario;
     private JTextField textContrasena;
+ // Mover la declaración de dlmUsuarios aquí para que sea accesible en toda la clase
+    private DefaultListModel<usuario> dlmUsuarios; // Modelo para la lista de usuarios
     
-    //Crear lista donde se introduciran los usuarios traidos de XML
-    private DefaultListModel<usuario> dlmUsuarios; // Modelo para la lista de usuarios    
     
     
+ 
+ 
 
     public static void main(String[] args) {
+
         EventQueue.invokeLater(() -> {
             try {
                 LoginWindow frame = new LoginWindow();
@@ -33,11 +41,16 @@ public class LoginWindow extends JFrame {
 
     public LoginWindow() {
     	
-        dlmUsuarios = cargarUsuariosDesdeXML("usuarios.xml"); // Cargar usuarios desde el XML
-
+    	// Inicializar el DefaultListModel aquí, ya que ahora es un campo de instancia
+        dlmUsuarios = new DefaultListModel<>(); 
+       
+        
+     // Cargar usuarios desde el archivo
+        dlmUsuarios = usuario.cargarUsuarios();
+        
+        
     	
-    	usuario a1 = new usuario();
-        System.out.println(a1);
+    	
         
         
         setTitle("Inicio de Sesion - Txurdi Liga");
@@ -135,15 +148,54 @@ public class LoginWindow extends JFrame {
         		String nombreUsuario = textUsuario.getText();
                 String contraseña = textContrasena.getText();
                 
-                usuario usuarioIntroducido = validarCredenciales(nombreUsuario, contraseña);
+             
                 
-                if (usuarioIntroducido != null) {
-                    // Aquí entra correctamente te lleva a su ventana correspondiente
-                	
-                	
-                } else {
-                    JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecta.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+             // Validar credenciales / Devuelve el valor del rol si esta bien, sino -1 o 0
+                int rol = usuario.validarCredenciales(dlmUsuarios, nombreUsuario, contraseña);
+                
+                
+                switch (rol) {
+                case 1:
+                    // Abrir ventana para el rol 1 (Administrador, por ejemplo)
+                    JOptionPane.showMessageDialog(null, "Bienvenido, administrador.");
+                    // Aquí abrirías la ventana del administrador
+                    gestionAdmin ventanaAdmin = new gestionAdmin(); // Crea la ventana del administrador
+                    ventanaAdmin.setVisible(true); // Muestra la ventana
+                    dispose(); // Cierra esta ventana de login
+                    break;
+                    
+                case 2:
+                    // Abrir ventana para el rol 2 (Moderador, por ejemplo)
+                    JOptionPane.showMessageDialog(null, "Bienvenido, arbitro.");
+                    // Aquí abrirías la ventana del moderador
+                    JornadasWindow ventanaJornadas = new JornadasWindow(); // Crea la ventana del administrador
+                    ventanaJornadas.setVisible(true); // Muestra la ventana
+                    dispose(); // Cierra esta ventana de login
+                    break;
+                    
+                case 3:
+                    // Abrir ventana para el rol 3 (Usuario regular, por ejemplo)
+                    JOptionPane.showMessageDialog(null, "Bienvenido, usuario.");
+                    // Aquí abrirías la ventana del usuario
+                    JornadasWindow ventanaJornadasUsuario = new JornadasWindow(); // Crea la ventana del administrador
+                    ventanaJornadasUsuario.setVisible(true); // Muestra la ventana
+                    dispose(); // Cierra esta ventana de login
+                    break;
+                    
+                case 0:
+                    // Credenciales incorrectas
+                    JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+                case -1:
+                    // Rol inválido
+                    JOptionPane.showMessageDialog(null, "Error en los datos del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+
+                
+                
+                
+                
         	}
         });
         
@@ -166,17 +218,9 @@ public class LoginWindow extends JFrame {
         contentPane.add(lblFooter, gbc);
     }
     
+   
     
     
-    // VALIDAR CREDENCIALES
-    private usuario validarCredenciales(String nombreUsuario, String contraseña) {
-        for (int i = 0; i < dlmUsuarios.size(); i++) {
-            usuario u = dlmUsuarios.get(i);
-            if (u.getNombre().equals(nombreUsuario) && u.getContrasena().equals(contraseña)) {
-                return u;  // Si encuentra un usuario que coincide
-            }
-        }
-        return null;  // Si no se encuentra
-    }
+ 
 
 }

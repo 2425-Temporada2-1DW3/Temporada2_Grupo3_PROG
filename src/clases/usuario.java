@@ -1,12 +1,16 @@
 package clases;
 
-import java.io.File;
+
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.List;
+
 import java.util.Objects;
+
+import javax.swing.DefaultListModel;
 
 public class usuario implements Serializable{
 	/**
@@ -106,21 +110,62 @@ public class usuario implements Serializable{
 
 	
 	
-	// Guardar usuarios en el archivo
-    public static void guardarUsuarios(List<usuario> listaUsuarios) {
-        try (FileOutputStream fos = new FileOutputStream("usuarios.ser");
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+	
+	
+	
+	
+	public static void guardarUsuarios(DefaultListModel<usuario> dlmUsuarios) {
+	    try (FileOutputStream fos = new FileOutputStream("usuarios.ser");
+	         ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 
-            // Guardar cada usuario en el archivo
-            for (usuario usuario : listaUsuarios) {
-                oos.writeObject(usuario);
-            }
-            System.out.println("Usuarios guardados exitosamente.");
+	        // Guardar cada usuario del DLM en el archivo
+	        for (int i = 0; i < dlmUsuarios.size(); i++) {
+	            oos.writeObject(dlmUsuarios.get(i));
+	        }
+	        System.out.println("Usuarios guardados exitosamente.");
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
+    
+	// Cargar usuarios desde un archivo .ser en un DefaultListModel
+	@SuppressWarnings("unchecked")
+	public static DefaultListModel<usuario> cargarUsuarios() {
+	    DefaultListModel<usuario> dlmUsuarios = new DefaultListModel<>();
+	    try (FileInputStream fis = new FileInputStream("usuarios.ser");
+	         ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+	        // Leer el DefaultListModel desde el archivo
+	        dlmUsuarios = (DefaultListModel<usuario>) ois.readObject();
+	        
+
+	    } catch (IOException | ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return dlmUsuarios;
+	}
+	
+	// Método para validar credenciales y redirigir según el rol
+	public static int validarCredenciales(DefaultListModel<usuario> dlmUsuarios, String nombreUsuario, String contrasena) {
+	    for (int i = 0; i < dlmUsuarios.size(); i++) {
+	        usuario u = dlmUsuarios.getElementAt(i);
+	        // Validar usuario y contraseña
+	        if (u.getNombre().equals(nombreUsuario) && u.getContrasena().equals(contrasena)) {
+	            // 
+	            try {
+	            	//Devuelve el numero del rol
+	                return u.getRol();
+	            } catch (NumberFormatException e) {
+	                return -1; // Rol inválido
+	            }
+	        }
+	    }
+	    return 0; // Usuario o contraseña incorrectos
+	}
+
     
     
 }
