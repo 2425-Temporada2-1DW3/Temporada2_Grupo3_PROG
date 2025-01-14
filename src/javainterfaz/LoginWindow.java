@@ -30,14 +30,25 @@ public class LoginWindow extends JFrame {
     // Constructor de la clase LoginWindow
     public LoginWindow() {
 
-        // Inicialización del modelo de la lista de usuarios
-        listaUsuarios = new ArrayList<>(); 
 
-        // Cargar los usuarios desde el archivo de almacenamiento
-        listaUsuarios = usuario.cargarUsuarios();
+        // Crear algunos usuarios de ejemplo si el archivo está vacío
+        listaUsuarios = usuario.cargarUsuarios();  // Intentar cargar los usuarios desde el archivo
 
+        // Verificar si la lista está vacía, si es así, agregar usuarios por defecto
+        if (listaUsuarios.isEmpty()) {
+            // Crear algunos usuarios predeterminados
+            usuario usuario1 = new usuario("Itxiar", "pass123", 1); // Admin
+            usuario usuario2 = new usuario("Arnaitz", "pass456", 2); // Árbitro
+            usuario usuario3 = new usuario("Andres", "pass789", 3); // Usuario
+            listaUsuarios.add(usuario1);
+            listaUsuarios.add(usuario2);
+            listaUsuarios.add(usuario3);
+
+            // Guardar los usuarios predeterminados en el archivo
+            usuario.guardarUsuarios(listaUsuarios);
+        }
         // Configuración de la ventana
-        setTitle("Inicio de Sesion - Txurdi Liga");  // Título de la ventana
+        setTitle("Inicio de Sesión - Txurdi Liga");  // Título de la ventana
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Cerrar la aplicación al cerrar la ventana
         setSize(450, 300);  // Establecer el tamaño de la ventana
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
@@ -56,7 +67,7 @@ public class LoginWindow extends JFrame {
         gbc.gridy = 0;  // Posición en la grilla (fila)
         gbc.gridwidth = 2;  // El componente ocupa dos columnas
 
-        JLabel lblTitulo = new JLabel("Inicio de Sesion - Txurdi Liga", SwingConstants.CENTER);
+        JLabel lblTitulo = new JLabel("Inicio de Sesión - Txurdi Liga", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));  // Establecer el tipo de fuente
         contentPane.add(lblTitulo, gbc);  // Añadir el título al panel
 
@@ -147,7 +158,7 @@ public class LoginWindow extends JFrame {
                         break;
 
                     case 2:
-                        JOptionPane.showMessageDialog(null, "Bienvenido, arbitro.");
+                        JOptionPane.showMessageDialog(null, "Bienvenido, árbitro.");
                         JornadasWindow ventanaJornadas = new JornadasWindow();  // Ventana para el árbitro
                         ventanaJornadas.setVisible(true);  // Mostrar la ventana
                         dispose();  // Cerrar la ventana de login
@@ -172,6 +183,13 @@ public class LoginWindow extends JFrame {
 
         // Botón para ingresar como invitado (sin validación)
         JButton btnInvitado = new JButton("Invitado");
+        btnInvitado.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		JornadasWindow ventanaJornadasUsuario = new JornadasWindow();  // Ventana para el usuario
+                ventanaJornadasUsuario.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana de login
+        	}
+        });
         panelBotones.add(btnIngresar);  // Añadir el botón "Ingresar"
         panelBotones.add(btnInvitado);  // Añadir el botón "Invitado"
         contentPane.add(panelBotones, gbc);  // Añadir el panel de botones al contenido

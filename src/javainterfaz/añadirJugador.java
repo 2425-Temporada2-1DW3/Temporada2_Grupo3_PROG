@@ -3,6 +3,8 @@ package javainterfaz;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class añadirJugador extends JFrame {
 
@@ -167,6 +169,13 @@ public class añadirJugador extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
 
         JButton btnVolver = new JButton("Atrás");
+        btnVolver.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		JugadoresWindow ventanaJugadores = new JugadoresWindow();  // Ventana gestión de equipos
+        		ventanaJugadores.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+        	}
+        });
         contentPane.add(btnVolver, gbc);
     }
 }

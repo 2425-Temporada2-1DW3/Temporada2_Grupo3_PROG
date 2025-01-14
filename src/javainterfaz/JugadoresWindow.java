@@ -13,6 +13,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class JugadoresWindow extends JFrame {
 
@@ -93,18 +95,19 @@ public class JugadoresWindow extends JFrame {
 		gbl_panel_6.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_6.setLayout(gbl_panel_6);
 		
-		JLabel lblNewLabel_3 = new JLabel("Cerrar Sesion");
-		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
-		gbc_lblNewLabel_3.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel_3.gridx = 0;
-		gbc_lblNewLabel_3.gridy = 0;
-		panel_6.add(lblNewLabel_3, gbc_lblNewLabel_3);
-		
-		JLabel lblNewLabel_2 = new JLabel("Atras");
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.gridx = 2;
-		gbc_lblNewLabel_2.gridy = 0;
-		panel_6.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		JButton btnAtras = new JButton("Atrás");
+		btnAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
+        		ventanaAdmin.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+			}
+		});
+		GridBagConstraints gbc_btnAtras = new GridBagConstraints();
+		gbc_btnAtras.insets = new Insets(0, 0, 0, 5);
+		gbc_btnAtras.gridx = 1;
+		gbc_btnAtras.gridy = 0;
+		panel_6.add(btnAtras, gbc_btnAtras);
 		
 		JPanel panel_7 = new JPanel();
 		panel_5.add(panel_7, BorderLayout.CENTER);
@@ -114,6 +117,13 @@ public class JugadoresWindow extends JFrame {
 		panel_7.add(panel_8, BorderLayout.SOUTH);
 		
 		JButton btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				añadirJugador ventanaJugador = new añadirJugador();  // Ventana gestión de equipos
+        		ventanaJugador.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+			}
+		});
 		panel_8.add(btnAgregar);
 		
 		JButton btnModificar = new JButton("Modificar");

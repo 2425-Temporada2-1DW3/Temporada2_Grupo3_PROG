@@ -3,11 +3,18 @@ package javainterfaz;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class gestionAdmin extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
+    private GridBagConstraints gbc_1;
+    private GridBagConstraints gbc_2;
+    private GridBagConstraints gbc_3;
+    private GridBagConstraints gbc_4;
+    private GridBagConstraints gbc_5;
 
     /**
      * Launch the application.
@@ -51,46 +58,96 @@ public class gestionAdmin extends JFrame {
         contentPane.add(lblLogo, gbc);
 
         // Botón "Gestionar equipos"
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
+        gbc_1 = new GridBagConstraints();
+        gbc_1.insets = new Insets(0, 0, 5, 5);
+        gbc_1.gridx = 0;
+        gbc_1.gridy = 1;
+        gbc_1.gridwidth = 1;
 
         JButton btnGestEq = new JButton("Gestionar equipos");
-        contentPane.add(btnGestEq, gbc);
+        btnGestEq.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		EquiposWindow ventanaEquipos = new EquiposWindow();  // Ventana gestión de equipos
+        		ventanaEquipos.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+        	}
+        });
+        contentPane.add(btnGestEq, gbc_1);
 
         // Botón "Gestionar resultados"
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc_2 = new GridBagConstraints();
+        gbc_2.insets = new Insets(0, 0, 5, 0);
+        gbc_2.gridx = 1;
+        gbc_2.gridy = 1;
 
         JButton btnGestRes = new JButton("Gestionar resultados");
-        contentPane.add(btnGestRes, gbc);
+        btnGestRes.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		JornadasWindow ventanaResultado = new JornadasWindow();  // Ventana gestión de equipos
+        		ventanaResultado.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+        	}
+        });
+        contentPane.add(btnGestRes, gbc_2);
 
         // Botón "Gestionar jugadores"
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc_3 = new GridBagConstraints();
+        gbc_3.insets = new Insets(0, 0, 5, 5);
+        gbc_3.gridx = 0;
+        gbc_3.gridy = 2;
 
         JButton btnGestJug = new JButton("Gestionar jugadores");
-        contentPane.add(btnGestJug, gbc);
+        btnGestJug.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		JugadoresWindow ventanaJugadores = new JugadoresWindow();  // Ventana gestión de equipos
+        		ventanaJugadores.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+        	}
+        });
+        contentPane.add(btnGestJug, gbc_3);
 
         // Botón "Gestionar temporadas"
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc_4 = new GridBagConstraints();
+        gbc_4.insets = new Insets(0, 0, 5, 0);
+        gbc_4.gridx = 1;
+        gbc_4.gridy = 2;
 
         JButton btnGestTemp = new JButton("Gestionar temporadas");
-        contentPane.add(btnGestTemp, gbc);
+        btnGestTemp.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		TemporadasWindow ventanaTemporada = new TemporadasWindow();  // Ventana gestión de equipos
+        		ventanaTemporada.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+        	}
+        });
+        contentPane.add(btnGestTemp, gbc_4);
 
         // Botón "Cerrar sesión"
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc_5 = new GridBagConstraints();
+        gbc_5.insets = new Insets(0, 0, 0, 5);
+        gbc_5.gridx = 0;
+        gbc_5.gridy = 3;
 
         JButton btnCerrar = new JButton("Cerrar sesión");
-        contentPane.add(btnCerrar, gbc);
+        btnCerrar.setHorizontalAlignment(SwingConstants.LEFT);
+        btnCerrar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        	}
+        });
+        contentPane.add(btnCerrar, gbc_5);
+        
+        JButton btnGestAdm = new JButton("Gestionar administradores");
+        btnGestAdm.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		añadirUsuario ventanaUsuario = new añadirUsuario();  // Ventana gestión de equipos
+        		ventanaUsuario.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+        	}
+        });
+        GridBagConstraints gbc_btnGestAdm = new GridBagConstraints();
+        gbc_btnGestAdm.gridx = 1;
+        gbc_btnGestAdm.gridy = 3;
+        contentPane.add(btnGestAdm, gbc_btnGestAdm);
     }
 }

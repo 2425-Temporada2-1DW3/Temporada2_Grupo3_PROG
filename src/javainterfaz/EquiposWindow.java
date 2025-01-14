@@ -12,6 +12,8 @@ import javax.swing.JComboBox;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class EquiposWindow extends JFrame {
 
@@ -67,6 +69,13 @@ public class EquiposWindow extends JFrame {
 		panel_2.add(panel_3, BorderLayout.WEST);
 		
 		JButton btnAnadir = new JButton("Añadir");
+		btnAnadir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				añadirEquipo ventanaEquipo = new añadirEquipo();  // Ventana gestión de equipos
+        		ventanaEquipo.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+			}
+		});
 		panel_3.add(btnAnadir);
 		
 		JButton btnEliminar = new JButton("Eliminar");
@@ -88,17 +97,24 @@ public class EquiposWindow extends JFrame {
 		JPanel panel_6 = new JPanel();
 		panel_5.add(panel_6, BorderLayout.SOUTH);
 		GridBagLayout gbl_panel_6 = new GridBagLayout();
-		gbl_panel_6.columnWidths = new int[]{0, 0};
+		gbl_panel_6.columnWidths = new int[]{0, 0, 0};
 		gbl_panel_6.rowHeights = new int[]{0, 0};
-		gbl_panel_6.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel_6.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_6.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_6.setLayout(gbl_panel_6);
 		
-		JLabel lblNewLabel_2 = new JLabel("Atras");
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.gridx = 0;
-		gbc_lblNewLabel_2.gridy = 0;
-		panel_6.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		JButton btnAtras = new JButton("Atrás");
+		btnAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
+        		ventanaAdmin.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+			}
+		});
+		GridBagConstraints gbc_btnAtras = new GridBagConstraints();
+		gbc_btnAtras.gridx = 1;
+		gbc_btnAtras.gridy = 0;
+		panel_6.add(btnAtras, gbc_btnAtras);
 		
 		JPanel panel_7 = new JPanel();
 		panel_5.add(panel_7, BorderLayout.CENTER);

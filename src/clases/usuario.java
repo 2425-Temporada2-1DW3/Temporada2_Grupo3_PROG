@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
-import javax.swing.DefaultListModel;
 
 public class usuario implements Serializable {
     private static final long serialVersionUID = -4324653987752064090L;
@@ -24,21 +23,21 @@ public class usuario implements Serializable {
      * Arbitro = 2
      * Usuario = 3
      */
-    
+   
     // Constructor por defecto
     public usuario() {
         nombre = "X";      // Nombre por defecto
         contrasena = "";   // Contraseña vacía por defecto
         rol = 3;           // Rol por defecto (Usuario)
     }
-    
+   
     // Constructor de copia
     public usuario(usuario a) {
         nombre = a.nombre;         // Copia el nombre del usuario original
         contrasena = a.contrasena; // Copia la contraseña del usuario original
         rol = a.rol;               // Copia el rol del usuario original
     }
-    
+   
     // Constructor personalizado con parámetros
     public usuario(String c, String b, int n) {
         nombre = c;           // Inicializa el nombre del usuario
@@ -95,36 +94,34 @@ public class usuario implements Serializable {
         return "usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", rol=" + rol + "]";
     }
 
+   
     // Método para guardar la lista de usuarios en un archivo binario (usuarios.ser)
     public static void guardarUsuarios(ArrayList<usuario> listaUsuarios) {
-        try (FileOutputStream fos = new FileOutputStream("usuarios.ser");
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+    	 try (FileOutputStream fos = new FileOutputStream("usuarios.ser");
+    	         ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 
-            // Guardar cada usuario del DefaultListModel en el archivo
-            for (int i = 0; i < listaUsuarios.size(); i++) {
-                oos.writeObject(listaUsuarios.get(i)); // Escribe el objeto usuario en el archivo
-            }
-            System.out.println("Usuarios guardados exitosamente.");
-
-        } catch (IOException e) {
-            e.printStackTrace(); // Si ocurre un error, lo imprime en consola
-        }
-    }
+    	        // Guardar la lista completa de usuarios en el archivo
+    	        oos.writeObject(listaUsuarios);  // Guardamos toda la lista
+    	        System.out.println("Usuarios guardados exitosamente.");
+    	    } catch (IOException e) {
+    	        e.printStackTrace();  // Si ocurre un error, lo imprime en consola
+    	    }
+    	}
 
     // Método para cargar la lista de usuarios desde un archivo binario (usuarios.ser)
     @SuppressWarnings("unchecked")
     public static ArrayList<usuario> cargarUsuarios() {
         ArrayList<usuario> listaUsuarios = new ArrayList<>();
         try (FileInputStream fis = new FileInputStream("usuarios.ser");
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
+                ObjectInputStream ois = new ObjectInputStream(fis)) {
 
-            // Leer el DefaultListModel de usuarios desde el archivo
-            listaUsuarios = (ArrayList<usuario>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace(); // Si ocurre un error, lo imprime en consola
-        }
-        return listaUsuarios; // Devuelve la lista de usuarios cargada
-    }
+               // Leer el DefaultListModel de usuarios desde el archivo
+               listaUsuarios = (ArrayList<usuario>) ois.readObject();
+           } catch (IOException | ClassNotFoundException e) {
+               e.printStackTrace(); // Si ocurre un error, lo imprime en consola
+           }
+           return listaUsuarios; // Devuelve la lista de usuarios cargada
+       }
 
     // Método para validar las credenciales de un usuario y devolver su rol
     public static int validarCredenciales(ArrayList<usuario> listaUsuarios, String nombreUsuario, String contrasena) {

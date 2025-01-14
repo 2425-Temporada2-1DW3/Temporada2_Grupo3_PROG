@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class añadirEquipo extends JFrame {
 
@@ -131,6 +133,13 @@ public class añadirEquipo extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
 
         JButton btnVolver = new JButton("Atrás");
+        btnVolver.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		EquiposWindow ventanaEquipos = new EquiposWindow();  // Ventana gestión de equipos
+        		ventanaEquipos.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+        	}
+        });
         contentPane.add(btnVolver, gbc);
     }
 }

@@ -11,6 +11,8 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class JornadasWindow extends JFrame {
 
@@ -46,9 +48,9 @@ public class JornadasWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public JornadasWindow() {
-		setTitle("Gestion Jornadas - Txurdi Liga");
+		setTitle("Gestión Jornadas - Txurdi Liga");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 757, 450);
+		setBounds(100, 100, 789, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -58,7 +60,7 @@ public class JornadasWindow extends JFrame {
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel = new JLabel("Gestion Jornadas");
+		JLabel lblNewLabel = new JLabel("Gestión Jornadas");
 		panel.add(lblNewLabel);
 		
 		JPanel panel_1 = new JPanel();
@@ -172,11 +174,15 @@ public class JornadasWindow extends JFrame {
 		JPanel panel_16 = new JPanel();
 		panel_12.add(panel_16, BorderLayout.SOUTH);
 		
-		JLabel lblNewLabel_6 = new JLabel("Cerrar Sesion");
-		panel_16.add(lblNewLabel_6);
+		JButton btnNewButton = new JButton("Cerrar sesión");
+		panel_16.add(btnNewButton);
 		
-		JLabel lblNewLabel_8 = new JLabel("Atras");
-		panel_16.add(lblNewLabel_8);
+		JButton btnNewButton_1 = new JButton("Atrás");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		panel_16.add(btnNewButton_1);
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.CENTER);
@@ -185,7 +191,7 @@ public class JornadasWindow extends JFrame {
 		JPanel panel_14 = new JPanel();
 		panel_2.add(panel_14, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel_7 = new JLabel("CLASIFICACION");
+		JLabel lblNewLabel_7 = new JLabel("CLASIFICACIÓN");
 		panel_14.add(lblNewLabel_7);
 		
 		tablaClasificacion = new JTable();

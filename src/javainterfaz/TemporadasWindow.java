@@ -12,6 +12,8 @@ import java.awt.GridBagConstraints;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class TemporadasWindow extends JFrame {
 
@@ -57,17 +59,24 @@ public class TemporadasWindow extends JFrame {
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.SOUTH);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{0, 0};
+		gbl_panel_1.columnWidths = new int[]{0, 0, 0};
 		gbl_panel_1.rowHeights = new int[]{0, 0};
-		gbl_panel_1.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_1.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
-		JLabel lblNewLabel_1 = new JLabel("Atras");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.gridx = 0;
-		gbc_lblNewLabel_1.gridy = 0;
-		panel_1.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		JButton btnAtras = new JButton("Atrás");
+		btnAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
+        		ventanaAdmin.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+			}
+		});
+		GridBagConstraints gbc_btnAtras = new GridBagConstraints();
+		gbc_btnAtras.gridx = 1;
+		gbc_btnAtras.gridy = 0;
+		panel_1.add(btnAtras, gbc_btnAtras);
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.CENTER);
