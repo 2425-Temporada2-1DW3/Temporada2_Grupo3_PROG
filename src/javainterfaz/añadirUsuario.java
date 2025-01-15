@@ -15,17 +15,15 @@ public class añadirUsuario extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField leerUsuario;
-    private JTextField leerContra;
-    private JTextField leerContra2;
     private GridBagConstraints gbc_1;
     private GridBagConstraints gbc_leerUsuario;
     private GridBagConstraints gbc_lblContra;
-    private GridBagConstraints gbc_leerContra;
     private GridBagConstraints gbc_lblContra2;
-    private GridBagConstraints gbc_leerContra2;
     private GridBagConstraints gbc_lblTipo;
     private GridBagConstraints gbc_9;
     private ArrayList<usuario> listaUsuarios; // Modelo para la lista de usuarios
+    private JPasswordField leerContra;
+    private JPasswordField leerContra2;
 
     /**
      * Launch the application.
@@ -100,16 +98,13 @@ public class añadirUsuario extends JFrame {
 
         JLabel lblContra = new JLabel("Contraseña:");
         contentPane.add(lblContra, gbc_lblContra);
-
-        gbc_leerContra = new GridBagConstraints();
+        
+        leerContra = new JPasswordField();
+        GridBagConstraints gbc_leerContra = new GridBagConstraints();
         gbc_leerContra.insets = new Insets(0, 0, 5, 0);
+        gbc_leerContra.fill = GridBagConstraints.HORIZONTAL;
         gbc_leerContra.gridx = 1;
         gbc_leerContra.gridy = 2;
-        gbc_leerContra.weightx = 1.0;
-        gbc_leerContra.fill = GridBagConstraints.HORIZONTAL;
-
-        leerContra = new JTextField();
-        leerContra.setPreferredSize(new Dimension(200, 30));
         contentPane.add(leerContra, gbc_leerContra);
 
         // Validar contraseña
@@ -121,16 +116,13 @@ public class añadirUsuario extends JFrame {
 
         JLabel lblContra2 = new JLabel("Repetir contraseña:");
         contentPane.add(lblContra2, gbc_lblContra2);
-
-        gbc_leerContra2 = new GridBagConstraints();
+        
+        leerContra2 = new JPasswordField();
+        GridBagConstraints gbc_leerContra2 = new GridBagConstraints();
         gbc_leerContra2.insets = new Insets(0, 0, 5, 0);
+        gbc_leerContra2.fill = GridBagConstraints.HORIZONTAL;
         gbc_leerContra2.gridx = 1;
         gbc_leerContra2.gridy = 3;
-        gbc_leerContra2.weightx = 1.0;
-        gbc_leerContra2.fill = GridBagConstraints.HORIZONTAL;
-
-        leerContra2 = new JTextField();
-        leerContra2.setPreferredSize(new Dimension(200, 30));
         contentPane.add(leerContra2, gbc_leerContra2);
 
         // Tipo
@@ -165,19 +157,21 @@ public class añadirUsuario extends JFrame {
         JButton btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String usuario = leerUsuario.getText();
+        		String nomusuario = leerUsuario.getText();
         		String contra = leerContra.getText();
         		String contra2 = leerContra2.getText();
         		int tipo = comboUsuario.getSelectedIndex();
-        		if (usuario.isEmpty() || contra.isEmpty() || contra2.isEmpty()) {
+        		if (nomusuario.isEmpty() || contra.isEmpty() || contra2.isEmpty()) {
         			// si algun campo de texto esta vacio
     				JOptionPane.showMessageDialog(añadirUsuario.this,(String)"Error. Rellene todos los campos.","Error",JOptionPane.ERROR_MESSAGE,null);
         		} else if (contra.equals(contra2)) {
-        			
-        			usuario u = new usuario(usuario, contra, tipo);
+        			listaUsuarios = usuario.cargarUsuarios(); 
+        			usuario u = new usuario(nomusuario, contra, tipo);
         			listaUsuarios.add(u);
         			// Guardar el usuario predeterminados en el archivo
                     usuario.guardarUsuarios(listaUsuarios);
+        		} else {
+        			JOptionPane.showMessageDialog(añadirUsuario.this,(String)"Error. Las contraseñas no coinciden.","Error",JOptionPane.ERROR_MESSAGE,null);
         		}
         	}
         });

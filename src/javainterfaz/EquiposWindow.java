@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import clases.usuario;
+import clases.Equipo;
+
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -13,6 +17,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class EquiposWindow extends JFrame {
@@ -20,6 +25,7 @@ public class EquiposWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JComboBox<String> comboBoxTemporada;
+	private ArrayList<Equipo> listaEquipos;
 
 	/**
 	 * Launch the application.
@@ -41,7 +47,13 @@ public class EquiposWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public EquiposWindow() {
-		setTitle("Gestion Equipos - Txurdi Liga");
+		
+		 // Crear algunos usuarios de ejemplo si el archivo está vacío
+        listaEquipos = Equipo.cargarEquipos();  // Intentar cargar los usuarios desde el archivo
+        
+        
+        
+		setTitle("Gestión Equipos - Txurdi Liga");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

@@ -1,7 +1,13 @@
 package clases;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 public class Equipo implements Serializable {
 	/**
@@ -76,5 +82,17 @@ public class Equipo implements Serializable {
         this.jugadores.remove(jugador);
     }
     
+    public static void guardarJugadores(ArrayList<Equipo> listaEquipos) {
+    	// grabo los datos en racionales.ser
+    	 try (FileOutputStream fos = new FileOutputStream("equipos.ser");
+    	         ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
+    	        // Guardar la lista completa de usuarios en el archivo
+    	        oos.writeObject(listaEquipos);  // Guardamos toda la lista
+    	        JOptionPane.showMessageDialog(null, "Equipo guardado correctamente.");
+    	    } catch (IOException e) {
+    	        e.printStackTrace();  // Si ocurre un error, lo imprime en consola
+    	    }
+    	}
     
 }

@@ -9,18 +9,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import javax.swing.JOptionPane;
+
 public class usuario implements Serializable {
     private static final long serialVersionUID = -4324653987752064090L;
 
     // Atributos de la clase usuario
     String nombre;      // Nombre del usuario
     String contrasena;  // Contraseña del usuario
-    Integer rol;        // Rol del usuario (1 = Admin, 2 = Arbitro, 3 = Usuario)
+    Integer rol;        // Rol del usuario (1 = Admin, 2 = Árbitro, 3 = Usuario)
 
     /*
      * Roles:
      * Admin = 1
-     * Arbitro = 2
+     * Árbitro = 2
      * Usuario = 3
      */
    
@@ -102,7 +104,7 @@ public class usuario implements Serializable {
 
     	        // Guardar la lista completa de usuarios en el archivo
     	        oos.writeObject(listaUsuarios);  // Guardamos toda la lista
-    	        System.out.println("Usuarios guardados exitosamente.");
+    	        JOptionPane.showMessageDialog(null, "Usuario guardado correctamente.");
     	    } catch (IOException e) {
     	        e.printStackTrace();  // Si ocurre un error, lo imprime en consola
     	    }
@@ -115,7 +117,7 @@ public class usuario implements Serializable {
         try (FileInputStream fis = new FileInputStream("usuarios.ser");
                 ObjectInputStream ois = new ObjectInputStream(fis)) {
 
-               // Leer el DefaultListModel de usuarios desde el archivo
+               // Leer el ArrayList de usuarios desde el archivo
                listaUsuarios = (ArrayList<usuario>) ois.readObject();
            } catch (IOException | ClassNotFoundException e) {
                e.printStackTrace(); // Si ocurre un error, lo imprime en consola
