@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import clases.usuario;
+
 import clases.Equipo;
 
 import java.awt.BorderLayout;
@@ -15,17 +15,22 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JList;
 
-public class EquiposWindow extends JFrame {
+
+public class EquiposWindow extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JComboBox<String> comboBoxTemporada;
-	private ArrayList<Equipo> listaEquipos;
+	private DefaultListModel<Equipo> listaEquipos;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -51,11 +56,32 @@ public class EquiposWindow extends JFrame {
 		 // Crear algunos usuarios de ejemplo si el archivo está vacío
         listaEquipos = Equipo.cargarEquipos();  // Intentar cargar los usuarios desde el archivo
         
+        // Verificar si la lista está vacía, si es así, agregar usuarios por defecto
+        if (listaEquipos.isEmpty()) {
+            // Crear algunos usuarios predeterminados
+            Equipo equipo1 = new Equipo("Athletic Club", "1898", "Bilbao", null); 
+            Equipo equipo2 = new Equipo("Real Madrid", "1902", "Madrid", null); 
+            Equipo equipo3 = new Equipo("FC Barcelona", "1899", "Barcelona", null); 
+            Equipo equipo4 = new Equipo("Sevilla FC", "1890", "Sevilla", null); 
+            Equipo equipo5 = new Equipo("Valencia CF", "1919", "Valencia", null); 
+            Equipo equipo6 = new Equipo("Atlético Madrid", "1903", "Madrid", null); 
+            
+            listaEquipos.addElement(equipo1);
+            listaEquipos.addElement(equipo2);
+            listaEquipos.addElement(equipo3);
+            listaEquipos.addElement(equipo4);
+            listaEquipos.addElement(equipo5);
+            listaEquipos.addElement(equipo6);
+           
+
+            // Guardar los usuarios predeterminados en el archivo
+            Equipo.guardarEquipos(listaEquipos);
+        }
         
         
 		setTitle("Gestión Equipos - Txurdi Liga");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 590, 402);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -81,13 +107,6 @@ public class EquiposWindow extends JFrame {
 		panel_2.add(panel_3, BorderLayout.WEST);
 		
 		JButton btnAnadir = new JButton("Añadir");
-		btnAnadir.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				añadirEquipo ventanaEquipo = new añadirEquipo();  // Ventana gestión de equipos
-        		ventanaEquipo.setVisible(true);  // Mostrar la ventana
-                dispose();  // Cerrar la ventana
-			}
-		});
 		panel_3.add(btnAnadir);
 		
 		JButton btnEliminar = new JButton("Eliminar");
@@ -137,6 +156,26 @@ public class EquiposWindow extends JFrame {
 		
 		JButton btnGuardar = new JButton("Guardar");
 		panel_8.add(btnGuardar);
+		
+		
+		JList<Equipo> list = new JList<Equipo>(listaEquipos);
+		panel_7.add(list, BorderLayout.CENTER);
+		
+
 	}
+	
+	// actionPerformed
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			
+			// obtengo sobre que componente se ha realizado la accion
+			Object o = ae.getSource();
+			
+			if (o == btnAnadir){
+				añadirEquipo ventanaEquipo = new añadirEquipo();  // Ventana gestión de equipos
+        		ventanaEquipo.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+			}
+		}
 
 }
