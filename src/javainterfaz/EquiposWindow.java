@@ -29,6 +29,7 @@ public class EquiposWindow extends JFrame implements ActionListener{
 	private JPanel contentPane;
 	private JComboBox<String> comboBoxTemporada;
 	private DefaultListModel<Equipo> listaEquipos;
+	private JButton btnAnadir, btnEliminar, btnAtras, btnGuardar;
 	
 	
 
@@ -106,10 +107,11 @@ public class EquiposWindow extends JFrame implements ActionListener{
 		JPanel panel_3 = new JPanel();
 		panel_2.add(panel_3, BorderLayout.WEST);
 		
-		JButton btnAnadir = new JButton("Añadir");
+		btnAnadir = new JButton("Añadir");
+		btnAnadir.addActionListener(this);
 		panel_3.add(btnAnadir);
 		
-		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar = new JButton("Eliminar");
 		panel_3.add(btnEliminar);
 		
 		JPanel panel_4 = new JPanel();
@@ -134,14 +136,8 @@ public class EquiposWindow extends JFrame implements ActionListener{
 		gbl_panel_6.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_6.setLayout(gbl_panel_6);
 		
-		JButton btnAtras = new JButton("Atrás");
-		btnAtras.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
-        		ventanaAdmin.setVisible(true);  // Mostrar la ventana
-                dispose();  // Cerrar la ventana
-			}
-		});
+		btnAtras = new JButton("Atrás");
+		btnAtras.addActionListener(this);
 		GridBagConstraints gbc_btnAtras = new GridBagConstraints();
 		gbc_btnAtras.gridx = 1;
 		gbc_btnAtras.gridy = 0;
@@ -154,7 +150,7 @@ public class EquiposWindow extends JFrame implements ActionListener{
 		JPanel panel_8 = new JPanel();
 		panel_7.add(panel_8, BorderLayout.SOUTH);
 		
-		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar = new JButton("Guardar");
 		panel_8.add(btnGuardar);
 		
 		
@@ -174,6 +170,11 @@ public class EquiposWindow extends JFrame implements ActionListener{
 			if (o == btnAnadir){
 				añadirEquipo ventanaEquipo = new añadirEquipo();  // Ventana gestión de equipos
         		ventanaEquipo.setVisible(true);  // Mostrar la ventana
+                dispose();  // Cerrar la ventana
+			}
+			else if (o == btnAtras) {
+				gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
+        		ventanaAdmin.setVisible(true);  // Mostrar la ventana
                 dispose();  // Cerrar la ventana
 			}
 		}
