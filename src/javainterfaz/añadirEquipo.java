@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import clases.Equipo;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -22,6 +24,8 @@ public class añadirEquipo extends JFrame {
     private GridBagConstraints gbc_3;
     private GridBagConstraints gbc_4;
     private GridBagConstraints gbc_5;
+    
+    private DefaultListModel<Equipo> listaEquipos;
 
     /**a
      * Launch the application.
@@ -109,7 +113,7 @@ public class añadirEquipo extends JFrame {
                         leerFecha.setPreferredSize(new Dimension(200, 30));
                         contentPane.add(leerFecha, gbc_4);
         
-                // País
+                // Ciudad
                 gbc_lblCiudad = new GridBagConstraints();
                 gbc_lblCiudad.insets = new Insets(0, 0, 5, 5);
                 gbc_lblCiudad.gridx = 0;
@@ -133,6 +137,16 @@ public class añadirEquipo extends JFrame {
         		String nomEquipo = leerNombre.getText();
         		String fecFund = leerFecha.getText();
         		String ciu = leerCiudad.getText();
+        		if (nomEquipo.isEmpty() || fecFund.isEmpty() || ciu.isEmpty()) {
+        			// si algun campo de texto esta vacio
+    				JOptionPane.showMessageDialog(añadirEquipo.this,(String)"Error. Rellene todos los campos.","Error",JOptionPane.ERROR_MESSAGE,null);
+        		} else {
+        			 listaEquipos = Equipo.cargarEquipos(); 
+        			 Equipo eq = new Equipo(nomEquipo, fecFund, ciu, null);
+        			 listaEquipos.addElement(eq);
+        			 Equipo.guardarEquipos(listaEquipos);
+        			 JOptionPane.showMessageDialog(null, "Equipo guardado correctamente.");
+        		}
         		
         	}
         });
