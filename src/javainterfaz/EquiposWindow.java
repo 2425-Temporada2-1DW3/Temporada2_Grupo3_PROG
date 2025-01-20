@@ -21,7 +21,6 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 
 
 public class EquiposWindow extends JFrame implements ActionListener{
@@ -30,13 +29,7 @@ public class EquiposWindow extends JFrame implements ActionListener{
 	private JPanel contentPane;
 	private JComboBox<String> comboBoxTemporada;
 	private DefaultListModel<Equipo> listaEquipos;
-<<<<<<< HEAD
 	private JButton btnAnadir, btnEliminar, btnAtras, btnGuardar;
-=======
-	private JList<Equipo> equiposList;
-	
-	private JButton btnAnadir, btnEliminar, btnAtras;
->>>>>>> 8f1cd28 (añadir equipos)
 	
 	
 
@@ -84,7 +77,6 @@ public class EquiposWindow extends JFrame implements ActionListener{
 
             // Guardar los usuarios predeterminados en el archivo
             Equipo.guardarEquipos(listaEquipos);
-            JOptionPane.showMessageDialog(null, "Equipo guardado correctamente.");
         }
         
         
@@ -120,10 +112,6 @@ public class EquiposWindow extends JFrame implements ActionListener{
 		panel_3.add(btnAnadir);
 		
 		btnEliminar = new JButton("Eliminar");
-<<<<<<< HEAD
-=======
-		btnEliminar.addActionListener(this);
->>>>>>> 8f1cd28 (añadir equipos)
 		panel_3.add(btnEliminar);
 		
 		JPanel panel_4 = new JPanel();
@@ -150,10 +138,6 @@ public class EquiposWindow extends JFrame implements ActionListener{
 		
 		btnAtras = new JButton("Atrás");
 		btnAtras.addActionListener(this);
-<<<<<<< HEAD
-=======
-		
->>>>>>> 8f1cd28 (añadir equipos)
 		GridBagConstraints gbc_btnAtras = new GridBagConstraints();
 		gbc_btnAtras.gridx = 1;
 		gbc_btnAtras.gridy = 0;
@@ -170,8 +154,8 @@ public class EquiposWindow extends JFrame implements ActionListener{
 		panel_8.add(btnGuardar);
 		
 		
-		equiposList = new JList<Equipo>(listaEquipos);
-		panel_7.add(equiposList, BorderLayout.CENTER);
+		JList<Equipo> list = new JList<Equipo>(listaEquipos);
+		panel_7.add(list, BorderLayout.CENTER);
 		
 
 	}
@@ -193,24 +177,6 @@ public class EquiposWindow extends JFrame implements ActionListener{
         		ventanaAdmin.setVisible(true);  // Mostrar la ventana
                 dispose();  // Cerrar la ventana
 			}
-<<<<<<< HEAD
-=======
-			else if (o == btnEliminar) {
-				// obtengo cuantas opciones hay seleccionadas en la lista
-				int[] indices = equiposList.getSelectedIndices();
-				int numeroOpciones = indices.length;
-				if (numeroOpciones <= 0) {
-					// si NO hay opciones seleccionadas
-					JOptionPane.showMessageDialog(this,(String)"Error. No hay equipos seleccionados","Error",JOptionPane.ERROR_MESSAGE,null);
-				} 
-				else {
-					 for (int i = indices.length - 1; i >= 0; i--) {
-				            listaEquipos.remove(indices[i]);
-					 } // Guardar los usuarios predeterminados en el archivo
-			            Equipo.guardarEquipos(listaEquipos);
-				}
-			}
->>>>>>> 8f1cd28 (añadir equipos)
 		}
 
 }

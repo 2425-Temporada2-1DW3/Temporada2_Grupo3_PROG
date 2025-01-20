@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -176,22 +175,6 @@ public class JornadasWindow extends JFrame {
 		panel_12.add(panel_16, BorderLayout.SOUTH);
 		
 		JButton btnNewButton = new JButton("Cerrar sesión");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int opcion =  JOptionPane.showConfirmDialog(JornadasWindow.this, "¿Está seguro que desea cerrar sesión?", "Info",  JOptionPane.YES_NO_CANCEL_OPTION);
-				switch (opcion) {
-    			case JOptionPane.YES_OPTION:
-					LoginWindow ventanaLogin = new LoginWindow();  // Ventana gestión de equipos
-					ventanaLogin.setVisible(true);  // Mostrar la ventana
-	                dispose();  // Cerrar la ventana
-					break;
-    			case JOptionPane.NO_OPTION:
-    			case JOptionPane.CANCEL_OPTION:
-    			case JOptionPane.CLOSED_OPTION:
-    				return;
-    			}
-			}
-		});
 		panel_16.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Atrás");
