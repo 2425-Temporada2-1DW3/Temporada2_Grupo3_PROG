@@ -144,7 +144,7 @@ public class añadirUsuario extends JFrame {
         contentPane.add(comboUsuario, gbc_comboUsuario);
         comboUsuario.addItem("Administrador");
         comboUsuario.addItem("Árbitro");
-        comboUsuario.addItem("Usuario");
+        comboUsuario.addItem("Invitado");
 
         // Botón "Agregar"
         gbc_9 = new GridBagConstraints();
@@ -162,14 +162,34 @@ public class añadirUsuario extends JFrame {
         		String contra2 = leerContra2.getText();
         		int tipo = comboUsuario.getSelectedIndex();
         		if (nomusuario.isEmpty() || contra.isEmpty() || contra2.isEmpty()) {
-        			// si algun campo de texto esta vacio
+        			// Si algun campo de texto esta vacio
     				JOptionPane.showMessageDialog(añadirUsuario.this,(String)"Error. Rellene todos los campos.","Error",JOptionPane.ERROR_MESSAGE,null);
-        		} else if (contra.equals(contra2)) {
+        		} else if (contra.equals(contra2)) { // Si las contraseñas coinciden que añada el usuario
+        			// Que ponga la primera letra del nombre en mayúscula
+        			if (nomusuario.length() > 0) {
+        	                nomusuario = nomusuario.substring(0, 1).toUpperCase() + nomusuario.substring(1).toLowerCase();
+        	            }
         			listaUsuarios = usuario.cargarUsuarios(); 
-        			usuario u = new usuario(nomusuario, contra, tipo);
+    			  boolean usuarioExistente = false;
+    	            for (usuario u : listaUsuarios) {
+    	                if (u.getNombre().equals(nomusuario)) { // Comprobar si el usuario existe en la lista
+    	                    usuarioExistente = true;
+    	                    break;
+    	                }
+    	            }
+    	            if (usuarioExistente) {
+    	                // Si el usuario ya existe en la lista
+    	                JOptionPane.showMessageDialog(añadirUsuario.this, "Error. El usuario ya está en la lista.", "Error", JOptionPane.ERROR_MESSAGE, null);
+    	            } else {
+    	            usuario u = new usuario(nomusuario, contra, tipo);
         			listaUsuarios.add(u);
-        			// Guardar el usuario predeterminados en el archivo
+        			// Guardar el usuario en el archivo
                     usuario.guardarUsuarios(listaUsuarios);
+                    JOptionPane.showMessageDialog(null, "Usuario guardado correctamente.");
+                    leerUsuario.setText("");
+                    leerContra.setText("");
+                    leerContra2.setText("");
+                    }
         		} else {
         			JOptionPane.showMessageDialog(añadirUsuario.this,(String)"Error. Las contraseñas no coinciden.","Error",JOptionPane.ERROR_MESSAGE,null);
         		}
@@ -187,8 +207,8 @@ public class añadirUsuario extends JFrame {
         JButton btnVolver = new JButton("Atrás");
         btnVolver.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
-        		ventanaAdmin.setVisible(true);  // Mostrar la ventana
+        		UsuariosWindow ventanaUsuarios = new UsuariosWindow();  // Ventana gestión de equipos
+        		ventanaUsuarios.setVisible(true);  // Mostrar la ventana
                 dispose();  // Cerrar la ventana
         	}
         });

@@ -17,13 +17,13 @@ public class usuario implements Serializable {
     // Atributos de la clase usuario
     String nombre;      // Nombre del usuario
     String contrasena;  // Contraseña del usuario
-    Integer rol;        // Rol del usuario (1 = Admin, 2 = Árbitro, 3 = Usuario)
+    Integer rol;        // Rol del usuario (1 = Admin, 2 = Árbitro, 3 = Invitado)
 
     /*
      * Roles:
      * Admin = 1
      * Árbitro = 2
-     * Usuario = 3
+     * Invitado = 3
      */
    
     // Constructor por defecto
@@ -93,7 +93,7 @@ public class usuario implements Serializable {
     // Método toString() para representar el objeto usuario como una cadena de texto
     @Override
     public String toString() {
-        return "usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", rol=" + rol + "]";
+        return "usuario: Nombre=" + nombre + "    Contrasena=" + contrasena + "    Rol=" + rol ;
     }
 
    
@@ -104,7 +104,7 @@ public class usuario implements Serializable {
 
     	        // Guardar la lista completa de usuarios en el archivo
     	        oos.writeObject(listaUsuarios);  // Guardamos toda la lista
-    	        JOptionPane.showMessageDialog(null, "Usuario guardado correctamente.");
+    	       
     	    } catch (IOException e) {
     	        e.printStackTrace();  // Si ocurre un error, lo imprime en consola
     	    }

@@ -6,11 +6,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
+
 
 public class Equipo implements Serializable {
 	/**
@@ -92,7 +91,6 @@ public class Equipo implements Serializable {
 
     	        // Guardar la lista en el archivo
     	        oos.writeObject(listaEquipos);  // Guardamos toda la lista
-    	        JOptionPane.showMessageDialog(null, "Equipo guardado correctamente.");
     	    } catch (IOException e) {
     	        e.printStackTrace();  // Si ocurre un error, lo imprime en consola
     	    }

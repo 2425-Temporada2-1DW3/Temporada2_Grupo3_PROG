@@ -132,7 +132,18 @@ public class gestionAdmin extends JFrame {
         btnCerrar.setHorizontalAlignment(SwingConstants.LEFT);
         btnCerrar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		
+        		int opcion =  JOptionPane.showConfirmDialog(gestionAdmin.this, "¿Está seguro que desea cerrar sesión?", "Info",  JOptionPane.YES_NO_CANCEL_OPTION);
+        		switch (opcion) {
+    			case JOptionPane.YES_OPTION:
+					LoginWindow ventanaLogin = new LoginWindow();  // Ventana gestión de equipos
+					ventanaLogin.setVisible(true);  // Mostrar la ventana
+	                dispose();  // Cerrar la ventana
+					break;
+    			case JOptionPane.NO_OPTION:
+    			case JOptionPane.CANCEL_OPTION:
+    			case JOptionPane.CLOSED_OPTION:
+    				return;
+    			}
         	}
         });
         contentPane.add(btnCerrar, gbc_5);
@@ -140,7 +151,7 @@ public class gestionAdmin extends JFrame {
         JButton btnGestAdm = new JButton("Gestionar administradores");
         btnGestAdm.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		añadirUsuario ventanaUsuario = new añadirUsuario();  // Ventana gestión de equipos
+        		UsuariosWindow ventanaUsuario = new UsuariosWindow();  // Ventana gestión de equipos
         		ventanaUsuario.setVisible(true);  // Mostrar la ventana
                 dispose();  // Cerrar la ventana
         	}

@@ -21,6 +21,7 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 
 public class EquiposWindow extends JFrame implements ActionListener{
@@ -30,6 +31,8 @@ public class EquiposWindow extends JFrame implements ActionListener{
 	private JComboBox<String> comboBoxTemporada;
 	private DefaultListModel<Equipo> listaEquipos;
 	private JButton btnAnadir, btnEliminar, btnAtras, btnGuardar;
+	private JList<Equipo> equiposList;
+	
 	
 	
 
@@ -77,6 +80,7 @@ public class EquiposWindow extends JFrame implements ActionListener{
 
             // Guardar los usuarios predeterminados en el archivo
             Equipo.guardarEquipos(listaEquipos);
+            JOptionPane.showMessageDialog(null, "Equipo guardado correctamente.");
         }
         
         
@@ -112,6 +116,7 @@ public class EquiposWindow extends JFrame implements ActionListener{
 		panel_3.add(btnAnadir);
 		
 		btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(this);
 		panel_3.add(btnEliminar);
 		
 		JPanel panel_4 = new JPanel();
@@ -154,8 +159,8 @@ public class EquiposWindow extends JFrame implements ActionListener{
 		panel_8.add(btnGuardar);
 		
 		
-		JList<Equipo> list = new JList<Equipo>(listaEquipos);
-		panel_7.add(list, BorderLayout.CENTER);
+		equiposList = new JList<Equipo>(listaEquipos);
+		panel_7.add(equiposList, BorderLayout.CENTER);
 		
 
 	}
@@ -176,6 +181,21 @@ public class EquiposWindow extends JFrame implements ActionListener{
 				gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
         		ventanaAdmin.setVisible(true);  // Mostrar la ventana
                 dispose();  // Cerrar la ventana
+			}
+			else if (o == btnEliminar) {
+				// obtengo cuantas opciones hay seleccionadas en la lista
+				int[] indices = equiposList.getSelectedIndices();
+				int numeroOpciones = indices.length;
+				if (numeroOpciones <= 0) {
+					// si NO hay opciones seleccionadas
+					JOptionPane.showMessageDialog(this,(String)"Error. No hay equipos seleccionados","Error",JOptionPane.ERROR_MESSAGE,null);
+				} 
+				else {
+					 for (int i = indices.length - 1; i >= 0; i--) {
+				            listaEquipos.remove(indices[i]);
+					 } // Guardar los usuarios predeterminados en el archivo
+			            Equipo.guardarEquipos(listaEquipos);
+				}
 			}
 		}
 

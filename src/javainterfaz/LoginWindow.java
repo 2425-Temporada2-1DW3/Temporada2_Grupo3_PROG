@@ -145,6 +145,8 @@ public class LoginWindow extends JFrame {
                 String nombreUsuario = textUsuario.getText();
                 String contraseña = textContrasena.getText();
 
+                nombreUsuario = nombreUsuario.substring(0, 1).toUpperCase() + nombreUsuario.substring(1).toLowerCase();
+                
                 // Validar las credenciales y obtener el rol
                 int rol = usuario.validarCredenciales(listaUsuarios, nombreUsuario, contraseña);
 
