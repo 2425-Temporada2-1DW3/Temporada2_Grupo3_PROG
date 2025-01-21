@@ -160,7 +160,7 @@ public class añadirUsuario extends JFrame {
         		String nomusuario = leerUsuario.getText();
         		String contra = leerContra.getText();
         		String contra2 = leerContra2.getText();
-        		int tipo = comboUsuario.getSelectedIndex();
+        		int tipo = comboUsuario.getSelectedIndex() +1;
         		if (nomusuario.isEmpty() || contra.isEmpty() || contra2.isEmpty()) {
         			// Si algun campo de texto esta vacio
     				JOptionPane.showMessageDialog(añadirUsuario.this,(String)"Error. Rellene todos los campos.","Error",JOptionPane.ERROR_MESSAGE,null);
