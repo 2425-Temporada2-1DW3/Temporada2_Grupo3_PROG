@@ -38,11 +38,17 @@ public class LoginWindow extends JFrame {
         if (listaUsuarios.isEmpty()) {
             // Crear algunos usuarios predeterminados
             usuario usuario1 = new usuario("Itxiar", "pass123", 1); // Admin
-            usuario usuario2 = new usuario("Arnaitz", "pass456", 2); // Árbitro
-            usuario usuario3 = new usuario("Andres", "pass789", 3); // Usuario
+            usuario usuario2 = new usuario("Arnaitz", "pass456", 1); // Admin
+            usuario usuario3 = new usuario("Andres", "pass789", 1); // Admin
+            usuario usuario4 = new usuario("Arbitro", "pass799", 2); // 
+            usuario usuario5 = new usuario("Usuario", "pass759", 3); // Árbitro
+            usuario usuario6 = new usuario("Invitado", "pass739", 4); // Usuario
             listaUsuarios.add(usuario1);
             listaUsuarios.add(usuario2);
             listaUsuarios.add(usuario3);
+            listaUsuarios.add(usuario4);
+            listaUsuarios.add(usuario5);
+            listaUsuarios.add(usuario6);
 
             // Guardar los usuarios predeterminados en el archivo
             usuario.guardarUsuarios(listaUsuarios);

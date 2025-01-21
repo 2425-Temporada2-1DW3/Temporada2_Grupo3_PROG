@@ -17,13 +17,14 @@ public class usuario implements Serializable {
     // Atributos de la clase usuario
     String nombre;      // Nombre del usuario
     String contrasena;  // Contraseña del usuario
-    Integer rol;        // Rol del usuario (1 = Admin, 2 = Árbitro, 3 = Invitado)
+    Integer rol;        // Rol del usuario (1 = Admin, 2 = Árbitro, 3 = Usuario  4 = Invitado)
 
     /*
      * Roles:
      * Admin = 1
      * Árbitro = 2
-     * Invitado = 3
+     * Usuario = 3
+     * Invitado = 4
      */
    
     // Constructor por defecto

@@ -106,7 +106,7 @@ public class UsuariosWindow extends JFrame implements ActionListener{
 		JPanel panel_4 = new JPanel();
 		panel_2.add(panel_4, BorderLayout.EAST);
 		
-		JLabel lblNewLabel_1 = new JLabel("Administrador = rol 1  Árbitro = rol 2  Invitado = rol 3");
+		JLabel lblNewLabel_1 = new JLabel("Administrador = rol 1  Árbitro = rol 2  Usuario= rol 3 Invitado= rol 4");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel_2.add(lblNewLabel_1, BorderLayout.CENTER);
 		
