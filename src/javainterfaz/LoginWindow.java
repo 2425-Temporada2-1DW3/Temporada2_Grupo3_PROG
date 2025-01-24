@@ -1,4 +1,5 @@
 package javainterfaz;
+import clases.Gestion;
 import clases.usuario;
 
 import java.awt.EventQueue;
@@ -40,9 +41,9 @@ public class LoginWindow extends JFrame {
             usuario usuario1 = new usuario("Itxiar", "pass123", 1); // Admin
             usuario usuario2 = new usuario("Arnaitz", "pass456", 1); // Admin
             usuario usuario3 = new usuario("Andres", "pass789", 1); // Admin
-            usuario usuario4 = new usuario("Arbitro", "pass799", 2); // 
-            usuario usuario5 = new usuario("Usuario", "pass759", 3); // Árbitro
-            usuario usuario6 = new usuario("Invitado", "pass739", 4); // Usuario
+            usuario usuario4 = new usuario("Arbitro", "pass799", 2); //Árbitro
+            usuario usuario5 = new usuario("Usuario", "pass759", 3); // Usuario
+            usuario usuario6 = new usuario("Invitado", "pass739", 4); // Invitado
             listaUsuarios.add(usuario1);
             listaUsuarios.add(usuario2);
             listaUsuarios.add(usuario3);
@@ -160,6 +161,7 @@ public class LoginWindow extends JFrame {
                 switch (rol) {
                     case 1:
                         JOptionPane.showMessageDialog(null, "Bienvenido, administrador.");
+                        Gestion.agregarUsuario(nombreUsuario); // Agrega el nombre a la lista
                         gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana para el administrador
                         ventanaAdmin.setVisible(true);  // Mostrar la ventana
                         dispose();  // Cerrar la ventana de login
@@ -178,6 +180,12 @@ public class LoginWindow extends JFrame {
                         ventanaJornadasUsuario.setVisible(true);  // Mostrar la ventana
                         dispose();  // Cerrar la ventana de login
                         break;
+                    case 4:
+                        JOptionPane.showMessageDialog(null, "Bienvenido, Invitado.");
+                        JornadasWindow ventanaJornadasUsuarios = new JornadasWindow();  // Ventana para el usuario
+                        ventanaJornadasUsuarios.setVisible(true);  // Mostrar la ventana
+                        dispose();  // Cerrar la ventana de login
+                        break;
 
                     case 0:
                         JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -193,6 +201,8 @@ public class LoginWindow extends JFrame {
         JButton btnInvitado = new JButton("Invitado");
         btnInvitado.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		JOptionPane.showMessageDialog(null, "Bienvenido, Invitado.");
+        		Gestion.agregarUsuario("Invitado"); // Agrega el nombre a la lista
         		JornadasWindow ventanaJornadasUsuario = new JornadasWindow();  // Ventana para el usuario
                 ventanaJornadasUsuario.setVisible(true);  // Mostrar la ventana
                 dispose();  // Cerrar la ventana de login

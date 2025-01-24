@@ -1,14 +1,14 @@
 package javainterfaz;
 
-import java.awt.EventQueue;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import clases.Equipo;
-
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import clases.Jugador;
+import clases.Temporada;
+import java.util.ArrayList;
+import java.util.List;
 
 public class añadirEquipo extends JFrame {
 
@@ -17,19 +17,10 @@ public class añadirEquipo extends JFrame {
     private JTextField leerNombre;
     private JTextField leerFecha;
     private JTextField leerCiudad;
-    private GridBagConstraints gbc_lblCiudad;
-    private GridBagConstraints gbc_leerCiudad;
-    private GridBagConstraints gbc_1;
-    private GridBagConstraints gbc_2;
-    private GridBagConstraints gbc_3;
-    private GridBagConstraints gbc_4;
-    private GridBagConstraints gbc_5;
-    
+    private JComboBox<Temporada> comboTemporada;
     private DefaultListModel<Equipo> listaEquipos;
+    private List<Temporada> temporadas;
 
-    /**a
-     * Launch the application.
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -41,151 +32,158 @@ public class añadirEquipo extends JFrame {
         });
     }
 
-    /**
-     * Create the frame.
-     */
     public añadirEquipo() {
         setTitle("Añadir Equipo - Txurdi Liga");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(450, 400);
-        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+        setLocationRelativeTo(null); // Centrar la ventana
 
-        GridBagLayout gbl_contentPane = new GridBagLayout();
-        gbl_contentPane.rowHeights = new int[]{0, 0, 0, 0, 28, 0, 0, 0};
-        contentPane = new JPanel(gbl_contentPane);
+        // Inicializar la lista de equipos
+        listaEquipos = Equipo.cargarEquipos();
+
+        // Cargar las temporadas desde archivo (asegurando que sean activas o por defecto)
+        temporadas = Temporada.cargarTemporadasDesdeArchivo(new ArrayList<Equipo>(), new DefaultListModel<Jugador>());
+
+        // Panel principal
+        contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         setContentPane(contentPane);
+        contentPane.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(5, 5, 5, 5); // Margen entre los elementos
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Logo
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
 
+        // Logo
         JLabel lblLogo = new JLabel(new ImageIcon(añadirEquipo.class.getResource("/img/imagenes/logotxurdi.png")));
         lblLogo.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblLogo, gbc);
-        
-                // Nombre
-                gbc_1 = new GridBagConstraints();
-                gbc_1.insets = new Insets(0, 0, 5, 5);
-                gbc_1.gridx = 0;
-                gbc_1.gridy = 1;
-                gbc_1.gridwidth = 1;
-                gbc_1.anchor = GridBagConstraints.EAST;
-                
-                        JLabel lblNombre = new JLabel("Nombre:");
-                        contentPane.add(lblNombre, gbc_1);
-        
-                gbc_2 = new GridBagConstraints();
-                gbc_2.insets = new Insets(0, 0, 5, 0);
-                gbc_2.gridx = 1;
-                gbc_2.gridy = 1;
-                gbc_2.weightx = 1.0; // Permitir que el campo se expanda
-                gbc_2.fill = GridBagConstraints.HORIZONTAL;
-                
-                        leerNombre = new JTextField();
-                        leerNombre.setPreferredSize(new Dimension(200, 30)); // Tamaño por defecto más grande
-                        contentPane.add(leerNombre, gbc_2);
-                
-                        // Fecha de fundación
-                        gbc_3 = new GridBagConstraints();
-                        gbc_3.insets = new Insets(0, 0, 5, 5);
-                        gbc_3.gridx = 0;
-                        gbc_3.gridy = 2;
-                        gbc_3.anchor = GridBagConstraints.EAST;
-                        
-                                JLabel lblFechaFun = new JLabel("Fecha de fundación:");
-                                contentPane.add(lblFechaFun, gbc_3);
-        
-                gbc_4 = new GridBagConstraints();
-                gbc_4.insets = new Insets(0, 0, 5, 0);
-                gbc_4.gridx = 1;
-                gbc_4.gridy = 2;
-                gbc_4.weightx = 1.0;
-                gbc_4.fill = GridBagConstraints.HORIZONTAL;
-                
-                        leerFecha = new JTextField();
-                        leerFecha.setPreferredSize(new Dimension(200, 30));
-                        contentPane.add(leerFecha, gbc_4);
-        
-                // Ciudad
-                gbc_lblCiudad = new GridBagConstraints();
-                gbc_lblCiudad.insets = new Insets(0, 0, 5, 5);
-                gbc_lblCiudad.gridx = 0;
-                gbc_lblCiudad.gridy = 3;
-                gbc_lblCiudad.anchor = GridBagConstraints.EAST;
-                
-                        JLabel lblCiudad = new JLabel("Ciudad:");
-                        contentPane.add(lblCiudad, gbc_lblCiudad);
+
+        // Nombre
+        JLabel lblNombre = new JLabel("Nombre:");
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        contentPane.add(lblNombre, gbc);
+
+        leerNombre = new JTextField();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        contentPane.add(leerNombre, gbc);
+
+        // Fecha de fundación
+        JLabel lblFechaFun = new JLabel("Fecha de fundación:");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        contentPane.add(lblFechaFun, gbc);
+
+        leerFecha = new JTextField();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        contentPane.add(leerFecha, gbc);
+
+        // Ciudad
+        JLabel lblCiudad = new JLabel("Ciudad:");
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.EAST;
+        contentPane.add(lblCiudad, gbc);
+
+        leerCiudad = new JTextField();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        contentPane.add(leerCiudad, gbc);
+
+        // Combo de temporadas
+        JLabel lblTemporada = new JLabel("Seleccionar Temporada:");
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.EAST;
+        contentPane.add(lblTemporada, gbc);
+
+        comboTemporada = new JComboBox<>();
+        for (Temporada temporada : temporadas) {
+            comboTemporada.addItem(temporada);
+        }
+
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        contentPane.add(comboTemporada, gbc);
 
         // Botón "Agregar"
-        gbc_5 = new GridBagConstraints();
-        gbc_5.insets = new Insets(0, 0, 5, 0);
-        gbc_5.gridx = 0;
-        gbc_5.gridy = 6;
-        gbc_5.gridwidth = 2;
-        gbc_5.anchor = GridBagConstraints.CENTER;
-
         JButton btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		String nomEquipo = leerNombre.getText();
-        		String fecFund = leerFecha.getText();
-        		String ciu = leerCiudad.getText();
-        		if (nomEquipo.isEmpty() || fecFund.isEmpty() || ciu.isEmpty()) {
-        			// si algun campo de texto esta vacio
-    				JOptionPane.showMessageDialog(añadirEquipo.this,(String)"Error. Rellene todos los campos.","Error",JOptionPane.ERROR_MESSAGE,null);
-        		} else {
-        			 listaEquipos = Equipo.cargarEquipos(); 
-        			 Equipo eq = new Equipo(nomEquipo, fecFund, ciu, null);
-        			 listaEquipos.addElement(eq);
-        			 Equipo.guardarEquipos(listaEquipos);
-        			 JOptionPane.showMessageDialog(null, "Equipo guardado correctamente.");
-        		}
-        		
-        	}
-        });
-        
-                gbc_leerCiudad = new GridBagConstraints();
-                gbc_leerCiudad.insets = new Insets(0, 0, 5, 0);
-                gbc_leerCiudad.gridx = 1;
-                gbc_leerCiudad.gridy = 3;
-                gbc_leerCiudad.weightx = 1.0;
-                gbc_leerCiudad.fill = GridBagConstraints.HORIZONTAL;
-                
-                        leerCiudad = new JTextField();
-                        leerCiudad.setPreferredSize(new Dimension(200, 30));
-                        contentPane.add(leerCiudad, gbc_leerCiudad);
-        
-        JLabel lblJugadores = new JLabel("Jugadores:");
-        GridBagConstraints gbc_lblJugadores = new GridBagConstraints();
-        gbc_lblJugadores.anchor = GridBagConstraints.EAST;
-        gbc_lblJugadores.insets = new Insets(0, 0, 5, 5);
-        gbc_lblJugadores.gridx = 0;
-        gbc_lblJugadores.gridy = 4;
-        contentPane.add(lblJugadores, gbc_lblJugadores);
-        contentPane.add(btnAgregar, gbc_5);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nombre = leerNombre.getText();
+                String fecha = leerFecha.getText();
+                String ciudad = leerCiudad.getText();
 
-        // Botón "Atrás"
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
+                System.out.println("[DEBUG] Datos ingresados - Nombre: " + nombre + ", Fecha: " + fecha + ", Ciudad: " + ciudad);
 
-        JButton btnVolver = new JButton("Atrás");
-        btnVolver.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		EquiposWindow ventanaEquipos = new EquiposWindow();  // Ventana gestión de equipos
-        		ventanaEquipos.setVisible(true);  // Mostrar la ventana
-                dispose();  // Cerrar la ventana
-        	}
+                if (nombre.isEmpty() || fecha.isEmpty() || ciudad.isEmpty()) {
+                    JOptionPane.showMessageDialog(añadirEquipo.this, "Por favor complete todos los campos.");
+                    System.out.println("[ERROR] Algún campo está vacío.");
+                } else {
+                    // Crear un nuevo equipo solo con los datos del equipo, sin agregarlo a las temporadas
+                    Equipo nuevoEquipo = new Equipo(nombre, fecha, ciudad, new ArrayList<>(), new ArrayList<>()); // No agregar a las temporadas aquí
+
+                    Temporada temporadaSeleccionada = (Temporada) comboTemporada.getSelectedItem();
+
+                    if (temporadaSeleccionada != null) {
+                        System.out.println("[DEBUG] Temporada seleccionada: " + temporadaSeleccionada.getNumero());
+
+                        // Agregar manualmente solo a la temporada seleccionada
+                        temporadaSeleccionada.agregarEquipo(nuevoEquipo);
+                        listaEquipos.addElement(nuevoEquipo); // Añadir el nuevo equipo a la lista global
+
+                        // Guardar la lista de equipos
+                        Equipo.guardarEquipos(listaEquipos);
+                        System.out.println("[INFO] Equipo agregado a la temporada y lista: " + nuevoEquipo);
+
+                        // Mensaje de éxito
+                        JOptionPane.showMessageDialog(añadirEquipo.this, "Equipo agregado correctamente.");
+                        dispose(); // Cerrar la ventana actual
+                    } else {
+                        System.out.println("[ERROR] No se ha seleccionado ninguna temporada.");
+                    }
+                }
+            }
         });
-        contentPane.add(btnVolver, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        contentPane.add(btnAgregar, gbc);
+
+        // Botón "Cancelar"
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Cerrar la ventana sin hacer nada
+            }
+        });
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        contentPane.add(btnCancelar, gbc);
+    }
+
+    public Equipo obtenerEquipo() {
+        String nombre = leerNombre.getText();
+        String fecha = leerFecha.getText();
+        String ciudad = leerCiudad.getText();
+        
+        if (!nombre.isEmpty() && !fecha.isEmpty() && !ciudad.isEmpty()) {
+            return new Equipo(nombre, fecha, ciudad, new ArrayList<>(), new ArrayList<>());
+        }
+        return null; // Si los campos están vacíos, devuelve null
     }
 }

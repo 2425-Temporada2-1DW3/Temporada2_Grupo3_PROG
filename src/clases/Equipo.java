@@ -1,43 +1,58 @@
 package clases;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 
-
 public class Equipo implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2642978724951727903L;
-	//aa
-	private String nombre;
+    private static final long serialVersionUID = 2642978724951727903L;
+
+    private String nombre;
     private String anoFundacion;
     private String ciudad;
     private List<Jugador> jugadores;
-    
- // Constructor completo
-    public Equipo(String nombre, String anoFundacion, String ciudad, List<Jugador> jugadores) {
+    private List<Partido> partidos;
+    private List<Temporada> temporadas;
+
+    // Constructor completo
+    public Equipo(String nombre, String anoFundacion, String ciudad, List<Jugador> jugadores, List<Temporada> temporadasExistentes) {
         this.nombre = nombre;
         this.anoFundacion = anoFundacion;
         this.ciudad = ciudad;
         this.jugadores = jugadores;
+        this.partidos = new ArrayList<>();
+        this.temporadas = new ArrayList<>();
+        
+        // Agregar automáticamente el equipo a todas las temporadas activas o por defecto
+        for (Temporada temporada : temporadasExistentes) {
+            temporada.agregarEquipo(this); // Esto asegura que el equipo participe en cada temporada
+        }
     }
+
     
- // Métodos toString
+    // Métodos toString
     @Override
     public String toString() {
-        return "El " + nombre + " fundado el año " + anoFundacion + " en " + ciudad;
+        String temporadasParticipadas = temporadas.isEmpty()
+            ? "No tiene temporadas asignadas"
+            : "Asignado a las temporadas: " + temporadas.stream()
+                  .map(t -> String.valueOf(t.getNumero()))
+                  .reduce((a, b) -> a + ", " + b)
+                  .orElse("");
+
+        return String.format("%s fundado el año %s en %s (%s)", 
+            nombre, 
+            anoFundacion, 
+            ciudad, 
+            temporadasParticipadas);
     }
-    
-    
- // Métodos equals
+
+
+
+
+    // Métodos equals
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -45,69 +60,98 @@ public class Equipo implements Serializable {
         Equipo equipo = (Equipo) obj;
         return nombre.equals(equipo.nombre) && ciudad.equals(equipo.ciudad);
     }
+
+    // Métodos relacionados con temporadas
+    public void agregarTemporada(Temporada temporada) {
+        if (!temporadas.contains(temporada)) {
+            temporadas.add(temporada); // Añadir la temporada a la lista interna del equipo
+        }
+    }
+
+
     
     
- // Getters y setters
-    public String getNombre() {
-        return nombre;
-    }
+  /*  // Métodos para mostrar las temporadas
+    public void mostrarTemporadas() {
+        if (temporadas.isEmpty()) {
+            System.out.println("El equipo " + nombre + " no ha participado en ninguna temporada.");
+        } else {
+            System.out.println("Temporadas en las que el equipo " + nombre + " ha participado:");
+            for (Temporada temporada : temporadas) {
+                System.out.println("Temporada " + temporada.getNumero() + " - Estado: " + temporada.getEstado());
+            }
+        }
+    }*/
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getFechaFundacion() {
-        return anoFundacion;
-    }
-
-    public void setFechaFundacion(String añoFundacion) {
-        this.anoFundacion = añoFundacion;
-    }
-
-    public String getCiudad() {
-        return ciudad;
-    }
-
-    public void setCiudad(String ciudad) {
-        this.ciudad = ciudad;
-    }
-
-    public List<Jugador> getJugadores() {
-        return jugadores;
-    }
-
-    public void agregarJugador(Jugador jugador) {
-        this.jugadores.add(jugador);
-    }
-
-    public void eliminarJugador(Jugador jugador) {
-        this.jugadores.remove(jugador);
-    }
-    
+    // Métodos para guardar y cargar equipos
     public static void guardarEquipos(DefaultListModel<Equipo> listaEquipos) {
-    	// grabo los datos en equipos.ser
-    	 try (FileOutputStream fos = new FileOutputStream("equipos.ser");
-    	         ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+        try (FileOutputStream fos = new FileOutputStream("equipos.ser");
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(listaEquipos);  // Guardar la lista
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-    	        // Guardar la lista en el archivo
-    	        oos.writeObject(listaEquipos);  // Guardamos toda la lista
-    	    } catch (IOException e) {
-    	        e.printStackTrace();  // Si ocurre un error, lo imprime en consola
-    	    }
-    	}
-		 // Método para cargar la lista de usuarios desde un archivo binario (equipos.ser)
-		    @SuppressWarnings("unchecked")
-		    public static DefaultListModel<Equipo> cargarEquipos() {
-		        DefaultListModel<Equipo> listaEquipos = new DefaultListModel<>();
-		        try (FileInputStream fis = new FileInputStream("equipos.ser");
-		                ObjectInputStream ois = new ObjectInputStream(fis)) {
-		
-		               // Leer el ArrayList de usuarios desde el archivo
-		               listaEquipos = (DefaultListModel<Equipo>) ois.readObject();
-		           } catch (IOException | ClassNotFoundException e) {
-		               e.printStackTrace(); // Si ocurre un error, lo imprime en consola
-		           }
-		           return listaEquipos; // Devuelve la lista de usuarios cargada
-		       }
-    
+    @SuppressWarnings("unchecked")
+    public static DefaultListModel<Equipo> cargarEquipos() {
+        DefaultListModel<Equipo> listaEquipos = new DefaultListModel<>();
+        File archivo = new File("equipos.ser");
+
+        // Si el archivo no existe, crearlo vacío
+        if (!archivo.exists()) {
+            try {
+                archivo.createNewFile(); // Crear el archivo si no existe
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Leer el archivo de equipos
+        try (FileInputStream fis = new FileInputStream(archivo);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            // Verificar si hay datos en el archivo
+            if (fis.available() > 0) {
+                listaEquipos = (DefaultListModel<Equipo>) ois.readObject();
+            }
+        } catch (EOFException e) {
+            System.out.println("El archivo está vacío o no contiene datos válidos.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return listaEquipos;
+    }
+
+
+
+	public String getNombre() {
+		// TODO Auto-generated method stub
+		return nombre;
+	}
+
+	// Métodos getter y setter
+public List<Jugador> getJugadores() {
+    return jugadores;
+}
+
+public List<Temporada> getTemporadas() {
+    return temporadas;
+}
+
+public boolean perteneceATemporada(String temporada) {
+    for (Temporada t : temporadas) {
+    	if (String.valueOf(t.getNumero()).equals(temporada)) { 
+ // Si la temporada del equipo coincide
+            return true;
+        }
+    }
+    return false;
+}
+
+public String getCiudad() {
+	// TODO Auto-generated method stub
+	return ciudad;
+}
+
 }

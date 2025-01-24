@@ -111,6 +111,35 @@ public class usuario implements Serializable {
     	    }
     	}
 
+ // Método para editar un usuario y guardar los cambios en el archivo binario (usuarios.ser)
+    public static void editarUsuario(usuario usuarioEditado) {
+        try (FileInputStream fis = new FileInputStream("usuarios.ser");
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+            // Cargar la lista de usuarios
+            ArrayList<usuario> listaUsuarios = (ArrayList<usuario>) ois.readObject();
+
+            // Buscar el índice del usuario a actualizar
+            for (int i = 0; i < listaUsuarios.size(); i++) {
+                if (listaUsuarios.get(i).getNombre().equals(usuarioEditado.getNombre())) {
+                    // Si el nombre coincide, reemplazamos el usuario en la lista
+                    listaUsuarios.set(i, usuarioEditado);
+                    break;
+                }
+            }
+
+            // Guardamos la lista actualizada con el usuario modificado
+            try (FileOutputStream fos = new FileOutputStream("usuarios.ser");
+                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                oos.writeObject(listaUsuarios);  // Guardamos toda la lista con el usuario actualizado
+            }
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();  // Si ocurre un error, lo imprime en consola
+        }
+    }
+
+    
     // Método para cargar la lista de usuarios desde un archivo binario (usuarios.ser)
     @SuppressWarnings("unchecked")
     public static ArrayList<usuario> cargarUsuarios() {

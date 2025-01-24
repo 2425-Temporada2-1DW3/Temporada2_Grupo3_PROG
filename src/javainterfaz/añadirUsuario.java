@@ -144,7 +144,8 @@ public class añadirUsuario extends JFrame {
         contentPane.add(comboUsuario, gbc_comboUsuario);
         comboUsuario.addItem("Administrador");
         comboUsuario.addItem("Árbitro");
-        comboUsuario.addItem("Invitado");
+        comboUsuario.addItem("Usuario");
+       // comboUsuario.addItem("Invitado");
 
         // Botón "Agregar"
         gbc_9 = new GridBagConstraints();
@@ -156,44 +157,51 @@ public class añadirUsuario extends JFrame {
 
         JButton btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		String nomusuario = leerUsuario.getText();
-        		String contra = leerContra.getText();
-        		String contra2 = leerContra2.getText();
-        		int tipo = comboUsuario.getSelectedIndex() +1;
-        		if (nomusuario.isEmpty() || contra.isEmpty() || contra2.isEmpty()) {
-        			// Si algun campo de texto esta vacio
-    				JOptionPane.showMessageDialog(añadirUsuario.this,(String)"Error. Rellene todos los campos.","Error",JOptionPane.ERROR_MESSAGE,null);
-        		} else if (contra.equals(contra2)) { // Si las contraseñas coinciden que añada el usuario
-        			// Que ponga la primera letra del nombre en mayúscula
-        			if (nomusuario.length() > 0) {
-        	                nomusuario = nomusuario.substring(0, 1).toUpperCase() + nomusuario.substring(1).toLowerCase();
-        	            }
-        			listaUsuarios = usuario.cargarUsuarios(); 
-    			  boolean usuarioExistente = false;
-    	            for (usuario u : listaUsuarios) {
-    	                if (u.getNombre().equals(nomusuario)) { // Comprobar si el usuario existe en la lista
-    	                    usuarioExistente = true;
-    	                    break;
-    	                }
-    	            }
-    	            if (usuarioExistente) {
-    	                // Si el usuario ya existe en la lista
-    	                JOptionPane.showMessageDialog(añadirUsuario.this, "Error. El usuario ya está en la lista.", "Error", JOptionPane.ERROR_MESSAGE, null);
-    	            } else {
-    	            usuario u = new usuario(nomusuario, contra, tipo);
-        			listaUsuarios.add(u);
-        			// Guardar el usuario en el archivo
-                    usuario.guardarUsuarios(listaUsuarios);
-                    JOptionPane.showMessageDialog(null, "Usuario guardado correctamente.");
-                    leerUsuario.setText("");
-                    leerContra.setText("");
-                    leerContra2.setText("");
+            public void actionPerformed(ActionEvent e) {
+                String nomusuario = leerUsuario.getText();
+                String contra = new String(leerContra.getPassword()); // Usar getPassword()
+                String contra2 = new String(leerContra2.getPassword()); // Usar getPassword()
+                int tipo = comboUsuario.getSelectedIndex() + 1;
+
+                if (nomusuario.isEmpty() || contra.isEmpty() || contra2.isEmpty()) {
+                    // Si algún campo de texto está vacío
+                    JOptionPane.showMessageDialog(añadirUsuario.this, 
+                        "Error. Rellene todos los campos.", "Error", 
+                        JOptionPane.ERROR_MESSAGE, null);
+                } else if (contra.equals(contra2)) { // Si las contraseñas coinciden
+                    // Capitalizar el primer carácter del nombre de usuario
+                    if (nomusuario.length() > 0) {
+                        nomusuario = nomusuario.substring(0, 1).toUpperCase() + nomusuario.substring(1).toLowerCase();
                     }
-        		} else {
-        			JOptionPane.showMessageDialog(añadirUsuario.this,(String)"Error. Las contraseñas no coinciden.","Error",JOptionPane.ERROR_MESSAGE,null);
-        		}
-        	}
+                    listaUsuarios = usuario.cargarUsuarios();
+                    boolean usuarioExistente = false;
+                    for (usuario u : listaUsuarios) {
+                        if (u.getNombre().equals(nomusuario)) { // Comprobar si el usuario existe en la lista
+                            usuarioExistente = true;
+                            break;
+                        }
+                    }
+                    if (usuarioExistente) {
+                        // Si el usuario ya existe en la lista
+                        JOptionPane.showMessageDialog(añadirUsuario.this, 
+                            "Error. El usuario ya está en la lista.", "Error", 
+                            JOptionPane.ERROR_MESSAGE, null);
+                    } else {
+                        usuario u = new usuario(nomusuario, contra, tipo);
+                        listaUsuarios.add(u);
+                        // Guardar el usuario en el archivo
+                        usuario.guardarUsuarios(listaUsuarios);
+                        JOptionPane.showMessageDialog(null, "Usuario guardado correctamente.");
+                        leerUsuario.setText("");
+                        leerContra.setText("");
+                        leerContra2.setText("");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(añadirUsuario.this, 
+                        "Error. Las contraseñas no coinciden.", "Error", 
+                        JOptionPane.ERROR_MESSAGE, null);
+                }
+            }
         });
         contentPane.add(btnAgregar, gbc_9);
 

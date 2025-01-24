@@ -1,6 +1,13 @@
 package clases;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import javax.swing.DefaultListModel;
 
 public class Jugador implements Serializable{
 /**
@@ -26,8 +33,10 @@ public class Jugador implements Serializable{
  // Métodos toString
     @Override
     public String toString() {
-        return "El jugador " + nombre + " que juega de " + posicion + " en el " + equipo.getNombre() + " a la edad de " + edad + " nacido en " + nacionalidad;
+        String nombreEquipo = (equipo != null) ? equipo.getNombre() : "sin equipo asignado";
+        return "El jugador " + nombre + " que juega de " + posicion + " en el " + nombreEquipo + " a la edad de " + edad + " nacido en " + nacionalidad;
     }
+
     
  // Métodos equals
     @Override
@@ -78,4 +87,31 @@ public class Jugador implements Serializable{
 	public void setEquipo(Equipo equipo) {
 		this.equipo = equipo;
 	}
+	
+	// Método para guardar jugadores en un archivo .ser
+	public static void guardarJugadores(DefaultListModel<Jugador> listaJugadores) {
+	    try (FileOutputStream fos = new FileOutputStream("jugadores.ser");
+	         ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
+	        oos.writeObject(listaJugadores);  // Guardar la lista
+	        System.out.println(listaJugadores);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	// Método para cargar jugadores desde un archivo .ser
+	@SuppressWarnings("unchecked")
+	public static DefaultListModel<Jugador> cargarJugadores() {
+	    DefaultListModel<Jugador> listaJugadores = new DefaultListModel<>();
+	    try (FileInputStream fis = new FileInputStream("jugadores.ser");
+	         ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+	        listaJugadores = (DefaultListModel<Jugador>) ois.readObject();
+	    } catch (IOException | ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return listaJugadores;
+	}
+
 }

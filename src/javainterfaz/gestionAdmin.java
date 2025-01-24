@@ -3,6 +3,9 @@ package javainterfaz;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import clases.Gestion;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -34,6 +37,8 @@ public class gestionAdmin extends JFrame {
      * Create the frame.
      */
     public gestionAdmin() {
+    	String username = Gestion.obtenerUltimoUsuario();
+    	
         setTitle("Gestión Administrativa - Txurdi Liga");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 400); // Ajustar tamaño de la ventana
@@ -50,7 +55,7 @@ public class gestionAdmin extends JFrame {
         // Logo
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 3;
         gbc.anchor = GridBagConstraints.CENTER;
 
         JLabel lblLogo = new JLabel(new ImageIcon(gestionAdmin.class.getResource("/img/imagenes/logotxurdi.png")));
@@ -61,7 +66,7 @@ public class gestionAdmin extends JFrame {
         gbc_1 = new GridBagConstraints();
         gbc_1.insets = new Insets(0, 0, 5, 5);
         gbc_1.gridx = 0;
-        gbc_1.gridy = 1;
+        gbc_1.gridy = 2;
         gbc_1.gridwidth = 1;
 
         JButton btnGestEq = new JButton("Gestionar equipos");
@@ -72,13 +77,20 @@ public class gestionAdmin extends JFrame {
                 dispose();  // Cerrar la ventana
         	}
         });
+        
+        JLabel lblNewLabel = new JLabel("Bienvenido, " + username);
+        GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+        gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+        gbc_lblNewLabel.gridx = 1;
+        gbc_lblNewLabel.gridy = 1;
+        contentPane.add(lblNewLabel, gbc_lblNewLabel);
         contentPane.add(btnGestEq, gbc_1);
 
         // Botón "Gestionar resultados"
         gbc_2 = new GridBagConstraints();
         gbc_2.insets = new Insets(0, 0, 5, 0);
-        gbc_2.gridx = 1;
-        gbc_2.gridy = 1;
+        gbc_2.gridx = 2;
+        gbc_2.gridy = 2;
 
         JButton btnGestRes = new JButton("Gestionar resultados");
         btnGestRes.addActionListener(new ActionListener() {
@@ -94,7 +106,7 @@ public class gestionAdmin extends JFrame {
         gbc_3 = new GridBagConstraints();
         gbc_3.insets = new Insets(0, 0, 5, 5);
         gbc_3.gridx = 0;
-        gbc_3.gridy = 2;
+        gbc_3.gridy = 3;
 
         JButton btnGestJug = new JButton("Gestionar jugadores");
         btnGestJug.addActionListener(new ActionListener() {
@@ -109,8 +121,8 @@ public class gestionAdmin extends JFrame {
         // Botón "Gestionar temporadas"
         gbc_4 = new GridBagConstraints();
         gbc_4.insets = new Insets(0, 0, 5, 0);
-        gbc_4.gridx = 1;
-        gbc_4.gridy = 2;
+        gbc_4.gridx = 2;
+        gbc_4.gridy = 3;
 
         JButton btnGestTemp = new JButton("Gestionar temporadas");
         btnGestTemp.addActionListener(new ActionListener() {
@@ -126,7 +138,7 @@ public class gestionAdmin extends JFrame {
         gbc_5 = new GridBagConstraints();
         gbc_5.insets = new Insets(0, 0, 0, 5);
         gbc_5.gridx = 0;
-        gbc_5.gridy = 3;
+        gbc_5.gridy = 4;
 
         JButton btnCerrar = new JButton("Cerrar sesión");
         btnCerrar.setHorizontalAlignment(SwingConstants.LEFT);
@@ -157,8 +169,8 @@ public class gestionAdmin extends JFrame {
         	}
         });
         GridBagConstraints gbc_btnGestAdm = new GridBagConstraints();
-        gbc_btnGestAdm.gridx = 1;
-        gbc_btnGestAdm.gridy = 3;
+        gbc_btnGestAdm.gridx = 2;
+        gbc_btnGestAdm.gridy = 4;
         contentPane.add(btnGestAdm, gbc_btnGestAdm);
     }
 }
