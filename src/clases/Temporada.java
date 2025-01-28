@@ -75,6 +75,11 @@ public class Temporada implements Serializable {
     public void setListJornadas(ArrayList<Jornada> listJornadas) {
         this.listJornadas = listJornadas;
     }
+    
+    @Override
+    public String toString() {
+        return this.nombre;  // Retorna solo el nombre de la temporada
+    }
 
     // Método para agregar una jornada a la temporada
     public void agregarJornada(Jornada jornada) {
@@ -98,7 +103,7 @@ public class Temporada implements Serializable {
 
     // Cargar todas las temporadas desde el archivo .ser
     @SuppressWarnings("unchecked")
-    public ArrayList<Temporada> cargarTemporadas() {
+    public static ArrayList<Temporada> cargarTemporadas() {
         ArrayList<Temporada> temporadas = new ArrayList<>();
         File file = new File("temporadas.ser");
         

@@ -34,7 +34,14 @@ public class Jornada implements Serializable{
         this.listPartidos = partidos;
     }
     
- // Método para agregar un partido a la jornada
+    
+    
+ @Override
+	public String toString() {
+		return "" + numero;
+	}
+
+	// Método para agregar un partido a la jornada
     public void agregarPartido(Partido partido) {
     	listPartidos.add(partido);
     }

@@ -30,8 +30,8 @@ public class JornadasWindow extends JFrame implements Serializable {
     private JLabel lblVisitante_3;
     
     private JTable tablaClasificacion;
-    private JComboBox<String> comboBoxTemporada;
-    private JComboBox<String> comboBoxJornada;
+    private JComboBox<Temporada> comboBoxTemporada;
+    private JComboBox<Jornada> comboBoxJornada;
     
     private ArrayList<Temporada> listaTemporadas; // Lista de temporadas
 
@@ -52,6 +52,7 @@ public class JornadasWindow extends JFrame implements Serializable {
 	}
 
     public JornadasWindow() {
+    	
         setTitle("Gestion Jornadas - Txurdi Liga");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 757, 450);
@@ -77,10 +78,10 @@ public class JornadasWindow extends JFrame implements Serializable {
         JLabel lblNewLabel_1 = new JLabel("Temporada");
         panel_3.add(lblNewLabel_1);
         
-        comboBoxTemporada = new JComboBox<String>();
+        comboBoxTemporada = new JComboBox<Temporada>();
         panel_3.add(comboBoxTemporada);
         
-        cargarTemporadas();
+        cargarTemporadasCombo();
         
         JPanel panel_4 = new JPanel();
         panel_1.add(panel_4, BorderLayout.CENTER);
@@ -92,10 +93,15 @@ public class JornadasWindow extends JFrame implements Serializable {
         JLabel lblNewLabel_2 = new JLabel("Jornada");
         panel_5.add(lblNewLabel_2);
         
-        comboBoxJornada = new JComboBox<String>();
+        comboBoxJornada = new JComboBox<Jornada>();
         panel_5.add(comboBoxJornada);
         
+     // Agregar un ActionListener para actualizar las jornadas cuando se selecciona una temporada
+        comboBoxTemporada.addActionListener(e -> cargarJornadas());
+        
+     // Agregar un ActionListener para mostrar los partidos cuando se seleccione una jornada
         comboBoxJornada.addActionListener(e -> mostrarPartidosDeJornada());
+
         
         JPanel panel_6 = new JPanel();
 		panel_4.add(panel_6, BorderLayout.CENTER);
@@ -203,43 +209,34 @@ public class JornadasWindow extends JFrame implements Serializable {
     }
 
     // Método para cargar temporadas
-    private void cargarTemporadas() {
-        // Crear una lista de temporadas si no existe
-        if (listaTemporadas == null) {
-            listaTemporadas = new ArrayList<>();
-        }
+ // Cargar las temporadas desde el archivo .ser y agregar los objetos Temporada al JComboBox
+    private void cargarTemporadasCombo() {
+        // Cargar las temporadas desde el archivo .ser
+        listaTemporadas = Temporada.cargarTemporadas(); // Método de la clase Temporada
 
-        // Verificar si ya existen temporadas cargadas
-        if (listaTemporadas.isEmpty()) {
-               	
-        	listaTemporadas = Temporada.crearDatosPredeterminados();
-            // Guardaar los datos predeterminaados
-        	Temporada.guardarTemporadas(listaTemporadas);
-            
-        }
-
-        // Limpiar el JComboBox de temporadas antes de agregar los nuevos elementos
+        // Limpiar el JComboBox antes de agregar los nuevos elementos
         comboBoxTemporada.removeAllItems();
 
-        // Agregar cada temporada al comboBox
+        // Agregar las temporadas al JComboBox (el objeto Temporada completo, no solo su nombre)
         for (Temporada temporada : listaTemporadas) {
-            comboBoxTemporada.addItem(temporada.getNombre());  // Usamos el nombre de la temporada
+            comboBoxTemporada.addItem(temporada);  // Agregar la instancia completa de Temporada
         }
     }
 
-    // Método para mostrar los partidos de la jornada seleccionada
-    private void mostrarPartidosDeJornada() {
-        // Obtener la temporada seleccionada
-        String nombreTemporada = (String) comboBoxTemporada.getSelectedItem();
-        Temporada temporada = obtenerTemporadaPorNombre(nombreTemporada);
 
-        if (temporada != null) {
+    // Método para mostrar los partidos de la jornada seleccionada
+ // Método para mostrar los partidos de la jornada seleccionada
+    private void mostrarPartidosDeJornada() {
+        // Obtener la temporada seleccionada como objeto completo
+        Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+
+        if (temporadaSeleccionada != null) {
             // Obtener la jornada seleccionada
             String nombreJornada = (String) comboBoxJornada.getSelectedItem();
-            int numeroJornada = Integer.parseInt(nombreJornada.replace("Jornada ", "")); // Extraer el número de la jornada
+            int numeroJornada = Integer.parseInt(nombreJornada.replace("Jornada ", ""));  // Extraer el número de la jornada
 
             // Buscar la jornada en la temporada
-            Jornada jornada = temporada.getListJornadas().stream()
+            Jornada jornada = temporadaSeleccionada.getListJornadas().stream()
                 .filter(j -> j.getNumero() == numeroJornada)
                 .findFirst()
                 .orElse(null);
@@ -260,6 +257,23 @@ public class JornadasWindow extends JFrame implements Serializable {
         }
     }
 
+ // Método para cargar las jornadas de la temporada seleccionada
+    private void cargarJornadas() {
+        // Limpiar el JComboBox de jornadas
+        comboBoxJornada.removeAllItems();
+
+        // Obtener la temporada seleccionada
+        Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+
+        if (temporadaSeleccionada != null) {
+            // Agregar las jornadas al JComboBox
+            for (Jornada jornada : temporadaSeleccionada.getListJornadas()) {
+                comboBoxJornada.addItem(jornada);  // Agregar el objeto Jornada completo
+            }
+        }
+    }
+
+
     // Método para obtener la temporada por nombre
     private Temporada obtenerTemporadaPorNombre(String nombre) {
         for (Temporada temporada : listaTemporadas) {
@@ -269,4 +283,9 @@ public class JornadasWindow extends JFrame implements Serializable {
         }
         return null; // Si no se encuentra la temporada
     }
+    
+    
 }
+
+
+
