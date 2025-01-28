@@ -15,7 +15,7 @@ public class EquiposWindow extends JFrame {
     private JPanel contentPane;
     private JComboBox<String> comboBoxTemporada;
     private JTextArea textAreaEquipos; // Para mostrar los equipos
-    private ArrayList<Temporada> temporadas; // Lista de temporadas cargadas
+    private ArrayList<Temporada> temporadas; // Lista de temporadas cargadass
 
     /**
      * Launch the application.

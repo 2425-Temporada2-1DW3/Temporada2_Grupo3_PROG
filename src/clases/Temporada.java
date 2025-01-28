@@ -1,5 +1,6 @@
 package clases;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,15 +8,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.List;
 
 public class Temporada implements Serializable {
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 115633587383446069L;
-	private int id_temporada; // Identificador único de la temporada
+    private static final long serialVersionUID = 115633587383446069L;
+    private int id_temporada; // Identificador único de la temporada
     private String nombre; // Nombre de la temporada
     private String estado; // Estado de finalización de la temporada
     private ArrayList<Jornada> listJornadas; // Lista de jornadas de la temporada
@@ -29,16 +26,16 @@ public class Temporada implements Serializable {
         this.listJornadas = new ArrayList<>();
         this.listEquipos = new ArrayList<>();
     }
-    
-    
- // Constructor NOMBRE Y NUMERO
+
+    // Constructor NOMBRE Y NUMERO
     public Temporada(int id_temporada, String nombre) {
         this.id_temporada = id_temporada;
         this.nombre = nombre;
         this.listJornadas = new ArrayList<>(); // Inicializamos la lista
         this.listEquipos = new ArrayList<>();  // Inicializamos la lista
     }
- // Getters y Setters
+
+    // Getters y Setters
     public int getId_temporada() {
         return id_temporada;
     }
@@ -55,11 +52,10 @@ public class Temporada implements Serializable {
         this.nombre = nombre;
     }
 
-
     public String getEstado() {
         return estado;
     }
-    
+
     public void setEstado(String estado) {
         this.estado = estado;
     }
@@ -79,20 +75,19 @@ public class Temporada implements Serializable {
     public void setListJornadas(ArrayList<Jornada> listJornadas) {
         this.listJornadas = listJornadas;
     }
-    
-    
+
     // Método para agregar una jornada a la temporada
     public void agregarJornada(Jornada jornada) {
         this.listJornadas.add(jornada);
     }
-    
+
     // Método para agregar un equipo a la temporada
     public void agregarEquipo(Equipo equipo) {
         listEquipos.add(equipo);
     }
 
-   // GUARDAR LA TEMPORADA A ARCHIVO
-    public void guardarTemporadas(ArrayList<Temporada> temporadas) {
+    // Guardar todas las temporadas en un solo archivo .ser
+    public static void guardarTemporadas(ArrayList<Temporada> temporadas) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("temporadas.ser"))) {
             oos.writeObject(temporadas);
             System.out.println("Temporadas guardadas con éxito.");
@@ -101,76 +96,104 @@ public class Temporada implements Serializable {
         }
     }
 
-    
-   // CARGAR LA TEMPORADA DESDE ARCHIVO
+    // Cargar todas las temporadas desde el archivo .ser
     @SuppressWarnings("unchecked")
-	public ArrayList<Temporada> cargarTemporadas() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("temporadas.ser"))) {
-            return (ArrayList<Temporada>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+    public ArrayList<Temporada> cargarTemporadas() {
+        ArrayList<Temporada> temporadas = new ArrayList<>();
+        File file = new File("temporadas.ser");
+        
+        if (!file.exists()) {
+        	 // Si el archivo no existe, creamos la temporada con datos predeterminados
+            System.out.println("Archivo no encontrado. Se cargarán datos predeterminados.");
+            // Crear datos predeterminados
+            temporadas = crearDatosPredeterminados();
+            // Guardar los datos predeterminados
+            guardarTemporadas(temporadas);
+        } else {
+            // Si el archivo existe, cargamos las temporadas desde el archivo
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("temporadas.ser"))) {
+                temporadas = (ArrayList<Temporada>) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-        return new ArrayList<>();
+        return temporadas;
+    }
+    
+ // Método para crear los datos predeterminados (equipos, temporada, etc.)
+    public static ArrayList<Temporada> crearDatosPredeterminados() {
+        ArrayList<Temporada> temporadas = new ArrayList<>();
+        
+        // Crear equipos
+        Equipo equipo1 = new Equipo("Real Madrid");
+        Equipo equipo2 = new Equipo("Barcelona");
+        Equipo equipo3 = new Equipo("Atletico Madrid");
+        Equipo equipo4 = new Equipo("Valencia");
+        Equipo equipo5 = new Equipo("Betis");
+        Equipo equipo6 = new Equipo("Sevilla");
+
+        // Crear la temporada y agregar equipos
+        Temporada temporada = new Temporada(1, "Temporada 202555");
+
+        // Agregar equipos a la temporada
+        temporada.agregarEquipo(equipo1);
+        temporada.agregarEquipo(equipo2);
+        temporada.agregarEquipo(equipo3);
+        temporada.agregarEquipo(equipo4);
+        temporada.agregarEquipo(equipo5);
+        temporada.agregarEquipo(equipo6);
+
+        // Crear y agregar jornadas (puedes agregar la lógica para crear jornadas)
+        List<Jornada> jornadas = new ArrayList<>();
+        for (Jornada jornada : jornadas) {
+            temporada.agregarJornada(jornada);
+        }
+
+        // Añadir la temporada a la lista
+        temporadas.add(temporada);
+        
+        return temporadas;
     }
 
 
-    
-    
- // Método para crear las jornadas de forma "Round Robin" (ida y vuelta)
+    // Método para crear las jornadas de forma "Round Robin" (ida y vuelta)
     public void crearJornadasRobin() {
-        // Verificamos que haya al menos 6 equipos
         if (listEquipos.size() < 6) {
             System.out.println("Se necesitan al menos seis equipos para crear las jornadas.");
             return;
         }
 
-        // Si hay 6 equipos, generamos 10 jornadas (ida y vuelta)
         int numEquipos = listEquipos.size();
-        int numJornadas = 10; // Siempre habrá 10 jornadas para 6 equipos
+        int numJornadas = 10;
 
-        // Creamos las jornadas de ida (3 partidos por jornada)
         ArrayList<Partido> partidosIda = new ArrayList<>();
 
-        // Generamos las jornadas de ida
         for (int i = 0; i < numJornadas / 2; i++) {
-            Jornada jornada = new Jornada(i + 1); // Cada jornada tiene un número
-
-            // Generamos los partidos de ida (solo 3 partidos por jornada)
+            Jornada jornada = new Jornada(i + 1);
             for (int j = 0; j < numEquipos / 2; j++) {
-                // Emparejamos los equipos para la jornada (primero genera los partidos de ida)
                 Equipo local = listEquipos.get((i + j) % numEquipos);
                 Equipo visitante = listEquipos.get((i + numEquipos - j - 1) % numEquipos);
 
-                // Creamos el partido de ida
                 Partido partidoIda = new Partido(local, visitante, 0, 0);
                 jornada.agregarPartido(partidoIda);
-                partidosIda.add(partidoIda); // Guardamos el partido de ida en la lista de partidosIda
+                partidosIda.add(partidoIda);
             }
-
-            // Agregamos la jornada de ida a la lista de jornadas
             listJornadas.add(jornada);
         }
 
-        // Generamos las jornadas de vuelta (a partir de la jornada 6)
         for (int i = numJornadas / 2; i < numJornadas; i++) {
-            Jornada jornada = new Jornada(i + 1); // Cada jornada tiene un número
-
-            // Generamos los partidos de vuelta (ya no generamos ida)
+            Jornada jornada = new Jornada(i + 1);
             for (Partido partidoIda : partidosIda) {
-                // Los partidos de vuelta tienen los equipos invertidos
-                Equipo local = partidoIda.getEquipoVisitante(); // El equipo visitante se convierte en local
-                Equipo visitante = partidoIda.getEquipoLocal(); // El equipo local se convierte en visitante
+                Equipo local = partidoIda.getEquipoVisitante();
+                Equipo visitante = partidoIda.getEquipoLocal();
 
-                // Creamos el partido de vuelta
                 Partido partidoVuelta = new Partido(local, visitante, 0, 0);
-                jornada.agregarPartido(partidoVuelta); // Agregamos el partido de vuelta a la jornada
+                jornada.agregarPartido(partidoVuelta);
             }
-
-            // Agregamos la jornada de vuelta a la lista de jornadas
             listJornadas.add(jornada);
         }
 
         System.out.println("Jornadas creadas exitosamente.");
     }
-    
+ 
 }

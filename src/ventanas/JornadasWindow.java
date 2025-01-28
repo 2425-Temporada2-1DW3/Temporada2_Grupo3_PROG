@@ -1,47 +1,41 @@
 package ventanas;
 
-import clases.*;
-import java.awt.EventQueue;
-import java.io.Serializable;
-import java.util.ArrayList;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JTable;
+
+import clases.Jornada;
+import clases.Partido;
+import clases.Temporada;
+
+import java.awt.*;
+import java.io.*;
+import java.util.ArrayList;
 
 public class JornadasWindow extends JFrame implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField golLocal_1;
-	private JTextField golVisitante_1;
-	private JTextField golLocal_2;
-	private JTextField golVisitante_2;
-	private JTextField golLocal_3;
-	private JTextField golVisitante_3;
-	
-	private JLabel lblLocal_1;
-	private JLabel lblLocal_2;
-	private JLabel lblLocal_3;
-	private JLabel lblVisitante_1;
-	private JLabel lblVisitante_2;
-	private JLabel lblVisitante_3;
-	
-	private JTable tablaClasificacion;
-	private JComboBox<String> comboBoxTemporada;
-	private JComboBox<String> comboBoxJornada;
-	
-	private ArrayList<Temporada> listaTemporadas; // Lista de temporadas
-    private Temporada temporadaSeleccionada; // Temporada seleccionada
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField golLocal_1;
+    private JTextField golVisitante_1;
+    private JTextField golLocal_2;
+    private JTextField golVisitante_2;
+    private JTextField golLocal_3;
+    private JTextField golVisitante_3;
+    
+    private JLabel lblLocal_1;
+    private JLabel lblLocal_2;
+    private JLabel lblLocal_3;
+    private JLabel lblVisitante_1;
+    private JLabel lblVisitante_2;
+    private JLabel lblVisitante_3;
+    
+    private JTable tablaClasificacion;
+    private JComboBox<String> comboBoxTemporada;
+    private JComboBox<String> comboBoxJornada;
+    
+    private ArrayList<Temporada> listaTemporadas; // Lista de temporadas
 
-	/**
+    /**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
@@ -57,69 +51,60 @@ public class JornadasWindow extends JFrame implements Serializable {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public JornadasWindow() {
-		setTitle("Gestion Jornadas - Txurdi Liga");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 757, 450);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    public JornadasWindow() {
+        setTitle("Gestion Jornadas - Txurdi Liga");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 757, 450);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
-		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.NORTH);
-		
-		JLabel lblNewLabel = new JLabel("Gestion Jornadas");
-		panel.add(lblNewLabel);
-		
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.WEST);
-		panel_1.setLayout(new BorderLayout(0, 0));
-		
-		JPanel panel_3 = new JPanel();
-		panel_1.add(panel_3, BorderLayout.NORTH);
-		
-		JLabel lblNewLabel_1 = new JLabel("Temporada");
-		panel_3.add(lblNewLabel_1);
-		
-		comboBoxTemporada = new JComboBox<String>();
-		panel_3.add(comboBoxTemporada);
-		
-		// Cargar temporadas desde el archivo .ser
-	    cargarTemporadas();
-	    
-	    
-	    
-	    
-		
-		JPanel panel_4 = new JPanel();
-		panel_1.add(panel_4, BorderLayout.CENTER);
-		panel_4.setLayout(new BorderLayout(0, 0));
-		
-		JPanel panel_5 = new JPanel();
-		panel_4.add(panel_5, BorderLayout.NORTH);
-		
-		JLabel lblNewLabel_2 = new JLabel("Jornada");
-		panel_5.add(lblNewLabel_2);
-		
-		comboBoxJornada = new JComboBox<String>();
-	    panel_5.add(comboBoxJornada);
-	 // Listener para cargar las jornadas al seleccionar una temporada
-	    comboBoxJornada.addActionListener(e -> mostrarPartidosDeJornada());
-	    cargarJornadas();
+        setContentPane(contentPane);
+        contentPane.setLayout(new BorderLayout(0, 0));
         
-		JPanel panel_6 = new JPanel();
+        JPanel panel = new JPanel();
+        contentPane.add(panel, BorderLayout.NORTH);
+        
+        JLabel lblNewLabel = new JLabel("Gestion Jornadas");
+        panel.add(lblNewLabel);
+        
+        JPanel panel_1 = new JPanel();
+        contentPane.add(panel_1, BorderLayout.WEST);
+        panel_1.setLayout(new BorderLayout(0, 0));
+        
+        JPanel panel_3 = new JPanel();
+        panel_1.add(panel_3, BorderLayout.NORTH);
+        
+        JLabel lblNewLabel_1 = new JLabel("Temporada");
+        panel_3.add(lblNewLabel_1);
+        
+        comboBoxTemporada = new JComboBox<String>();
+        panel_3.add(comboBoxTemporada);
+        
+        cargarTemporadas();
+        
+        JPanel panel_4 = new JPanel();
+        panel_1.add(panel_4, BorderLayout.CENTER);
+        panel_4.setLayout(new BorderLayout(0, 0));
+        
+        JPanel panel_5 = new JPanel();
+        panel_4.add(panel_5, BorderLayout.NORTH);
+        
+        JLabel lblNewLabel_2 = new JLabel("Jornada");
+        panel_5.add(lblNewLabel_2);
+        
+        comboBoxJornada = new JComboBox<String>();
+        panel_5.add(comboBoxJornada);
+        
+        comboBoxJornada.addActionListener(e -> mostrarPartidosDeJornada());
+        
+        JPanel panel_6 = new JPanel();
 		panel_4.add(panel_6, BorderLayout.CENTER);
 		panel_6.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_7 = new JPanel();
 		panel_6.add(panel_7, BorderLayout.NORTH);
 		
-		lblLocal_1 = new JLabel("New label");
+		JLabel lblLocal_1 = new JLabel("New label");
 		panel_7.add(lblLocal_1);
 		
 		golLocal_1 = new JTextField();
@@ -215,116 +200,65 @@ public class JornadasWindow extends JFrame implements Serializable {
 		
 		tablaClasificacion = new JTable();
 		panel_2.add(tablaClasificacion, BorderLayout.CENTER);
-		
-	}
-	
-	private void cargarTemporadas() {
-	    // Crear el manager para cargar las temporadas
-	    TemporadaManager temporadaManager = new TemporadaManager();
-	    
-	    // Cargar temporadas desde el archivo
-	    listaTemporadas = temporadaManager.cargarTemporadas();  // Obtienes la lista de temporadas desde el archivo
+    }
 
-	    // Limpiar comboBox de temporadas antes de agregar los nuevos elementos
-	    comboBoxTemporada.removeAllItems();
-	    
-	    // Agregar cada temporada al comboBox
-	    for (Temporada temporada : listaTemporadas) {
-	        comboBoxTemporada.addItem(temporada.getNombre());  // Usamos el nombre de la temporada
-	    }
-	}
+    // Método para cargar temporadas
+    private void cargarTemporadas() {
+        // Crear una lista de temporadas si no existe
+        if (listaTemporadas == null) {
+            listaTemporadas = new ArrayList<>();
+        }
 
-	private void cargarJornadas() {
-	    // Limpiar el JComboBox de jornadas
-	    comboBoxJornada.removeAllItems();
+        // Verificar si ya existen temporadas cargadas
+        if (listaTemporadas.isEmpty()) {
+               	
+        	listaTemporadas = Temporada.crearDatosPredeterminados();
+            // Guardaar los datos predeterminaados
+        	Temporada.guardarTemporadas(listaTemporadas);
+            
+        }
 
-	    // Obtener la temporada seleccionada
-	    String nombreTemporada = (String) comboBoxTemporada.getSelectedItem();
-	    Temporada temporada = obtenerTemporadaPorNombre(nombreTemporada);
+        // Limpiar el JComboBox de temporadas antes de agregar los nuevos elementos
+        comboBoxTemporada.removeAllItems();
 
-	    // Verificar si la temporada fue encontrada
-	    if (temporada != null) {
-	        // Verificar cuántas jornadas tiene la temporada
-	        ArrayList<Jornada> jornadas = temporada.getListJornadas();
+        // Agregar cada temporada al comboBox
+        for (Temporada temporada : listaTemporadas) {
+            comboBoxTemporada.addItem(temporada.getNombre());  // Usamos el nombre de la temporada
+        }
+    }
 
-	        // Si la temporada tiene jornadas, agregar al comboBox
-	        if (!jornadas.isEmpty()) {
-	            for (Jornada jornada : jornadas) {
-	                comboBoxJornada.addItem("Jornada " + jornada.getNumero());
-	            }
-	        } else {
-	            System.out.println("No hay jornadas para esta temporada.");
-	        }
-	    } else {
-	        System.out.println("No se encontró la temporada seleccionada.");
-	    }
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-    
-	// Método para mostrar los partidos de la jornada seleccionada
-	private void mostrarPartidosDeJornada() {
-	    // Obtener la temporada seleccionada
-	    String nombreTemporada = (String) comboBoxTemporada.getSelectedItem();
-	    Temporada temporada = obtenerTemporadaPorNombre(nombreTemporada);
+    // Método para mostrar los partidos de la jornada seleccionada
+    private void mostrarPartidosDeJornada() {
+        // Obtener la temporada seleccionada
+        String nombreTemporada = (String) comboBoxTemporada.getSelectedItem();
+        Temporada temporada = obtenerTemporadaPorNombre(nombreTemporada);
 
-	    if (temporada != null) {
-	        // Obtener la jornada seleccionada
-	        String nombreJornada = (String) comboBoxJornada.getSelectedItem();
-	        int numeroJornada = Integer.parseInt(nombreJornada.replace("Jornada ", "")); // Extraer el número de la jornada
+        if (temporada != null) {
+            // Obtener la jornada seleccionada
+            String nombreJornada = (String) comboBoxJornada.getSelectedItem();
+            int numeroJornada = Integer.parseInt(nombreJornada.replace("Jornada ", "")); // Extraer el número de la jornada
 
-	        // Buscar la jornada en la temporada
-	        Jornada jornada = temporada.getListJornadas().stream()
-	            .filter(j -> j.getNumero() == numeroJornada)
-	            .findFirst()
-	            .orElse(null);
+            // Buscar la jornada en la temporada
+            Jornada jornada = temporada.getListJornadas().stream()
+                .filter(j -> j.getNumero() == numeroJornada)
+                .findFirst()
+                .orElse(null);
 
-	        if (jornada != null) {
-	            // Obtener los partidos de la jornada
-	            ArrayList<Partido> partidos = jornada.getPartidos();
+            if (jornada != null) {
+                // Obtener los partidos de la jornada
+                ArrayList<Partido> partidos = jornada.getPartidos();
 
-	            // Mostrar los partidos en los campos de texto
-	            if (partidos.size() >= 1) {
-	                Partido partido1 = partidos.get(0);
-	                lblLocal_1.setText(partido1.getEquipoLocal().getNombre());
-	                lblVisitante_1.setText(partido1.getEquipoVisitante().getNombre());
-	                golLocal_1.setText(String.valueOf(partido1.getGolesLocal()));
-	                golVisitante_1.setText(String.valueOf(partido1.getGolesVisitante()));
-	            }
-
-	            if (partidos.size() >= 2) {
-	                Partido partido2 = partidos.get(1);
-	                lblLocal_2.setText(partido2.getEquipoLocal().getNombre());
-	                lblVisitante_2.setText(partido2.getEquipoVisitante().getNombre());
-	                golLocal_2.setText(String.valueOf(partido2.getGolesLocal()));
-	                golVisitante_2.setText(String.valueOf(partido2.getGolesVisitante()));
-	            }
-
-	            if (partidos.size() >= 3) {
-	                Partido partido3 = partidos.get(2);
-	                lblLocal_3.setText(partido3.getEquipoLocal().getNombre());
-	                lblVisitante_3.setText(partido3.getEquipoVisitante().getNombre());
-	                golLocal_3.setText(String.valueOf(partido3.getGolesLocal()));
-	                golVisitante_3.setText(String.valueOf(partido3.getGolesVisitante()));
-	            }
-	        } else {
-	            JOptionPane.showMessageDialog(this, "No se encontró la jornada seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
-	        }
-	    } else {
-	        JOptionPane.showMessageDialog(this, "No se encontró la temporada seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
-	    }
-	}
-
-
+                // Mostrar los partidos en los campos de texto
+                if (partidos.size() >= 1) {
+                    Partido partido1 = partidos.get(0);
+                    lblLocal_1.setText(partido1.getEquipoLocal().getNombre());
+                    lblVisitante_1.setText(partido1.getEquipoVisitante().getNombre());
+                    golLocal_1.setText(String.valueOf(partido1.getGolesLocal()));
+                    golVisitante_1.setText(String.valueOf(partido1.getGolesVisitante()));
+                }
+            }
+        }
+    }
 
     // Método para obtener la temporada por nombre
     private Temporada obtenerTemporadaPorNombre(String nombre) {
@@ -335,7 +269,4 @@ public class JornadasWindow extends JFrame implements Serializable {
         }
         return null; // Si no se encuentra la temporada
     }
-
-	
-	
 }
