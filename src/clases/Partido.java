@@ -2,61 +2,46 @@ package clases;
 
 import java.io.Serializable;
 
-public class Partido implements Serializable {
-
-	/**
+public class Partido implements Serializable{
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -5678010098298026099L;
-	private String equipoLocal;
-    private String equipoVisitante;
-    private int golesLocal;
-    private int golesVisitante;
-    private String estado; // Puede ser: "Pendiente", "En curso", "Finalizado"
+	private static final long serialVersionUID = 772724823964523943L;
+	private Equipo equipoLocal; // Equipo local
+    private Equipo equipoVisitante; // Equipo visitante
+    private int golesLocal; // Goles marcados por el equipo local
+    private int golesVisitante; // Goles marcados por el equipo visitante
 
- // Constructor completo
-    public Partido(String equipoLocal, String equipoVisitante, int golesLocal, int golesVisitante, String estado) {
+    // Constructor
+    public Partido(Equipo equipoLocal, Equipo equipoVisitante, int golesLocal, int golesVisitante) {
         this.equipoLocal = equipoLocal;
         this.equipoVisitante = equipoVisitante;
         this.golesLocal = golesLocal;
         this.golesVisitante = golesVisitante;
-        this.estado = estado;
     }
     
- // Constructor con goles en 0
-    public Partido(String equipoLocal, String equipoVisitante) {
-        this(equipoLocal, equipoVisitante, 0, 0, "Pendiente");
+    
+    // PRUEBA CONSTRUCTOR
+    public Partido(Equipo equipoLocal, Equipo equipoVisitante) {
+    	this.equipoLocal = equipoLocal;
+        this.equipoVisitante = equipoVisitante;
     }
     
- // Métodos toString
-    @Override
-    public String toString() {
-        return equipoLocal + " vs " + equipoVisitante + " = " + golesLocal + "-" + golesVisitante + " (" + estado + ")";
-    }
     
- // Métodos equals
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Partido partido = (Partido) obj;
-        return equipoLocal.equals(partido.equipoLocal) && equipoVisitante.equals(partido.equipoVisitante);
-    }
-    
- // Getters y setters
-    public String getEquipoLocal() {
+ // Getters y Setters
+    public Equipo getEquipoLocal() {
         return equipoLocal;
     }
 
-    public void setEquipoLocal(String equipoLocal) {
+    public void setEquipoLocal(Equipo equipoLocal) {
         this.equipoLocal = equipoLocal;
     }
 
-    public String getEquipoVisitante() {
+    public Equipo getEquipoVisitante() {
         return equipoVisitante;
     }
 
-    public void setEquipoVisitante(String equipoVisitante) {
+    public void setEquipoVisitante(Equipo equipoVisitante) {
         this.equipoVisitante = equipoVisitante;
     }
 
@@ -75,12 +60,37 @@ public class Partido implements Serializable {
     public void setGolesVisitante(int golesVisitante) {
         this.golesVisitante = golesVisitante;
     }
+    
+ // Método para obtener el resultado del partido
+    public int obtenerResultado() {
+    	
+    	//Si gana local devuelve 1
+        if (golesLocal > golesVisitante) {
+            return 1;
+          //Si gana visitante devuelve 2
+        } else if (golesVisitante > golesLocal) {
+            return 2;
+          //En caso de empate devuelve 0
+        } else {
+            return 0;
+        }
+    }
+    
+    public void actualizarPuntos() {
+        // Obtenemos el resultado del partido (1 = victoria local, 2 = victoria visitante, 0 = empate)
+        int resultado = obtenerResultado();
 
-    public String getEstado() {
-        return estado;
+        if (resultado == 1) {
+            // Si el equipo local gana, obtiene 3 puntos
+            equipoLocal.setPuntos(equipoLocal.getPuntos() + 3);
+        } else if (resultado == 2) {
+            // Si el equipo visitante gana, obtiene 3 puntos
+            equipoVisitante.setPuntos(equipoVisitante.getPuntos() + 3);
+        } else {
+            // Si hay empate, ambos equipos reciben 1 punto
+            equipoLocal.setPuntos(equipoLocal.getPuntos() + 1);
+            equipoVisitante.setPuntos(equipoVisitante.getPuntos() + 1);
+        }
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
 }

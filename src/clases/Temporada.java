@@ -1,218 +1,176 @@
 package clases;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.DefaultListModel;
 
 public class Temporada implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private int numero; // Ejemplo: 2023
-    private String estado; // Activa, Inactiva, Finalizada
-    private List<Equipo> equipos;
-    private List<Partido> partidos;
 
-    // Constructor completo
-    public Temporada(int numero, String estado) {
-        this.numero = numero;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 115633587383446069L;
+	private int id_temporada; // Identificador único de la temporada
+    private String nombre; // Nombre de la temporada
+    private String estado; // Estado de finalización de la temporada
+    private ArrayList<Jornada> listJornadas; // Lista de jornadas de la temporada
+    private ArrayList<Equipo> listEquipos; // Lista de equipos de la temporada
+
+    // Constructor
+    public Temporada(int id_temporada, String nombre, String estado) {
+        this.id_temporada = id_temporada;
+        this.nombre = nombre;
         this.estado = estado;
-        this.equipos = new ArrayList<>();
-        this.partidos = new ArrayList<>();
+        this.listJornadas = new ArrayList<>();
+        this.listEquipos = new ArrayList<>();
+    }
+    
+    
+ // Constructor NOMBRE Y NUMERO
+    public Temporada(int id_temporada, String nombre) {
+        this.id_temporada = id_temporada;
+        this.nombre = nombre;
+        this.listJornadas = new ArrayList<>(); // Inicializamos la lista
+        this.listEquipos = new ArrayList<>();  // Inicializamos la lista
+    }
+ // Getters y Setters
+    public int getId_temporada() {
+        return id_temporada;
     }
 
-    // Métodos toString
-    @Override
-    public String toString() {
-        return "Temporada " + numero + " - " + estado;
+    public void setId_temporada(int id_temporada) {
+        this.id_temporada = id_temporada;
     }
 
-    // Métodos equals
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Temporada temporada = (Temporada) obj;
-        return numero == temporada.numero;
+    public String getNombre() {
+        return nombre;
     }
 
-    // Getters y setters
-    public int getNumero() {
-        return numero;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
 
     public String getEstado() {
         return estado;
     }
-
+    
     public void setEstado(String estado) {
         this.estado = estado;
     }
 
-    public List<Equipo> getEquipos() {
-        return equipos;
+    public ArrayList<Equipo> getListEquipos() {
+        return listEquipos;
     }
 
-    // Add the setEquipos method
-    public void setEquipos(List<Equipo> equipos) {
-        this.equipos = equipos;
+    public void setListEquipos(ArrayList<Equipo> listEquipos) {
+        this.listEquipos = listEquipos;
     }
 
-    public List<Partido> getPartidos() {
-        return partidos;
+    public ArrayList<Jornada> getListJornadas() {
+        return listJornadas;
     }
 
+    public void setListJornadas(ArrayList<Jornada> listJornadas) {
+        this.listJornadas = listJornadas;
+    }
+    
+    
+    // Método para agregar una jornada a la temporada
+    public void agregarJornada(Jornada jornada) {
+        this.listJornadas.add(jornada);
+    }
+    
+    // Método para agregar un equipo a la temporada
     public void agregarEquipo(Equipo equipo) {
-        if (!equipos.contains(equipo)) {
-            equipos.add(equipo);
-            equipo.agregarTemporada(this);
-            System.out.println("[DEBUG] Equipo " + equipo.getNombre() + " agregado a la temporada " + numero);
-        }
+        listEquipos.add(equipo);
     }
 
-
-    // Método para agregar todos los equipos de la lista de equipos
-    public static void agregarEquiposATemporada(List<Equipo> equipos, Temporada temporada) {
-        for (Equipo equipo : equipos) {
-            temporada.agregarEquipo(equipo);
-        }
-    }
-
-    public void eliminarEquipo(Equipo equipo) {
-        if (equipos.contains(equipo)) {
-            equipos.remove(equipo);
-            System.out.println("[INFO] El equipo " + equipo.getNombre() + " ha sido eliminado de la temporada.");
-        } else {
-            System.out.println("[ERROR] El equipo no existe en la temporada.");
-        }
-    }
-
-    // Cargar temporadas desde archivo
-    @SuppressWarnings("unchecked")
-    public static List<Temporada> cargarTemporadasDesdeArchivo(List<Equipo> equipos, DefaultListModel<Jugador> listaJugadores) {
-        File archivo = new File("temporadas.ser");
-        List<Temporada> temporadas = new ArrayList<>();
-
-        if (!archivo.exists()) {
-            // Si el archivo no existe, crear temporadas, equipos y jugadores por defecto
-            if (listaJugadores.isEmpty()) {
-                // Crear jugadores por defecto si no existen
-                Jugador jugador1 = new Jugador("Jugador 1", "Delantero", null, 25, "España");
-                Jugador jugador2 = new Jugador("Jugador 2", "Defensa", null, 27, "México");
-                Jugador jugador3 = new Jugador("Jugador 3", "Portero", null, 30, "Argentina");
-                listaJugadores.addElement(jugador1);
-                listaJugadores.addElement(jugador2);
-                listaJugadores.addElement(jugador3);
-
-                // Guardar los jugadores en el archivo
-                Jugador.guardarJugadores(listaJugadores);
-            }
-
-            // Crear equipos por defecto si no existen
-            if (equipos.isEmpty()) {
-                // Crear equipos por defecto si no existen
-                Equipo equipo1 = new Equipo("Equipo A", "1990", "Ciudad A", new ArrayList<>(), new ArrayList<>());
-                Equipo equipo2 = new Equipo("Equipo B", "1995", "Ciudad B", new ArrayList<>(), new ArrayList<>());
-                equipos.add(equipo1);
-                equipos.add(equipo2);
-
-                // Asignar jugadores a equipos
-                equipo1.getJugadores().add(listaJugadores.getElementAt(0));
-                equipo1.getJugadores().add(listaJugadores.getElementAt(1));
-                equipo2.getJugadores().add(listaJugadores.getElementAt(2));
-
-                // Convertir la lista de equipos a DefaultListModel
-                DefaultListModel<Equipo> equiposModel = new DefaultListModel<>();
-                for (Equipo equipo : equipos) {
-                    equiposModel.addElement(equipo);
-                }
-
-                // Guardar los equipos en el archivo
-                Equipo.guardarEquipos(equiposModel);  // Llamada para guardar los equipos
-            }
-
-            // Crear temporadas por defecto
-            Temporada temporada2023 = new Temporada(2023, "Activa");
-            Temporada temporada2022 = new Temporada(2022, "Finalizada");
-            Temporada temporada2021 = new Temporada(2021, "Finalizada");
-
-            // Asignar equipos a todas las temporadas si no tienen equipos
-            agregarEquiposSiNoExistente(temporada2023, equipos);  // Asignar equipos a temporada 2023
-            agregarEquiposSiNoExistente(temporada2022, equipos);  // Asignar equipos a temporada 2022
-            agregarEquiposSiNoExistente(temporada2021, equipos);  // Asignar equipos a temporada 2021
-
-            // Guardar las temporadas por defecto
-            temporadas.add(temporada2023);
-            temporadas.add(temporada2022);
-            temporadas.add(temporada2021);
-
-            // Guardar temporadas en archivo
-            guardarTemporadasEnArchivo(temporadas);
-            
-            return temporadas;
-        }
-
-        // Si el archivo de temporadas existe, cargar las temporadas desde el archivo
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
-            temporadas = (List<Temporada>) ois.readObject();
-            // No agregamos los equipos nuevamente, solo los asignamos si es necesario
-            for (Temporada temporada : temporadas) {
-                agregarEquiposSiNoExistente(temporada, equipos); // Asignar los equipos a cada temporada solo si es necesario
-            }
-            return temporadas;
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-    }
-
-    // Nueva función para asignar equipos solo si no existen en la temporada
-    private static void agregarEquiposSiNoExistente(Temporada temporada, List<Equipo> equipos) {
-        for (Equipo equipo : equipos) {
-            if (!temporada.getEquipos().contains(equipo)) {
-                temporada.getEquipos().add(equipo); // Solo agregar si no está presente
-            }
-        }
-    }
-
-    // Guardar temporadas en archivo
-    public static void guardarTemporadasEnArchivo(List<Temporada> temporadas) {
+   // GUARDAR LA TEMPORADA A ARCHIVO
+    public void guardarTemporadas(ArrayList<Temporada> temporadas) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("temporadas.ser"))) {
             oos.writeObject(temporadas);
+            System.out.println("Temporadas guardadas con éxito.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Método para verificar si hay una temporada activa
-    public static boolean hayTemporadaActiva(List<Temporada> temporadas) {
-        for (Temporada temporada : temporadas) {
-            if ("Activa".equalsIgnoreCase(temporada.getEstado())) {
-                return true;
+    
+   // CARGAR LA TEMPORADA DESDE ARCHIVO
+    @SuppressWarnings("unchecked")
+	public ArrayList<Temporada> cargarTemporadas() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("temporadas.ser"))) {
+            return (ArrayList<Temporada>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+
+    
+    
+ // Método para crear las jornadas de forma "Round Robin" (ida y vuelta)
+    public void crearJornadasRobin() {
+        // Verificamos que haya al menos 6 equipos
+        if (listEquipos.size() < 6) {
+            System.out.println("Se necesitan al menos seis equipos para crear las jornadas.");
+            return;
+        }
+
+        // Si hay 6 equipos, generamos 10 jornadas (ida y vuelta)
+        int numEquipos = listEquipos.size();
+        int numJornadas = 10; // Siempre habrá 10 jornadas para 6 equipos
+
+        // Creamos las jornadas de ida (3 partidos por jornada)
+        ArrayList<Partido> partidosIda = new ArrayList<>();
+
+        // Generamos las jornadas de ida
+        for (int i = 0; i < numJornadas / 2; i++) {
+            Jornada jornada = new Jornada(i + 1); // Cada jornada tiene un número
+
+            // Generamos los partidos de ida (solo 3 partidos por jornada)
+            for (int j = 0; j < numEquipos / 2; j++) {
+                // Emparejamos los equipos para la jornada (primero genera los partidos de ida)
+                Equipo local = listEquipos.get((i + j) % numEquipos);
+                Equipo visitante = listEquipos.get((i + numEquipos - j - 1) % numEquipos);
+
+                // Creamos el partido de ida
+                Partido partidoIda = new Partido(local, visitante, 0, 0);
+                jornada.agregarPartido(partidoIda);
+                partidosIda.add(partidoIda); // Guardamos el partido de ida en la lista de partidosIda
             }
-        }
-        return false;
-    }
 
-    // Método para agregar una nueva temporada con validación
-    public static boolean agregarTemporada(List<Temporada> temporadas, Temporada nuevaTemporada) {
-        if ("Activa".equalsIgnoreCase(nuevaTemporada.getEstado()) && hayTemporadaActiva(temporadas)) {
-            return false; // No se puede agregar una nueva temporada activa si ya hay una activa
+            // Agregamos la jornada de ida a la lista de jornadas
+            listJornadas.add(jornada);
         }
-        temporadas.add(nuevaTemporada);
-        guardarTemporadasEnArchivo(temporadas);
-        return true;
-    }
 
-    // Método para actualizar la lista de equipos de una temporada en la interfaz
-    public static void actualizarEquiposPorTemporada(DefaultListModel<Equipo> listaEquipos, Temporada temporada) {
-        listaEquipos.clear();
-        for (Equipo equipo : temporada.getEquipos()) {
-            listaEquipos.addElement(equipo);
+        // Generamos las jornadas de vuelta (a partir de la jornada 6)
+        for (int i = numJornadas / 2; i < numJornadas; i++) {
+            Jornada jornada = new Jornada(i + 1); // Cada jornada tiene un número
+
+            // Generamos los partidos de vuelta (ya no generamos ida)
+            for (Partido partidoIda : partidosIda) {
+                // Los partidos de vuelta tienen los equipos invertidos
+                Equipo local = partidoIda.getEquipoVisitante(); // El equipo visitante se convierte en local
+                Equipo visitante = partidoIda.getEquipoLocal(); // El equipo local se convierte en visitante
+
+                // Creamos el partido de vuelta
+                Partido partidoVuelta = new Partido(local, visitante, 0, 0);
+                jornada.agregarPartido(partidoVuelta); // Agregamos el partido de vuelta a la jornada
+            }
+
+            // Agregamos la jornada de vuelta a la lista de jornadas
+            listJornadas.add(jornada);
         }
+
+        System.out.println("Jornadas creadas exitosamente.");
     }
+    
 }
