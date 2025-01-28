@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 public class Temporada implements Serializable {
     private static final long serialVersionUID = 115633587383446069L;
     private int id_temporada; // Identificador único de la temporada
@@ -85,6 +87,11 @@ public class Temporada implements Serializable {
     public void agregarEquipo(Equipo equipo) {
         listEquipos.add(equipo);
     }
+    
+ // Método para eliminar un equipo de la temporada
+    public void eliminarEquipo(Equipo equipo) {
+        listEquipos.remove(equipo);
+    }
 
     // Guardar todas las temporadas en un solo archivo .ser
     public static void guardarTemporadas(ArrayList<Temporada> temporadas) {
@@ -124,17 +131,21 @@ public class Temporada implements Serializable {
     public static ArrayList<Temporada> crearDatosPredeterminados() {
         ArrayList<Temporada> temporadas = new ArrayList<>();
         
+        ImageIcon logo = new ImageIcon("C:/Users/ik_1DW3A/Downloads/fc_barcelona.png");
         // Crear equipos
-        Equipo equipo1 = new Equipo("Real Madrid");
-        Equipo equipo2 = new Equipo("Barcelona");
-        Equipo equipo3 = new Equipo("Atletico Madrid");
-        Equipo equipo4 = new Equipo("Valencia");
-        Equipo equipo5 = new Equipo("Betis");
-        Equipo equipo6 = new Equipo("Sevilla");
+        
+        ArrayList<Jugador> jugadores = new ArrayList<>();
+        
+        Equipo equipo1 = new Equipo("Real Madrid", "1909",  "madrid", jugadores,  0, logo);
+        Equipo equipo2 = new Equipo("Barcelona", "1989",  "barcelona", jugadores,  0, logo);
+        Equipo equipo3 = new Equipo("Atletico Madrid", "1979",  "madrid", jugadores,  0, logo);
+        Equipo equipo4 = new Equipo("Valencia", "1969",  "valencia", jugadores,  0, logo);
+        Equipo equipo5 = new Equipo("Betis", "1999",  "sevilla", jugadores,  0, logo);
+        Equipo equipo6 = new Equipo("Athletic Club", "1959",  "bilbao", jugadores,  0, logo);
 
         // Crear la temporada y agregar equipos
         Temporada temporada = new Temporada(1, "Temporada 202555", "Finalizada");
-
+        Temporada temporada1 = new Temporada(1, "Temporada 2025", "Finalizada");
         // Agregar equipos a la temporada
         temporada.agregarEquipo(equipo1);
         temporada.agregarEquipo(equipo2);
@@ -142,15 +153,24 @@ public class Temporada implements Serializable {
         temporada.agregarEquipo(equipo4);
         temporada.agregarEquipo(equipo5);
         temporada.agregarEquipo(equipo6);
+        
+        temporada1.agregarEquipo(equipo1);
+        temporada1.agregarEquipo(equipo2);
+        temporada1.agregarEquipo(equipo3);
+        temporada1.agregarEquipo(equipo4);
+        temporada1.agregarEquipo(equipo5);
+        temporada1.agregarEquipo(equipo6);
 
         // Crear y agregar jornadas (puedes agregar la lógica para crear jornadas)
         List<Jornada> jornadas = new ArrayList<>();
         for (Jornada jornada : jornadas) {
             temporada.agregarJornada(jornada);
+            temporada1.agregarJornada(jornada);
         }
 
         // Añadir la temporada a la lista
         temporadas.add(temporada);
+        temporadas.add(temporada1);
         
         return temporadas;
     }
@@ -195,5 +215,6 @@ public class Temporada implements Serializable {
 
         System.out.println("Jornadas creadas exitosamente.");
     }
+	
  
 }

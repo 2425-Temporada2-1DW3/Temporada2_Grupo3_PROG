@@ -2,8 +2,7 @@ package clases;
 
 import java.io.*;
 import java.util.ArrayList;
-
-import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 
 public class Equipo implements Serializable {
 
@@ -13,22 +12,39 @@ public class Equipo implements Serializable {
     private String ciudad;
     private ArrayList<Jugador> jugadores;
     private int puntos;
+    private ImageIcon imagen;  // New field to store the team's image
 
     // Constructor completo
-    public Equipo(String nombre, String anoFundacion, String ciudad, ArrayList<Jugador> jugadores, int puntos) {
+    public Equipo(String nombre, String anoFundacion, String ciudad, ArrayList<Jugador> jugadores, int puntos, ImageIcon imagen) {
         this.nombre = nombre;
         this.anoFundacion = anoFundacion;
         this.ciudad = ciudad;
         this.jugadores = jugadores;
         this.puntos = puntos;
+        this.imagen = imagen;  // Initialize the image field
     }
+    
+    
+    // Constructor copia
+    public Equipo(Equipo otroEquipo) {
+        this.nombre = otroEquipo.nombre;
+        this.anoFundacion = otroEquipo.anoFundacion;
+        this.ciudad = otroEquipo.ciudad;
+        this.jugadores = new ArrayList<>(otroEquipo.jugadores);  // Crear una nueva lista con los mismos jugadores
+        this.puntos = otroEquipo.puntos;
+        this.imagen = otroEquipo.imagen;  // Si la imagen no es mutable, puedes copiarla directamente
+    }
+
+    
+    
 
     // Constructor solo nombre
     public Equipo(String nombre) {
         this.nombre = nombre;
     }
 
-    // Getters y Setters
+
+	// Getters y Setters
     public String getNombre() {
         return nombre;
     }
@@ -67,6 +83,22 @@ public class Equipo implements Serializable {
 
     public void setPuntos(int puntos) {
         this.puntos = puntos;
+    }
+
+    public ImageIcon getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(ImageIcon imagen) {
+        this.imagen = imagen;
+    }
+    
+    public ImageIcon getLogo() {
+        return imagen;
+    }
+
+    public void setLogo(ImageIcon imagen) {
+        this.imagen = imagen;
     }
 
     // Métodos para agregar o eliminar jugadores
