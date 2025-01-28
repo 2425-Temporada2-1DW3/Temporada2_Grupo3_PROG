@@ -133,7 +133,7 @@ public class Temporada implements Serializable {
         Equipo equipo6 = new Equipo("Sevilla");
 
         // Crear la temporada y agregar equipos
-        Temporada temporada = new Temporada(1, "Temporada 202555");
+        Temporada temporada = new Temporada(1, "Temporada 202555", "Finalizada");
 
         // Agregar equipos a la temporada
         temporada.agregarEquipo(equipo1);
