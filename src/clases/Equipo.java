@@ -101,6 +101,7 @@ public class Equipo implements Serializable {
         this.imagen = imagen;
     }
 
+    
     // Métodos para agregar o eliminar jugadores
     public void agregarJugador(Jugador jugador) {
         if (jugadores == null) {
