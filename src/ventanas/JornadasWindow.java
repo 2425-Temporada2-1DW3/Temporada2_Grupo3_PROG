@@ -184,6 +184,43 @@ public class JornadasWindow extends JFrame implements Serializable {
 		
 		JButton btnGuardar = new JButton("Guardar");
 		panel_13.add(btnGuardar);
+		btnGuardar.addActionListener(e -> {
+		    // Obtener la temporada seleccionada
+		    Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+		    if (temporadaSeleccionada != null) {
+		        // Obtener la jornada seleccionada
+		        Jornada jornadaSeleccionada = (Jornada) comboBoxJornada.getSelectedItem();
+		        if (jornadaSeleccionada != null) {
+		            ArrayList<Partido> partidos = jornadaSeleccionada.getPartidos();
+
+		            try {
+		                // Guardar los resultados ingresados y actualizar puntos
+		                if (partidos.size() >= 1) {
+		                    partidos.get(0).setGolesLocal(Integer.parseInt(golLocal_1.getText()));
+		                    partidos.get(0).setGolesVisitante(Integer.parseInt(golVisitante_1.getText()));
+		                    partidos.get(0).actualizarPuntos();
+		                }
+		                if (partidos.size() >= 2) {
+		                    partidos.get(1).setGolesLocal(Integer.parseInt(golLocal_2.getText()));
+		                    partidos.get(1).setGolesVisitante(Integer.parseInt(golVisitante_2.getText()));
+		                    partidos.get(1).actualizarPuntos();
+		                }
+		                if (partidos.size() >= 3) {
+		                    partidos.get(2).setGolesLocal(Integer.parseInt(golLocal_3.getText()));
+		                    partidos.get(2).setGolesVisitante(Integer.parseInt(golVisitante_3.getText()));
+		                    partidos.get(2).actualizarPuntos();
+		                }
+
+		                // Guardar todas las temporadas en el archivo
+		                Temporada.guardarTemporadas(listaTemporadas);
+		                JOptionPane.showMessageDialog(null, "Resultados guardados correctamente.");
+		            } catch (NumberFormatException ex) {
+		                JOptionPane.showMessageDialog(null, "Error: Asegúrate de ingresar solo números en los goles.", "Error", JOptionPane.ERROR_MESSAGE);
+		            }
+		        }
+		    }
+		});
+
 		
 		JPanel panel_16 = new JPanel();
 		panel_12.add(panel_16, BorderLayout.SOUTH);
