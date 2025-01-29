@@ -148,17 +148,15 @@ public class Temporada implements Serializable {
         temporada.agregarEquipo(equipo5);
         temporada.agregarEquipo(equipo6);
 
-        // Crear y agregar jornadas (puedes agregar la lógica para crear jornadas)
-        List<Jornada> jornadas = new ArrayList<>();
-        for (Jornada jornada : jornadas) {
-            temporada.agregarJornada(jornada);
-        }
+        //  Agregar la generación de jornadas correctamente**
+        temporada.crearJornadasRobin();
 
         // Añadir la temporada a la lista
         temporadas.add(temporada);
-        
+
         return temporadas;
     }
+
 
 
     // Método para crear las jornadas de forma "Round Robin" (ida y vuelta)
@@ -169,11 +167,11 @@ public class Temporada implements Serializable {
         }
 
         int numEquipos = listEquipos.size();
-        int numJornadas = 10;
-
+        int numJornadas = numEquipos - 1;  // Número correcto de jornadas en una liga de ida
         ArrayList<Partido> partidosIda = new ArrayList<>();
 
-        for (int i = 0; i < numJornadas / 2; i++) {
+        // 🔹 Generar las jornadas de IDA correctamente
+        for (int i = 0; i < numJornadas; i++) {
             Jornada jornada = new Jornada(i + 1);
             for (int j = 0; j < numEquipos / 2; j++) {
                 Equipo local = listEquipos.get((i + j) % numEquipos);
@@ -186,9 +184,11 @@ public class Temporada implements Serializable {
             listJornadas.add(jornada);
         }
 
-        for (int i = numJornadas / 2; i < numJornadas; i++) {
-            Jornada jornada = new Jornada(i + 1);
-            for (Partido partidoIda : partidosIda) {
+        // 🔹 Generar las jornadas de VUELTA correctamente
+        for (int i = 0; i < numJornadas; i++) {
+            Jornada jornada = new Jornada(numJornadas + i + 1);
+            for (int j = 0; j < numEquipos / 2; j++) {
+                Partido partidoIda = partidosIda.get(i * (numEquipos / 2) + j);
                 Equipo local = partidoIda.getEquipoVisitante();
                 Equipo visitante = partidoIda.getEquipoLocal();
 
@@ -200,5 +200,6 @@ public class Temporada implements Serializable {
 
         System.out.println("Jornadas creadas exitosamente.");
     }
+
  
 }
