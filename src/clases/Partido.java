@@ -12,20 +12,22 @@ public class Partido implements Serializable{
     private int golesLocal; // Goles marcados por el equipo local
     private int golesVisitante; // Goles marcados por el equipo visitante
 
-    // Constructor
+ // Constructor cuando el partido ya tiene un resultado
     public Partido(Equipo equipoLocal, Equipo equipoVisitante, int golesLocal, int golesVisitante) {
         this.equipoLocal = equipoLocal;
         this.equipoVisitante = equipoVisitante;
         this.golesLocal = golesLocal;
         this.golesVisitante = golesVisitante;
     }
-    
-    
-    // PRUEBA CONSTRUCTOR
+
+    // Constructor para un partido aún no jugado
     public Partido(Equipo equipoLocal, Equipo equipoVisitante) {
-    	this.equipoLocal = equipoLocal;
+        this.equipoLocal = equipoLocal;
         this.equipoVisitante = equipoVisitante;
+        this.golesLocal = -1; // Valor especial para indicar que el partido no se ha jugado
+        this.golesVisitante = -1;
     }
+   
     
     
  // Getters y Setters
@@ -61,36 +63,45 @@ public class Partido implements Serializable{
         this.golesVisitante = golesVisitante;
     }
     
+    public boolean estaJugado() {
+        return golesLocal >= 0 && golesVisitante >= 0;
+    }
+
+    
  // Método para obtener el resultado del partido
     public int obtenerResultado() {
-    	
-    	//Si gana local devuelve 1
-        if (golesLocal > golesVisitante) {
-            return 1;
-          //Si gana visitante devuelve 2
+        if (golesLocal == -1 || golesVisitante == -1) {
+            return -1;  // Partido no jugado
+        } else if (golesLocal > golesVisitante) {
+            return 1;  // Gana el local
         } else if (golesVisitante > golesLocal) {
-            return 2;
-          //En caso de empate devuelve 0
+            return 2;  // Gana el visitante
         } else {
-            return 0;
+            return 0;  // Empate
         }
     }
+
     
     public void actualizarPuntos() {
-        // Obtenemos el resultado del partido (1 = victoria local, 2 = victoria visitante, 0 = empate)
         int resultado = obtenerResultado();
-
+        
+        // Si el resultado es 1, gana el local
         if (resultado == 1) {
-            // Si el equipo local gana, obtiene 3 puntos
+            // Sumar 3 puntos al equipo local
             equipoLocal.setPuntos(equipoLocal.getPuntos() + 3);
-        } else if (resultado == 2) {
-            // Si el equipo visitante gana, obtiene 3 puntos
+        }
+        // Si el resultado es 2, gana el visitante
+        else if (resultado == 2) {
+            // Sumar 3 puntos al equipo visitante
             equipoVisitante.setPuntos(equipoVisitante.getPuntos() + 3);
-        } else {
-            // Si hay empate, ambos equipos reciben 1 punto
+        }
+        // Si el resultado es 0, es empate
+        else if (resultado == 0) {
+            // Sumar 1 punto a cada equipo
             equipoLocal.setPuntos(equipoLocal.getPuntos() + 1);
             equipoVisitante.setPuntos(equipoVisitante.getPuntos() + 1);
         }
     }
+
 
 }

@@ -13,14 +13,16 @@ public class Equipo implements Serializable {
     private String ciudad;
     private ArrayList<Jugador> jugadores;
     private int puntos;
+    private int partidosJugados;
 
     // Constructor completo
-    public Equipo(String nombre, String anoFundacion, String ciudad, ArrayList<Jugador> jugadores, int puntos) {
+    public Equipo(String nombre, String anoFundacion, String ciudad, ArrayList<Jugador> jugadores, int puntos, int partidosJugados) {
         this.nombre = nombre;
         this.anoFundacion = anoFundacion;
         this.ciudad = ciudad;
         this.jugadores = jugadores;
         this.puntos = puntos;
+        this.partidosJugados = partidosJugados;
     }
 
     // Constructor solo nombre
@@ -67,6 +69,14 @@ public class Equipo implements Serializable {
 
     public void setPuntos(int puntos) {
         this.puntos = puntos;
+    }
+    
+    public int getpartidosJugados() {
+        return partidosJugados;
+    }
+
+    public void setpartidosJugados(int partidosJugados) {
+        this.partidosJugados = partidosJugados;
     }
 
     // Métodos para agregar o eliminar jugadores

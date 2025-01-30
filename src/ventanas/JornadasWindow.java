@@ -3,6 +3,7 @@ package ventanas;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import clases.Equipo;
 import clases.Jornada;
 import clases.Partido;
 import clases.Temporada;
@@ -214,6 +215,7 @@ public class JornadasWindow extends JFrame implements Serializable {
 		                // Guardar todas las temporadas en el archivo
 		                Temporada.guardarTemporadas(listaTemporadas);
 		                JOptionPane.showMessageDialog(null, "Resultados guardados correctamente.");
+		                calcularClasificacion(temporadaSeleccionada);
 		            } catch (NumberFormatException ex) {
 		                JOptionPane.showMessageDialog(null, "Error: Asegúrate de ingresar solo números en los goles.", "Error", JOptionPane.ERROR_MESSAGE);
 		            }
@@ -333,6 +335,35 @@ public class JornadasWindow extends JFrame implements Serializable {
     }
 
 
+    public void calcularClasificacion(Temporada temporada) {
+        // Recorremos todas las jornadas de la temporada
+        for (Jornada jornada : temporada.getListJornadas()) {
+            // Recorremos los partidos de cada jornada
+            for (Partido partido : jornada.getPartidos()) {
+                // Verificamos si el partido ha sido jugado (tiene un resultado válido)
+                int resultado = partido.obtenerResultado();
+                if (resultado != -1) { // Si el resultado no es -1, es un partido jugado
+                    // Actualizamos los puntos según el resultado
+                    partido.actualizarPuntos();
+                }
+            }
+        }
+
+        // Ahora que hemos actualizado los puntos, ordenamos a los equipos según sus puntos
+        ArrayList<Equipo> equipos = temporada.getListEquipos();
+        equipos.sort((e1, e2) -> Integer.compare(e2.getPuntos(), e1.getPuntos())); // Ordenamos de mayor a menor puntos
+
+        // Mostramos la clasificación (por ejemplo en consola, puedes adaptarlo a tu JTable)
+        for (int i = 0; i < equipos.size(); i++) {
+            Equipo equipo = equipos.get(i);
+            System.out.println((i + 1) + ". " + equipo.getNombre() + " - Puntos: " + equipo.getPuntos());
+        }
+    }
+
+
+    
+    
+    
 
     // Método para obtener la temporada por nombre
     private Temporada obtenerTemporadaPorNombre(String nombre) {

@@ -177,7 +177,7 @@ public class Temporada implements Serializable {
                 Equipo local = listEquipos.get((i + j) % numEquipos);
                 Equipo visitante = listEquipos.get((i + numEquipos - j - 1) % numEquipos);
 
-                Partido partidoIda = new Partido(local, visitante, 0, 0);
+                Partido partidoIda = new Partido(local, visitante);
                 jornada.agregarPartido(partidoIda);
                 partidosIda.add(partidoIda);
             }
@@ -192,7 +192,7 @@ public class Temporada implements Serializable {
                 Equipo local = partidoIda.getEquipoVisitante();
                 Equipo visitante = partidoIda.getEquipoLocal();
 
-                Partido partidoVuelta = new Partido(local, visitante, 0, 0);
+                Partido partidoVuelta = new Partido(local, visitante);
                 jornada.agregarPartido(partidoVuelta);
             }
             listJornadas.add(jornada);
