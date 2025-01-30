@@ -23,6 +23,7 @@ public class Temporada implements Serializable {
     private String estado; // Estado de finalización de la temporada
     private ArrayList<Jornada> listJornadas; // Lista de jornadas de la temporada
     private ArrayList<Equipo> listEquipos; // Lista de equipos de la temporada
+    private ArrayList<Temporada> temporadas;
 
     // Constructor
     public Temporada(int id_temporada, String nombre, String estado) {
@@ -88,8 +89,26 @@ public class Temporada implements Serializable {
     }
 
     // Método para agregar un equipo a la temporada
-    public void agregarEquipo(Equipo equipo) {
-        listEquipos.add(equipo);
+    public void agregarEquipo(Equipo equipoOriginal) {
+        // Crear una copia del equipo original
+        Equipo equipoCopia = new Equipo(
+            equipoOriginal.getNombre(),
+            equipoOriginal.getAnoFundacion(),
+            equipoOriginal.getCiudad(),
+            new ArrayList<>(), // Lista vacía de jugadores (se llenará con copias)
+            equipoOriginal.getPuntos(),
+            equipoOriginal.getImagen()
+        );
+
+        // Clonar cada jugador del equipo original y agregarlo al equipo copia
+        for (Jugador jugador : equipoOriginal.getJugadores()) {
+            Jugador copiaJugador = jugador.clone(); // Clonar el jugador
+            copiaJugador.setEquipo(equipoCopia); // Asignar el equipo copia al jugador clonado
+            equipoCopia.getJugadores().add(copiaJugador);
+        }
+
+        // Agregar la copia del equipo a la temporada
+        this.listEquipos.add(equipoCopia);
     }
     
  // Método para eliminar un equipo de la temporada
@@ -131,6 +150,44 @@ public class Temporada implements Serializable {
         return temporadas;
     }
     
+    
+    public void agregarJugadorAEquipo(String nombreEquipo, Jugador jugador) {
+        boolean equipoEncontrado = false;
+
+        // Recorremos la lista de equipos para encontrar el equipo por su nombre
+        for (Equipo equipo : listEquipos) {
+            if (equipo.getNombre().equals(nombreEquipo)) {
+                equipo.agregarJugador(jugador); // Agregamos el jugador al equipo
+                break;
+            }
+        }
+
+        if (!equipoEncontrado) {
+            System.out.println("Equipo no encontrado: " + nombreEquipo); // Caso en el que el equipo no existe
+        }
+    }
+
+    
+    public void eliminarJugadorDeEquipo(String nombreEquipo, String nombreJugador) {
+        // Buscar el equipo en la lista de equipos de esta temporada
+        for (Equipo equipo : listEquipos) {
+            if (equipo.getNombre().equalsIgnoreCase(nombreEquipo)) {
+                // Buscar el jugador dentro del equipo
+                for (Jugador jugador : equipo.getJugadores()) {
+                    if (jugador.getNombre().equalsIgnoreCase(nombreJugador)) {
+                        equipo.getJugadores().remove(jugador);
+                        System.out.println("Jugador " + nombreJugador + " eliminado del equipo " + nombreEquipo + " en la temporada " + this.nombre);
+                        return; // Salimos del método una vez eliminado
+                    }
+                }
+                System.out.println("No se encontró al jugador " + nombreJugador + " en el equipo " + nombreEquipo + " en la temporada " + this.nombre);
+                return;
+            }
+        }
+        System.out.println("No se encontró el equipo " + nombreEquipo + " en la temporada " + this.nombre);
+    }
+
+
 
     public static ArrayList<Temporada> crearDatosPredeterminados() {
         ArrayList<Temporada> temporadas = new ArrayList<>();
@@ -294,22 +351,29 @@ public class Temporada implements Serializable {
         }
 
         // Crear temporadas y agregar equipos
-        Temporada temporada2025 = new Temporada(1, "Temporada 2025", "Finalizada");
-        Temporada temporada202555 = new Temporada(2, "Temporada 202555", "En Curso");
+        Temporada temporada2025 = new Temporada(1, "Temporada 2025", "En Curso");
+        Temporada temporada2024 = new Temporada(2, "Temporada 2024", "Inactiva");
+        Temporada temporada2023 = new Temporada(3, "Temporada 2023", "Finalizada");
+
 
         // Agregar equipos a las temporadas
         for (Equipo equipo : new Equipo[]{equipo1, equipo2, equipo3, equipo4, equipo5, equipo6}) {
             temporada2025.agregarEquipo(equipo);
-            temporada202555.agregarEquipo(equipo);
+            temporada2024.agregarEquipo(equipo);
+            temporada2023.agregarEquipo(equipo);
         }
 
         // Agregar temporadas a la lista
         temporadas.add(temporada2025);
-        temporadas.add(temporada202555);
+        temporadas.add(temporada2024);
+        temporadas.add(temporada2023);
 
         return temporadas;
     }
 
+    
+
+    
     // Método para verificar si la imagen del jugador existe en el sistema de archivos
     public static boolean verificarExistenciaImagen(String rutaImagen) {
         File archivo = new File(rutaImagen);
