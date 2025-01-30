@@ -145,8 +145,13 @@ public class JugadoresWindow extends JFrame {
             Temporada tempSeleccionada = temporadas.get(indiceTemporada);
             Equipo equipoSeleccionado = equiposActuales.get(indiceEquipo);
 
+            System.out.println("Temporada seleccionada: " + tempSeleccionada.getNombre());
+            System.out.println("Equipo seleccionado: " + equipoSeleccionado.getNombre());
+
             // Obtiene los jugadores del equipo seleccionado
             ArrayList<Jugador> jugadores = tempSeleccionada.obtenerJugadoresDeEquipo(equipoSeleccionado.getNombre());
+
+            System.out.println("Número de jugadores obtenidos: " + jugadores.size());
 
             // Limpia el panel antes de añadir los nuevos jugadores
             panelJugadores.removeAll();
@@ -155,10 +160,12 @@ public class JugadoresWindow extends JFrame {
             panelJugadores.setLayout(new BoxLayout(panelJugadores, BoxLayout.Y_AXIS));
 
             if (jugadores.isEmpty()) {
+                System.out.println("No hay jugadores en este equipo.");
                 JLabel lblVacio = new JLabel("No hay jugadores en este equipo");
                 panelJugadores.add(lblVacio);
             } else {
                 for (Jugador jugador : jugadores) {
+                    System.out.println("Jugador: " + jugador.getNombre() + " - Equipo: " + jugador.getEquipo());
                     JLabel lblJugador = new JLabel(jugador.getNombre());
                     panelJugadores.add(lblJugador);
                     // Espacio entre los jugadores, si es necesario
@@ -169,6 +176,8 @@ public class JugadoresWindow extends JFrame {
             // Actualizar la vista
             panelJugadores.revalidate();
             panelJugadores.repaint();
+        } else {
+            System.out.println("Índices fuera de rango.");
         }
     }
 

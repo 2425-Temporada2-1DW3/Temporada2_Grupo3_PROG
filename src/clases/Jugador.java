@@ -50,8 +50,8 @@ public class Jugador implements Serializable{
         this.posicion = posicion;
     }
 
-    public Equipo getEquipo() {
-        return equipo;
+    public String getEquipo() {
+        return equipo.getNombre(); // Devuelve el nombre del equipo, no el objeto Equipo
     }
 
     public void setEquipo(Equipo equipo) {

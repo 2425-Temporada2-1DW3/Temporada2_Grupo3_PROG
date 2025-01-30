@@ -317,13 +317,25 @@ public class Temporada implements Serializable {
     }
 
     public ArrayList<Jugador> obtenerJugadoresDeEquipo(String equipoNombre) {
+        System.out.println("Buscando jugadores para el equipo: " + equipoNombre);
+
         for (Equipo equipo : getListEquipos()) {
+            System.out.println("Equipo en lista: " + equipo.getNombre());
             if (equipo.getNombre().equals(equipoNombre)) {
+                System.out.println("Equipo encontrado. Jugadores:");
+
+                for (Jugador jugador : equipo.getJugadores()) {
+                    System.out.println(" - " + jugador.getNombre());
+                }
+
                 return equipo.getJugadores();
             }
         }
+
+        System.out.println("Equipo no encontrado en la lista.");
         return new ArrayList<>();
     }
+
 
     // Método para cambiar el nombre de la imagen, borrar el archivo anterior si existe, y guardarla con el nombre del equipo en su caprta de equipo
     private static ImageIcon cambiarNombreImagen(ImageIcon logoPredeterminado, String nombreEquipo) {
