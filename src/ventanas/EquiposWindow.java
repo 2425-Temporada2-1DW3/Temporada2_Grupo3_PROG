@@ -2,12 +2,18 @@ package ventanas;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import clases.Temporada;
 import clases.Equipo;
+import clases.Jugador;
 
 public class EquiposWindow extends JFrame {
 
@@ -16,9 +22,10 @@ public class EquiposWindow extends JFrame {
     private JComboBox<String> comboBoxTemporada;
     private JTextArea textAreaEquipos; // Para mostrar los equipos
     private ArrayList<Temporada> temporadas; // Lista de temporadas cargadas
+    private final String RUTA_IMAGENES = "C:\\xampp\\htdocs\\Temporada2_Grupo3_LM\\img\\escudos\\";
 
     /**
-     * Launch the application.
+     * Launch the applicationa
      */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -66,6 +73,9 @@ public class EquiposWindow extends JFrame {
 
         JButton btnAnadir = new JButton("Añadir");
         panel_3.add(btnAnadir);
+     // Dentro del constructor, en el panel donde están los botones Añadir, Eliminar, Detalles
+        JButton btnEditar = new JButton("Editar");
+        panel_3.add(btnEditar);
 
         JButton btnEliminar = new JButton("Eliminar");
         panel_3.add(btnEliminar);
@@ -94,7 +104,11 @@ public class EquiposWindow extends JFrame {
         panel_1.add(panel_6, BorderLayout.SOUTH);
 
         JButton btnAtras = new JButton("Atrás");
-        btnAtras.addActionListener(e -> dispose());
+        btnAtras.addActionListener(e -> {
+        	 gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
+             ventanaAdmin.setVisible(true);  // Mostrar la ventana
+             dispose();  // Cerrar la ventana
+        });
         panel_6.add(btnAtras);
 
         // Botón para guardar los cambios
@@ -106,7 +120,244 @@ public class EquiposWindow extends JFrame {
         cargarTemporadas();
 
         // Acción para añadir un equipo
+     // Acción para añadir un equipo (modificado para incluir imagen)
         btnAnadir.addActionListener(e -> {
+            int selectedIndex = comboBoxTemporada.getSelectedIndex();
+            if (selectedIndex == -1) {
+                JOptionPane.showMessageDialog(this, "Seleccione una temporada.", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            Temporada temporadaSeleccionada = temporadas.get(selectedIndex);
+            ArrayList<Equipo> equipos = temporadaSeleccionada.getListEquipos();
+
+            if (equipos.size() >= 6) {
+                JOptionPane.showMessageDialog(this, "Ya hay 6 equipos en esta temporada.", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            JPanel inputPanel = new JPanel();
+            inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+            JTextField nombreField = new JTextField(20);
+            JTextField anioFundacionField = new JTextField(20);
+            JTextField ciudadField = new JTextField(20);
+            JLabel lblPreview = new JLabel();
+            lblPreview.setPreferredSize(new Dimension(100, 100));
+            final File[] imagenSeleccionada = {null};
+            
+            JButton btnSeleccionarLogo = new JButton("Seleccionar Logo");
+            btnSeleccionarLogo.addActionListener(ev -> {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new FileNameExtensionFilter("Imágenes", "jpg", "png", "gif"));
+                int result = fileChooser.showOpenDialog(this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    imagenSeleccionada[0] = fileChooser.getSelectedFile();
+                    lblPreview.setIcon(new ImageIcon(new ImageIcon(imagenSeleccionada[0].getPath()).getImage()
+                            .getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+                }
+            });
+            
+            inputPanel.add(new JLabel("Nombre del equipo:"));
+            inputPanel.add(nombreField);
+            inputPanel.add(new JLabel("Año de fundación:"));
+            inputPanel.add(anioFundacionField);
+            inputPanel.add(new JLabel("Ciudad del equipo:"));
+            inputPanel.add(ciudadField);
+            inputPanel.add(new JLabel("Logo:"));
+            inputPanel.add(btnSeleccionarLogo);
+            inputPanel.add(lblPreview);
+            
+            int option = JOptionPane.showConfirmDialog(
+                    this, inputPanel, "Nuevo Equipo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            
+            if (option == JOptionPane.OK_OPTION) {
+                String nombre = nombreField.getText().trim();
+                String anio = anioFundacionField.getText().trim();
+                String ciudad = ciudadField.getText().trim();
+                if (nombre.isEmpty() || anio.isEmpty() || ciudad.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                // Crear una carpeta con el nombre del equipo
+                String carpetaEquipo = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/" + nombre.replaceAll("\\s+", "_");
+                File directorio = new File(carpetaEquipo);
+                if (!directorio.exists()) {
+                    if (!directorio.mkdirs()) {
+                        JOptionPane.showMessageDialog(this, "Error al crear la carpeta del equipo.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                
+                // Ruta de la imagen logo dentro de la carpeta del equipo
+                String rutaLogo = carpetaEquipo + "/" + nombre.replaceAll("\\s+", "_") + ".png";
+                
+                // Copiar la imagen seleccionada a la carpeta del equipo
+                if (imagenSeleccionada[0] != null) {
+                    try {
+                        Files.copy(imagenSeleccionada[0].toPath(), new File(rutaLogo).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(this, "Error al copiar la imagen.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                
+                // Crear el nuevo equipo
+                Equipo nuevoEquipo = new Equipo(nombre, anio, ciudad, new ArrayList<>(), 0, new ImageIcon(rutaLogo));
+                
+                // Crear jugadores y asignarlos a los equipos con posiciones específicas
+                for (Equipo equipo : new Equipo[]{nuevoEquipo}) {
+                    int jugadorNum = 1; // Inicia en 1 para cada equipo
+
+                    // Asignar 4 delanteros
+                    for (int i = 0; i < 4; i++) {
+                        String nombreJugador = "Jugador_" + jugadorNum;
+                        String rutaImagen = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/" + equipo.getNombre().toLowerCase().replaceAll("\\s+", "_") + "/Jugador_" + jugadorNum + ".png";
+                        
+                        // Verificar si existe la imagen del jugador
+                        if (verificarExistenciaImagen(rutaImagen)) {
+                            ImageIcon imagenJugador = new ImageIcon(rutaImagen);
+                            Jugador delantero = new Jugador(nombreJugador, 25 + (jugadorNum % 10), "Delantero", equipo, imagenJugador);
+                            equipo.getJugadores().add(delantero);
+                            System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
+                            System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
+                        } else {
+                            // Si no existe la imagen, coger la imagen por defecto y copiarla
+                            String rutaImagenPredeterminada = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/jugadores/Jugador_" + jugadorNum + ".png";
+                            if (verificarExistenciaImagen(rutaImagenPredeterminada)) {
+                                try {
+                                    // Copiar la imagen predeterminada al equipo
+                                    Files.copy(new File(rutaImagenPredeterminada).toPath(),
+                                               new File(rutaImagen).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                    ImageIcon imagenJugador = new ImageIcon(rutaImagen);
+                                    Jugador delantero = new Jugador(nombreJugador, 25 + (jugadorNum % 10), "Delantero", equipo, imagenJugador);
+                                    equipo.getJugadores().add(delantero);
+                                    System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
+                                    System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
+                                } catch (IOException ex) {
+                                    System.out.println("¡Error al copiar la imagen predeterminada de " + nombreJugador + "!");
+                                }
+                            } else {
+                                System.out.println("¡Advertencia! La imagen de " + nombreJugador + " no existe en la ruta: " + rutaImagenPredeterminada);
+                            }
+                        }
+                        jugadorNum++;
+                    }
+
+                    // Asignar 4 defensas
+                    for (int i = 0; i < 4; i++) {
+                        String nombreJugador = "Jugador_" + jugadorNum;
+                        String rutaImagen = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/" + equipo.getNombre().toLowerCase().replaceAll("\\s+", "_") + "/Jugador_" + jugadorNum + ".png";
+                        
+                        // Verificar si existe la imagen del jugador
+                        if (verificarExistenciaImagen(rutaImagen)) {
+                            ImageIcon imagenJugador = new ImageIcon(rutaImagen);
+                            Jugador defensa = new Jugador(nombreJugador, 25 + (jugadorNum % 10), "Defensa", equipo, imagenJugador);
+                            equipo.getJugadores().add(defensa);
+                            System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
+                            System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
+                        } else {
+                            // Si no existe la imagen, coger la imagen por defecto y copiarla
+                            String rutaImagenPredeterminada = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/jugadores/Jugador_" + jugadorNum + ".png";
+                            if (verificarExistenciaImagen(rutaImagenPredeterminada)) {
+                                try {
+                                    // Copiar la imagen predeterminada al equipo
+                                    Files.copy(new File(rutaImagenPredeterminada).toPath(),
+                                               new File(rutaImagen).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                    ImageIcon imagenJugador = new ImageIcon(rutaImagen);
+                                    Jugador defensa = new Jugador(nombreJugador, 25 + (jugadorNum % 10), "Defensa", equipo, imagenJugador);
+                                    equipo.getJugadores().add(defensa);
+                                    System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
+                                    System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
+                                } catch (IOException ex) {
+                                    System.out.println("¡Error al copiar la imagen predeterminada de " + nombreJugador + "!");
+                                }
+                            } else {
+                                System.out.println("¡Advertencia! La imagen de " + nombreJugador + " no existe en la ruta: " + rutaImagenPredeterminada);
+                            }
+                        }
+                        jugadorNum++;
+                    }
+
+                    // Asignar 4 mediocampistas
+                    for (int i = 0; i < 4; i++) {
+                        String nombreJugador = "Jugador_" + jugadorNum;
+                        String rutaImagen = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/" + equipo.getNombre().toLowerCase().replaceAll("\\s+", "_") + "/Jugador_" + jugadorNum + ".png";
+                        
+                        // Verificar si existe la imagen del jugador
+                        if (verificarExistenciaImagen(rutaImagen)) {
+                            ImageIcon imagenJugador = new ImageIcon(rutaImagen);
+                            Jugador mediocampista = new Jugador(nombreJugador, 25 + (jugadorNum % 10), "Mediocampista", equipo, imagenJugador);
+                            equipo.getJugadores().add(mediocampista);
+                            System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
+                            System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
+                        } else {
+                            // Si no existe la imagen, coger la imagen por defecto y copiarla
+                            String rutaImagenPredeterminada = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/jugadores/Jugador_" + jugadorNum + ".png";
+                            if (verificarExistenciaImagen(rutaImagenPredeterminada)) {
+                                try {
+                                    // Copiar la imagen predeterminada al equipo
+                                    Files.copy(new File(rutaImagenPredeterminada).toPath(),
+                                               new File(rutaImagen).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                    ImageIcon imagenJugador = new ImageIcon(rutaImagen);
+                                    Jugador mediocampista = new Jugador(nombreJugador, 25 + (jugadorNum % 10), "Mediocampista", equipo, imagenJugador);
+                                    equipo.getJugadores().add(mediocampista);
+                                    System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
+                                    System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
+                                } catch (IOException ex) {
+                                    System.out.println("¡Error al copiar la imagen predeterminada de " + nombreJugador + "!");
+                                }
+                            } else {
+                                System.out.println("¡Advertencia! La imagen de " + nombreJugador + " no existe en la ruta: " + rutaImagenPredeterminada);
+                            }
+                        }
+                        jugadorNum++;
+                    }
+
+                    // Asignar 3 porteros
+                    for (int i = 0; i < 3; i++) {
+                        String nombreJugador = "Jugador_" + jugadorNum;
+                        String rutaImagen = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/" + equipo.getNombre().toLowerCase().replaceAll("\\s+", "_") + "/Jugador_" + jugadorNum + ".png";
+                        
+                        // Verificar si existe la imagen del jugador
+                        if (verificarExistenciaImagen(rutaImagen)) {
+                            ImageIcon imagenJugador = new ImageIcon(rutaImagen);
+                            Jugador portero = new Jugador(nombreJugador, 25 + (jugadorNum % 10), "Portero", equipo, imagenJugador);
+                            equipo.getJugadores().add(portero);
+                            System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
+                            System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
+                        } else {
+                            // Si no existe la imagen, coger la imagen por defecto y copiarla
+                            String rutaImagenPredeterminada = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/jugadores/Jugador_" + jugadorNum + ".png";
+                            if (verificarExistenciaImagen(rutaImagenPredeterminada)) {
+                                try {
+                                    // Copiar la imagen predeterminada al equipo
+                                    Files.copy(new File(rutaImagenPredeterminada).toPath(),
+                                               new File(rutaImagen).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                    ImageIcon imagenJugador = new ImageIcon(rutaImagen);
+                                    Jugador portero = new Jugador(nombreJugador, 25 + (jugadorNum % 10), "Portero", equipo, imagenJugador);
+                                    equipo.getJugadores().add(portero);
+                                    System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
+                                    System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
+                                } catch (IOException ex) {
+                                    System.out.println("¡Error al copiar la imagen predeterminada de " + nombreJugador + "!");
+                                }
+                            } else {
+                                System.out.println("¡Advertencia! La imagen de " + nombreJugador + " no existe en la ruta: " + rutaImagenPredeterminada);
+                            }
+                        }
+                        jugadorNum++;
+                    }
+                }
+                temporadaSeleccionada.agregarEquipo(nuevoEquipo);
+                mostrarEquipos();
+                JOptionPane.showMessageDialog(this, "Equipo añadido exitosamente!");
+            }
+        });
+
+
+
+        
+        btnEditar.addActionListener(e -> {
             int selectedIndex = comboBoxTemporada.getSelectedIndex();
             if (selectedIndex == -1) {
                 JOptionPane.showMessageDialog(this, "Seleccione una temporada.", "Error", JOptionPane.WARNING_MESSAGE);
@@ -116,52 +367,97 @@ public class EquiposWindow extends JFrame {
             Temporada temporadaSeleccionada = temporadas.get(selectedIndex);
             ArrayList<Equipo> equipos = temporadaSeleccionada.getListEquipos();
 
-            if (equipos.size() >= 6) {
-                JOptionPane.showMessageDialog(this, "Ya hay 6 equipos en esta temporada.", "Error", JOptionPane.WARNING_MESSAGE);
+            if (equipos.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay equipos en esta temporada.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Crear el panel para ingresar los datos del equipo
-            JPanel inputPanel = new JPanel();  // Cambié 'panel' por 'inputPanel' para evitar conflicto de nombre
-            inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS)); // Configurar el layout para que los campos se acomoden verticalmente
+            String[] nombresEquipos = equipos.stream().map(Equipo::getNombre).toArray(String[]::new);
+            String equipoSeleccionado = (String) JOptionPane.showInputDialog(
+                this,
+                "Seleccione un equipo para editar:",
+                "Editar Equipo",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                nombresEquipos,
+                nombresEquipos[0]
+            );
 
-            JTextField nombreField = new JTextField(20);
-            JTextField anioFundacionField = new JTextField(20);
-            JTextField ciudadField = new JTextField(20);
+            if (equipoSeleccionado != null) {
+                Equipo equipoAEditar = equipos.stream()
+                    .filter(equipo -> equipo.getNombre().equals(equipoSeleccionado))
+                    .findFirst()
+                    .orElse(null);
 
-            inputPanel.add(new JLabel("Nombre del equipo:"));
-            inputPanel.add(nombreField);
-            inputPanel.add(new JLabel("Año de fundación:"));
-            inputPanel.add(anioFundacionField);
-            inputPanel.add(new JLabel("Ciudad del equipo:"));
-            inputPanel.add(ciudadField);
+                if (equipoAEditar != null) {
+                    JPanel editPanel = new JPanel();
+                    editPanel.setLayout(new BoxLayout(editPanel, BoxLayout.Y_AXIS));
 
-            // Mostrar el panel en un diálogo
-            int option = JOptionPane.showConfirmDialog(this, inputPanel, "Ingrese los datos del equipo", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    JTextField anioField = new JTextField(equipoAEditar.getAnoFundacion());
+                    JTextField ciudadField = new JTextField(equipoAEditar.getCiudad());
+                    JLabel lblLogo = new JLabel();
+                    lblLogo.setIcon(new ImageIcon(equipoAEditar.getLogo().getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 
-            // Verificar si el usuario presionó "OK"
-            if (option == JOptionPane.OK_OPTION) {
-                String nuevoEquipoNombre = nombreField.getText().trim();
-                String anioFundacion = anioFundacionField.getText().trim();
-                String ciudad = ciudadField.getText().trim();
+                    JButton btnCambiarLogo = new JButton("Cambiar Logo");
+                    btnCambiarLogo.addActionListener(ev -> {
+                        JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setFileFilter(new FileNameExtensionFilter("Imágenes", "jpg", "png", "gif"));
+                        int result = fileChooser.showOpenDialog(this);
+                        if (result == JFileChooser.APPROVE_OPTION) {
+                            File archivoSeleccionado = fileChooser.getSelectedFile();
+                            // Eliminar la imagen anterior si existe
+                            File archivoAnterior = new File(RUTA_IMAGENES + equipoAEditar.getNombre().replaceAll("\\s+", "_") + ".png");
+                            if (archivoAnterior.exists()) {
+                                archivoAnterior.delete(); // Eliminar la imagen anterior
+                            }
 
-                // Validación de los campos
-                if (nuevoEquipoNombre.isEmpty() || anioFundacion.isEmpty() || ciudad.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.WARNING_MESSAGE);
-                    return;
+                            // Cambiar el nombre del archivo al nombre del equipo
+                            String rutaLogo = RUTA_IMAGENES + equipoAEditar.getNombre().replaceAll("\\s+", "_") + ".png";
+                            ImageIcon nuevoLogo = new ImageIcon(archivoSeleccionado.getPath());
+                            lblLogo.setIcon(new ImageIcon(nuevoLogo.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+                            equipoAEditar.setLogo(nuevoLogo); // Actualizamos el logo en el objeto
+
+                            try {
+                                // Guardamos la nueva imagen con el nombre del equipo
+                                Files.copy(archivoSeleccionado.toPath(), new File(rutaLogo).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            } catch (IOException ex) {
+                                JOptionPane.showMessageDialog(this, "Error al copiar la imagen.", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    });
+
+                    editPanel.add(new JLabel("Año Fundación:"));
+                    editPanel.add(anioField);
+                    editPanel.add(new JLabel("Ciudad:"));
+                    editPanel.add(ciudadField);
+                    editPanel.add(new JLabel("Logo:"));
+                    editPanel.add(lblLogo);
+                    editPanel.add(btnCambiarLogo);
+
+                    int option = JOptionPane.showConfirmDialog(
+                        this, 
+                        editPanel, 
+                        "Editar Equipo", 
+                        JOptionPane.OK_CANCEL_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE
+                    );
+
+                    if (option == JOptionPane.OK_OPTION) {
+                        if (anioField.getText().trim().isEmpty() || ciudadField.getText().trim().isEmpty()) {
+                            JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.", "Error", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+
+                        equipoAEditar.setAnoFundacion(anioField.getText().trim());
+                        equipoAEditar.setCiudad(ciudadField.getText().trim());
+                        mostrarEquipos();
+                        JOptionPane.showMessageDialog(this, "Equipo actualizado correctamente.");
+                    }
                 }
-                
-                ImageIcon logo = new ImageIcon("C:/Users/ik_1DW3A/Downloads/fc_barcelona.png");
-
-                // Crear el nuevo equipo con los datos proporcionados
-                Equipo nuevoEquipo = new Equipo(nuevoEquipoNombre, anioFundacion, ciudad, new ArrayList<>(), 0, logo);
-                temporadaSeleccionada.agregarEquipo(nuevoEquipo); // Agrega un solo equipo
-                mostrarEquipos();
-                JOptionPane.showMessageDialog(this, "Equipo añadido exitosamente.");
             }
         });
-
         // Acción para eliminar un equipo
+     // Acción para eliminar un equipo
         btnEliminar.addActionListener(e -> {
             int selectedIndex = comboBoxTemporada.getSelectedIndex();
             if (selectedIndex == -1) {
@@ -197,12 +493,20 @@ public class EquiposWindow extends JFrame {
                     .orElse(null);
 
                 if (equipoEncontrado != null) {
-                    temporadaSeleccionada.eliminarEquipo(equipoEncontrado); // Llamar al método de eliminación
+                    // Eliminar la carpeta del equipo
+                    eliminarCarpetaEquipo(equipoEncontrado);
+
+                    // Eliminar el equipo de la temporada
+                    temporadaSeleccionada.eliminarEquipo(equipoEncontrado);
                     mostrarEquipos();
                     JOptionPane.showMessageDialog(this, "Equipo eliminado exitosamente.");
                 }
             }
+        
         });
+
+
+
 
         // Acción para mostrar los detalles de un equipo
         btnDetalles.addActionListener(e -> {
@@ -263,6 +567,30 @@ public class EquiposWindow extends JFrame {
         });
     }
 
+    
+    
+ // Método para eliminar la carpeta del equipo (y su contenido)
+    private void eliminarCarpetaEquipo(Equipo equipo) {
+        String carpetaEquipo = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/" + equipo.getNombre().replaceAll("\\s+", "_");
+
+        File directorio = new File(carpetaEquipo);
+        if (directorio.exists() && directorio.isDirectory()) {
+            try {
+                // Eliminar todos los archivos dentro de la carpeta
+                File[] archivos = directorio.listFiles();
+                if (archivos != null) {
+                    for (File archivo : archivos) {
+                        archivo.delete(); // Eliminar archivo
+                    }
+                }
+                
+                // Eliminar la carpeta vacía
+                directorio.delete();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar la carpeta del equipo.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
     /**
      * Cargar las temporadas desde el archivo y rellenar el comboBox.
      */
@@ -296,6 +624,12 @@ public class EquiposWindow extends JFrame {
         for (Equipo equipo : equipos) {
             textAreaEquipos.append(equipo.getNombre() + "\n");
         }
+    }
+    
+    // Método para verificar si la imagen del jugador existe en el sistema de archivos
+    public static boolean verificarExistenciaImagen(String rutaImagen) {
+        File archivo = new File(rutaImagen);
+        return archivo.exists() && archivo.isFile();
     }
 
     /**
