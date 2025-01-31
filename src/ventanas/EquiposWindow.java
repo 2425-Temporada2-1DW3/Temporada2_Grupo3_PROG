@@ -752,9 +752,10 @@ public class EquiposWindow extends JFrame  implements WindowListener{
 		    return;
 		    }
 
-		    }
+		    }else {
 		    // salgo de la aplicación
 		    //System.exit(0);
+		    }
 		    }
 
 	@Override
