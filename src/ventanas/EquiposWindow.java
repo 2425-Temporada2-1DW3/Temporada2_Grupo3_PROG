@@ -754,7 +754,7 @@ public class EquiposWindow extends JFrame  implements WindowListener{
 
 		    }else {
 		    // salgo de la aplicación
-		    //System.exit(0);
+		    System.exit(0);
 		    }
 		    }
 
