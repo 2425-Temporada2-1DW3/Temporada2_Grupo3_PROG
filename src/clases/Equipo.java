@@ -92,4 +92,16 @@ public class Equipo implements Serializable {
             jugadores.remove(jugador);
         }
     }
+    
+    public void sumarPuntos(int cantidad) {
+        this.puntos += cantidad;
+    }
+
+    public void restarPuntos(int cantidad) {
+        this.puntos -= cantidad;
+        if (this.puntos < 0) {
+            this.puntos = 0; // Evita que los puntos sean negativos
+        }
+    }
+
 }

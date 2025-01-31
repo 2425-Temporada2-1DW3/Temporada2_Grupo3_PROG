@@ -64,44 +64,61 @@ public class Partido implements Serializable{
     }
     
     public boolean estaJugado() {
-        return golesLocal >= 0 && golesVisitante >= 0;
+        return golesLocal != -1 && golesVisitante != -1; // Comprobamos que ambos goles sean válidos
     }
+
 
     
  // Método para obtener el resultado del partido
     public int obtenerResultado() {
-        if (golesLocal == -1 || golesVisitante == -1) {
-            return -1;  // Partido no jugado
+        if (!estaJugado()) { // Si el partido no ha sido jugado, no tiene resultado
+            return -1; 
         } else if (golesLocal > golesVisitante) {
-            return 1;  // Gana el local
+            return 1;  // Gana el equipo local
         } else if (golesVisitante > golesLocal) {
-            return 2;  // Gana el visitante
+            return 2;  // Gana el equipo visitante
         } else {
             return 0;  // Empate
         }
     }
 
+
     
     public void actualizarPuntos() {
-        int resultado = obtenerResultado();
-        
-        // Si el resultado es 1, gana el local
-        if (resultado == 1) {
-            // Sumar 3 puntos al equipo local
-            equipoLocal.setPuntos(equipoLocal.getPuntos() + 3);
+        // Si el partido no ha sido jugado, no hacemos nada
+        if (golesLocal == -1 || golesVisitante == -1) {
+            return;
         }
-        // Si el resultado es 2, gana el visitante
-        else if (resultado == 2) {
-            // Sumar 3 puntos al equipo visitante
-            equipoVisitante.setPuntos(equipoVisitante.getPuntos() + 3);
+
+        // Si el local gana
+        if (golesLocal > golesVisitante) {
+            equipoLocal.setPuntos(equipoLocal.getPuntos()); // Gana el equipo local
+            System.out.println(equipoLocal.getNombre());
         }
-        // Si el resultado es 0, es empate
-        else if (resultado == 0) {
-            // Sumar 1 punto a cada equipo
-            equipoLocal.setPuntos(equipoLocal.getPuntos() + 1);
-            equipoVisitante.setPuntos(equipoVisitante.getPuntos() + 1);
+        // Si el visitante gana
+        else if (golesVisitante > golesLocal) {
+            equipoVisitante.setPuntos(equipoVisitante.getPuntos() ); // Gana el equipo visitante
+            System.out.println(equipoVisitante.getNombre());
+        }
+        // Si es empate
+        else {
+            equipoLocal.setPuntos(equipoLocal.getPuntos() + 1); // Empate, sumamos 1 punto al local
+            equipoVisitante.setPuntos(equipoVisitante.getPuntos() + 1); // Empate, sumamos 1 punto al visitante
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
