@@ -2,6 +2,7 @@ package ventanas;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import clases.Equipo;
 import clases.Jornada;
@@ -29,6 +30,9 @@ public class JornadasWindow extends JFrame implements Serializable {
     private JLabel lblVisitante_1;
     private JLabel lblVisitante_2;
     private JLabel lblVisitante_3;
+    
+    private JButton btnGuardar;
+    private DefaultTableModel modelClasificacion;
     
     private JTable tablaClasificacion;
     private JComboBox<Temporada> comboBoxTemporada;
@@ -101,8 +105,10 @@ public class JornadasWindow extends JFrame implements Serializable {
         comboBoxTemporada.addActionListener(e -> cargarJornadas());
         
      // Agregar un ActionListener para mostrar los partidos cuando se seleccione una jornada
-        comboBoxJornada.addActionListener(e -> mostrarPartidosDeJornada());
-
+        comboBoxJornada.addActionListener(e -> {
+            mostrarPartidosDeJornada();
+            verificarJornadaJugados();  // Llamada al método verificarJornadaJugados
+        });
         
         JPanel panel_6 = new JPanel();
 		panel_4.add(panel_6, BorderLayout.CENTER);
@@ -183,7 +189,7 @@ public class JornadasWindow extends JFrame implements Serializable {
 		JPanel panel_13 = new JPanel();
 		panel_12.add(panel_13, BorderLayout.NORTH);
 		
-		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar = new JButton("Guardar");
 		panel_13.add(btnGuardar);
 
 		btnGuardar.addActionListener(e -> {
@@ -191,30 +197,45 @@ public class JornadasWindow extends JFrame implements Serializable {
 		    if (temporadaSeleccionada != null) {
 		        Jornada jornadaSeleccionada = (Jornada) comboBoxJornada.getSelectedItem();
 		        if (jornadaSeleccionada != null) {
-		            int respuesta = JOptionPane.showConfirmDialog(null, 
+		            int respuesta = JOptionPane.showConfirmDialog(null,
 		                    "¿Estás seguro de que deseas guardar los resultados? Una vez guardados, no podrás modificar los datos de esta jornada.",
-		                    "Confirmar Guardado", 
+		                    "Confirmar Guardado",
 		                    JOptionPane.YES_NO_OPTION);
 
 		            if (respuesta == JOptionPane.YES_OPTION) {
 		                ArrayList<Partido> partidos = jornadaSeleccionada.getPartidos();
-		                
+		                boolean todosJugados = true;
+
+		                // Verificar si todos los partidos tienen goles ingresados
+		                if (partidos.size() >= 1 && (golLocal_1.getText().equals("-1") || golVisitante_1.getText().equals("-1"))) {
+		                    todosJugados = false;
+		                }
+		                if (partidos.size() >= 2 && (golLocal_2.getText().equals("-1") || golVisitante_2.getText().equals("-1"))) {
+		                    todosJugados = false;
+		                }
+		                if (partidos.size() >= 3 && (golLocal_3.getText().equals("-1") || golVisitante_3.getText().equals("-1"))) {
+		                    todosJugados = false;
+		                }
+
+		                // Si hay partidos no jugados, mostrar un mensaje y evitar guardar
+		                if (!todosJugados) {
+		                    JOptionPane.showMessageDialog(null, "Error: Todos los partidos deben estar jugados antes de guardar los resultados.", "Error", JOptionPane.ERROR_MESSAGE);
+		                    return; // No continuar con el proceso de guardado
+		                }
+
 		                try {
 		                    // Guardar los resultados ingresados y actualizar puntos
 		                    if (partidos.size() >= 1) {
 		                        partidos.get(0).setGolesLocal(Integer.parseInt(golLocal_1.getText()));
 		                        partidos.get(0).setGolesVisitante(Integer.parseInt(golVisitante_1.getText()));
-		                        //partidos.get(0).actualizarPuntos();  // Actualiza los puntos de los equipos
 		                    }
 		                    if (partidos.size() >= 2) {
 		                        partidos.get(1).setGolesLocal(Integer.parseInt(golLocal_2.getText()));
 		                        partidos.get(1).setGolesVisitante(Integer.parseInt(golVisitante_2.getText()));
-		                        //partidos.get(1).actualizarPuntos();
 		                    }
 		                    if (partidos.size() >= 3) {
 		                        partidos.get(2).setGolesLocal(Integer.parseInt(golLocal_3.getText()));
 		                        partidos.get(2).setGolesVisitante(Integer.parseInt(golVisitante_3.getText()));
-		                        //partidos.get(2).actualizarPuntos();
 		                    }
 
 		                    // Guardar las temporadas
@@ -224,13 +245,14 @@ public class JornadasWindow extends JFrame implements Serializable {
 		                    // Recalcular clasificación
 		                    calcularClasificacion(temporadaSeleccionada);  // Recalcular la clasificación después de guardar los resultados
 
-		                    // Deshabilitar la edición de los campos de goles para evitar cambios posteriores
+		                    // Deshabilitar la edición de los campos de goles y el botón de guardar para evitar cambios posteriores
 		                    golLocal_1.setEditable(false);
 		                    golVisitante_1.setEditable(false);
 		                    golLocal_2.setEditable(false);
 		                    golVisitante_2.setEditable(false);
 		                    golLocal_3.setEditable(false);
 		                    golVisitante_3.setEditable(false);
+		                    btnGuardar.setEnabled(false); // Deshabilitar el botón guardar
 		                } catch (NumberFormatException ex) {
 		                    JOptionPane.showMessageDialog(null, "Error: Asegúrate de ingresar solo números en los goles.", "Error", JOptionPane.ERROR_MESSAGE);
 		                }
@@ -240,6 +262,13 @@ public class JornadasWindow extends JFrame implements Serializable {
 		        }
 		    }
 		});
+
+
+
+
+
+
+
 
 
 
@@ -373,17 +402,11 @@ public class JornadasWindow extends JFrame implements Serializable {
         ArrayList<Equipo> equipos = temporada.getListEquipos();
         equipos.sort((e1, e2) -> Integer.compare(e2.getPuntos(), e1.getPuntos())); // Ordenamos de mayor a menor puntos
 
-        // Mostrar la clasificación en la consola
-        System.out.println("Clasificación actualizada:");
-        for (int i = 0; i < equipos.size(); i++) {
-            Equipo equipo = equipos.get(i);
-            System.out.println((i + 1) + ". " + equipo.getNombre() + " - Puntos: " + equipo.getPuntos());
-        }
-
         // Actualizar la tabla de clasificación
         //actualizarTablaClasificacion(equipos); // Llamamos a este método para actualizar la tabla en la interfaz
     }
 
+
     
 
 
@@ -392,38 +415,87 @@ public class JornadasWindow extends JFrame implements Serializable {
 
 
 
- // Bloquear los JTextFields cuando se inicia la aplicación
-    private void bloquearCampos() {
-        golLocal_1.setEditable(false);
-        golVisitante_1.setEditable(false);
-        golLocal_2.setEditable(false);
-        golVisitante_2.setEditable(false);
-        golLocal_3.setEditable(false);
-        golVisitante_3.setEditable(false);
-    }
 
-    // Función que desbloquea los campos
-    private void desbloquearCampos() {
-        golLocal_1.setEditable(true);
-        golVisitante_1.setEditable(true);
-        golLocal_2.setEditable(true);
-        golVisitante_2.setEditable(true);
-        golLocal_3.setEditable(true);
-        golVisitante_3.setEditable(true);
-    }
     
-    
-    
+    private void verificarJornadaJugados() {
+        Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+        if (temporadaSeleccionada != null) {
+            Jornada jornadaSeleccionada = (Jornada) comboBoxJornada.getSelectedItem();
+            if (jornadaSeleccionada != null) {
+                ArrayList<Partido> partidos = jornadaSeleccionada.getPartidos();
+                boolean todosJugados = true;
 
-    // Método para obtener la temporada por nombre
-    private Temporada obtenerTemporadaPorNombre(String nombre) {
-        for (Temporada temporada : listaTemporadas) {
-            if (temporada.getNombre().equals(nombre)) {
-                return temporada;
+                // Verificar si todos los partidos están jugados, considerando los JTextField
+                for (int i = 0; i < partidos.size(); i++) {
+                    Partido partido = partidos.get(i);
+
+                    // Verifica si los goles en los JTextField no son -1
+                    int golesLocal = getGolLocalDesdeJTextField(i);  // Método para obtener el valor del JTextField
+                    int golesVisitante = getGolVisitanteDesdeJTextField(i);  // Método para obtener el valor del JTextField
+
+                    // Si cualquier gol es -1, la jornada no está completa
+                    if (golesLocal == -1 || golesVisitante == -1) {
+                        todosJugados = false;
+                        break;  // Si encontramos un partido no jugado, salimos del bucle
+                    }
+                }
+
+                // Si todos los partidos están jugados (sin goles -1), deshabilitar los campos y el botón de guardar
+                if (todosJugados) {
+                    golLocal_1.setEditable(false);
+                    golVisitante_1.setEditable(false);
+                    golLocal_2.setEditable(false);
+                    golVisitante_2.setEditable(false);
+                    golLocal_3.setEditable(false);
+                    golVisitante_3.setEditable(false);
+                    btnGuardar.setEnabled(false); // Deshabilitar el botón guardar
+                } else {
+                    // Si no todos los partidos están jugados, asegurarse de que los campos estén habilitados
+                    golLocal_1.setEditable(true);
+                    golVisitante_1.setEditable(true);
+                    golLocal_2.setEditable(true);
+                    golVisitante_2.setEditable(true);
+                    golLocal_3.setEditable(true);
+                    golVisitante_3.setEditable(true);
+                    btnGuardar.setEnabled(true); // Habilitar el botón guardar
+                }
             }
         }
-        return null; // Si no se encuentra la temporada
     }
+
+
+    // Métodos para obtener los valores de goles de los JTextField
+    private int getGolLocalDesdeJTextField(int index) {
+        switch (index) {
+            case 0:
+                return Integer.parseInt(golLocal_1.getText());
+            case 1:
+                return Integer.parseInt(golLocal_2.getText());
+            case 2:
+                return Integer.parseInt(golLocal_3.getText());
+            default:
+                return -1;
+        }
+    }
+
+    private int getGolVisitanteDesdeJTextField(int index) {
+        switch (index) {
+            case 0:
+                return Integer.parseInt(golVisitante_1.getText());
+            case 1:
+                return Integer.parseInt(golVisitante_2.getText());
+            case 2:
+                return Integer.parseInt(golVisitante_3.getText());
+            default:
+                return -1;
+        }
+    }
+
+
+    
+
+    
+
     
     
 }
