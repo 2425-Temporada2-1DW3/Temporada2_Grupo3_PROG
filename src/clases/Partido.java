@@ -92,12 +92,12 @@ public class Partido implements Serializable{
 
         // Si el local gana
         if (golesLocal > golesVisitante) {
-            equipoLocal.setPuntos(equipoLocal.getPuntos()); // Gana el equipo local
+            equipoLocal.setPuntos(equipoLocal.getPuntos()+3); // Gana el equipo local
             System.out.println(equipoLocal.getNombre());
         }
         // Si el visitante gana
         else if (golesVisitante > golesLocal) {
-            equipoVisitante.setPuntos(equipoVisitante.getPuntos() ); // Gana el equipo visitante
+            equipoVisitante.setPuntos(equipoVisitante.getPuntos()+3 ); // Gana el equipo visitante
             System.out.println(equipoVisitante.getNombre());
         }
         // Si es empate

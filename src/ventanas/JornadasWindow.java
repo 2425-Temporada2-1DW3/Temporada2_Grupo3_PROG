@@ -204,17 +204,17 @@ public class JornadasWindow extends JFrame implements Serializable {
 		                    if (partidos.size() >= 1) {
 		                        partidos.get(0).setGolesLocal(Integer.parseInt(golLocal_1.getText()));
 		                        partidos.get(0).setGolesVisitante(Integer.parseInt(golVisitante_1.getText()));
-		                        partidos.get(0).actualizarPuntos();  // Actualiza los puntos de los equipos
+		                        //partidos.get(0).actualizarPuntos();  // Actualiza los puntos de los equipos
 		                    }
 		                    if (partidos.size() >= 2) {
 		                        partidos.get(1).setGolesLocal(Integer.parseInt(golLocal_2.getText()));
 		                        partidos.get(1).setGolesVisitante(Integer.parseInt(golVisitante_2.getText()));
-		                        partidos.get(1).actualizarPuntos();
+		                        //partidos.get(1).actualizarPuntos();
 		                    }
 		                    if (partidos.size() >= 3) {
 		                        partidos.get(2).setGolesLocal(Integer.parseInt(golLocal_3.getText()));
 		                        partidos.get(2).setGolesVisitante(Integer.parseInt(golVisitante_3.getText()));
-		                        partidos.get(2).actualizarPuntos();
+		                        //partidos.get(2).actualizarPuntos();
 		                    }
 
 		                    // Guardar las temporadas
