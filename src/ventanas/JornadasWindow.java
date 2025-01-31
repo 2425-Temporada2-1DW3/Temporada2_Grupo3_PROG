@@ -58,6 +58,16 @@ public class JornadasWindow extends JFrame implements Serializable {
 
     public JornadasWindow() {
     	
+    	// Crear la tabla y el modelo
+    	modelClasificacion = new DefaultTableModel(
+    	    new Object[][] {}, // Datos iniciales (vacíos)
+    	    new String[] {"Posición", "Equipo", "Puntos", "Partidos Jugados"} // Encabezados de la tabla
+    	);
+    	tablaClasificacion = new JTable(modelClasificacion);
+
+    	// Agregar la tabla a un JScrollPane
+    	JScrollPane scrollPane = new JScrollPane(tablaClasificacion);
+    	
         setTitle("Gestion Jornadas - Txurdi Liga");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 757, 450);
@@ -102,12 +112,34 @@ public class JornadasWindow extends JFrame implements Serializable {
         panel_5.add(comboBoxJornada);
         
      // Agregar un ActionListener para actualizar las jornadas cuando se selecciona una temporada
-        comboBoxTemporada.addActionListener(e -> cargarJornadas());
+        comboBoxTemporada.addActionListener(e -> {
+            cargarJornadas(); // Cargar las jornadas de la temporada seleccionada
+            Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+            if (temporadaSeleccionada != null) {
+                // Obtener la lista de equipos de la temporada seleccionada
+                ArrayList<Equipo> equipos = temporadaSeleccionada.getListEquipos();
+                // Actualizar la tabla de clasificación con los equipos
+                actualizarTablaClasificacion(equipos);
+            }
+        });
         
      // Agregar un ActionListener para mostrar los partidos cuando se seleccione una jornada
         comboBoxJornada.addActionListener(e -> {
-            mostrarPartidosDeJornada();
-            verificarJornadaJugados();  // Llamada al método verificarJornadaJugados
+            mostrarPartidosDeJornada(); // Mostrar los partidos de la jornada seleccionada
+            verificarJornadaJugados(); // Verificar si la jornada está jugada
+
+            // Obtener la temporada seleccionada
+            Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+            if (temporadaSeleccionada != null) {
+                // Recalcular la clasificación basada en todas las jornadas jugadas
+                calcularClasificacion(temporadaSeleccionada);
+
+                // Obtener la lista de equipos de la temporada seleccionada
+                ArrayList<Equipo> equipos = temporadaSeleccionada.getListEquipos();
+
+                // Actualizar la tabla de clasificación con los equipos
+                actualizarTablaClasificacion(equipos);
+            }
         });
         
         JPanel panel_6 = new JPanel();
@@ -244,6 +276,10 @@ public class JornadasWindow extends JFrame implements Serializable {
 
 		                    // Recalcular clasificación
 		                    calcularClasificacion(temporadaSeleccionada);  // Recalcular la clasificación después de guardar los resultados
+		                    
+		                    ArrayList<Equipo> equipos = temporadaSeleccionada.getListEquipos();
+		                    ///////////////CAMBIAR ESTO
+		                    actualizarTablaClasificacion(equipos);
 
 		                    // Deshabilitar la edición de los campos de goles y el botón de guardar para evitar cambios posteriores
 		                    golLocal_1.setEditable(false);
@@ -284,7 +320,7 @@ public class JornadasWindow extends JFrame implements Serializable {
 		panel_16.add(lblNewLabel_8);
 		
 		JPanel panel_2 = new JPanel();
-		contentPane.add(panel_2, BorderLayout.CENTER);
+		contentPane.add(scrollPane, BorderLayout.CENTER);
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_14 = new JPanel();
@@ -295,6 +331,9 @@ public class JornadasWindow extends JFrame implements Serializable {
 		
 		tablaClasificacion = new JTable();
 		panel_2.add(tablaClasificacion, BorderLayout.CENTER);
+		
+		
+		
     }
 
     // Método para cargar temporadas
@@ -387,33 +426,26 @@ public class JornadasWindow extends JFrame implements Serializable {
 
  // Método para actualizar la tabla de clasificación después de cada jornada
     public void calcularClasificacion(Temporada temporada) {
-        // Recorremos todas las jornadas de la temporada
+        // Reiniciar los puntos de todos los equipos
+        for (Equipo equipo : temporada.getListEquipos()) {
+            equipo.setPuntos(0); // Reiniciar los puntos a 0
+        }
+
+        // Recorrer todas las jornadas de la temporada
         for (Jornada jornada : temporada.getListJornadas()) {
-            // Recorremos los partidos de cada jornada
+            // Recorrer los partidos de cada jornada
             for (Partido partido : jornada.getPartidos()) {
-                // Verificamos si el partido ha sido jugado (tiene un resultado válido)
-                if (partido.getGolesLocal() != -1 && partido.getGolesVisitante() != -1) { // Aseguramos que ambos goles sean válidos
-                    partido.actualizarPuntos(); // Solo se actualiza si el partido tiene resultado válido
+                // Verificar si el partido ha sido jugado (tiene un resultado válido)
+                if (partido.getGolesLocal() != -1 && partido.getGolesVisitante() != -1) {
+                    partido.actualizarPuntos(); // Actualizar los puntos de los equipos
                 }
             }
         }
 
-        // Ahora que hemos actualizado los puntos, ordenamos a los equipos según sus puntos
+        // Ordenar los equipos por puntos (de mayor a menor)
         ArrayList<Equipo> equipos = temporada.getListEquipos();
-        equipos.sort((e1, e2) -> Integer.compare(e2.getPuntos(), e1.getPuntos())); // Ordenamos de mayor a menor puntos
-
-        // Actualizar la tabla de clasificación
-        //actualizarTablaClasificacion(equipos); // Llamamos a este método para actualizar la tabla en la interfaz
+        equipos.sort((e1, e2) -> Integer.compare(e2.getPuntos(), e1.getPuntos()));
     }
-
-
-    
-
-
-
-
-
-
 
 
     
@@ -492,9 +524,24 @@ public class JornadasWindow extends JFrame implements Serializable {
     }
 
 
-    
+ // Método para actualizar la tabla de clasificación
+    private void actualizarTablaClasificacion(ArrayList<Equipo> equipos) {
+        // Limpiar las filas existentes
+        modelClasificacion.setRowCount(0);
 
-    
+        // Recorrer la lista de equipos para llenar la tabla
+        for (int i = 0; i < equipos.size(); i++) {
+            Equipo equipo = equipos.get(i);
+
+            // Añadir los datos del equipo a la tabla
+            modelClasificacion.addRow(new Object[] {
+                i + 1,  // Posición (comienza en 1)
+                equipo.getNombre(),
+                equipo.getPuntos(),
+                equipo.getpartidosJugados()
+            });
+        }
+    }
 
     
     
