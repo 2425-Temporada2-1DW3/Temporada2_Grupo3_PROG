@@ -12,6 +12,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,7 +21,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class JugadoresWindow extends JFrame {
+public class JugadoresWindow extends JFrame implements WindowListener {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JComboBox<String> comboBoxTemporada;
@@ -27,6 +29,7 @@ public class JugadoresWindow extends JFrame {
     private JPanel panelJugadores;
     private ArrayList<Temporada> temporadas;
     private ArrayList<Equipo> equiposActuales;
+    private boolean hayCambiosNoGuardados = false; // Indicador de cambios no guardados
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -41,7 +44,8 @@ public class JugadoresWindow extends JFrame {
 
     public JugadoresWindow() {
         setTitle("Gestion Jugadores - Txurdi Liga");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(this);
         setBounds(100, 100, 730, 300);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -125,6 +129,7 @@ public class JugadoresWindow extends JFrame {
                     tempSeleccionada.eliminarJugadorDeEquipo(equipoSeleccionado.getNombre(), jugadorAEliminar);
                     JOptionPane.showMessageDialog(this, "Jugador eliminado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     actualizarJugadores();
+                    hayCambiosNoGuardados = true;
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Seleccione una temporada y un equipo.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -158,9 +163,28 @@ public class JugadoresWindow extends JFrame {
                 JButton btnAtras = new JButton("Atras");
                 contentPane.add(btnAtras, BorderLayout.SOUTH);
                 btnAtras.addActionListener(e -> {
-                	 gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
-                     ventanaAdmin.setVisible(true);  // Mostrar la ventana
-                     dispose();  // Cerrar la ventana
+                	if (hayCambiosNoGuardados) {
+                        int opcion = JOptionPane.showConfirmDialog(
+                        		JugadoresWindow.this,
+                            "Hay cambios no guardados. ¿Desea guardar antes de salir?",
+                            "Cambios no guardados",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.WARNING_MESSAGE
+                        );
+
+                        if (opcion == JOptionPane.YES_OPTION) {
+                            guardarEquipos();
+                        } else if (opcion == JOptionPane.NO_OPTION) {
+                            gestionAdmin ventanaAdmin = new gestionAdmin();
+                            ventanaAdmin.setVisible(true);
+                            dispose();
+                        }
+                        // Si elige CANCELAR, no se hace nada (no se cierra la ventana)
+                    } else {
+                        gestionAdmin ventanaAdmin = new gestionAdmin();
+                        ventanaAdmin.setVisible(true);
+                        dispose();
+                    } // Cerrar la ventana
                 });
 
         cargarTemporadas();
@@ -243,6 +267,7 @@ public class JugadoresWindow extends JFrame {
                         tempSeleccionada.agregarJugadorAEquipo(equipoSeleccionado.getNombre(), nuevoJugador);
                         JOptionPane.showMessageDialog(null, "Jugador agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                         actualizarJugadores();
+                        hayCambiosNoGuardados = true;
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(null, "Edad debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
                     } catch (IOException ex) {
@@ -340,6 +365,7 @@ public class JugadoresWindow extends JFrame {
 
                                 JOptionPane.showMessageDialog(null, "Jugador modificado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                                 actualizarJugadores();
+                                hayCambiosNoGuardados = true;
                             } catch (NumberFormatException ex) {
                                 JOptionPane.showMessageDialog(null, "Edad debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
                             } catch (IOException ex) {
@@ -488,7 +514,90 @@ public class JugadoresWindow extends JFrame {
         }
     }
     private void guardarEquipos() {
+    	int indiceTemporada = comboBoxTemporada.getSelectedIndex();
+        int indiceEquipo = comboBoxEquipo.getSelectedIndex();
+
+        if (indiceTemporada >= 0 && indiceEquipo >= 0 && indiceEquipo < equiposActuales.size()) {
+            Temporada tempSeleccionada = temporadas.get(indiceTemporada);
+            Equipo equipoSeleccionado = equiposActuales.get(indiceEquipo);
+
+            
+            
+         // Verificar si el equipo ya tiene 15 jugadores
+            if (equipoSeleccionado.getJugadores().size() < 15) {
+                JOptionPane.showMessageDialog(null, "hay equipo que no tienen 15 jugadores.agregar más.", "Límite NO alcanzado", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            } else {
         Temporada.guardarTemporadas(temporadas); // Llama al método de guardar
+        
+        gestionAdmin ventanaAdmin = new gestionAdmin();
+        ventanaAdmin.setVisible(true);
+        dispose();
+        //System.exit(0);
+            }
     }
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	 public void windowClosing(WindowEvent e) {
+		    if (hayCambiosNoGuardados) {
+		    int opcion = JOptionPane.showConfirmDialog(this,(String) "Ha modificado datos. ¿Desea guardarlos?", "Info",  JOptionPane.YES_NO_CANCEL_OPTION);
+		    switch (opcion) {
+		    case JOptionPane.YES_OPTION:
+		    // si pulsa si
+		    // guardo los datos en racionales.ser
+		    	guardarEquipos();
+		    break;
+		     case JOptionPane.NO_OPTION:
+		    	  gestionAdmin ventanaAdmin = new gestionAdmin();
+		          ventanaAdmin.setVisible(true);
+		          dispose();
+		     break;
+		    case JOptionPane.CANCEL_OPTION:
+		    case JOptionPane.CLOSED_OPTION:
+		    // si pulsa cancelar o X
+		    return;
+		    }
+
+		    }
+		    // salgo de la aplicación
+		    //System.exit(0);
+		    }
+
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -15,7 +15,7 @@ import clases.Temporada;
 import clases.Equipo;
 import clases.Jugador;
 
-public class EquiposWindow extends JFrame {
+public class EquiposWindow extends JFrame  implements WindowListener{
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -23,6 +23,7 @@ public class EquiposWindow extends JFrame {
     private JTextArea textAreaEquipos; // Para mostrar los equipos
     private ArrayList<Temporada> temporadas; // Lista de temporadas cargadas
     private final String RUTA_IMAGENES = "C:\\xampp\\htdocs\\Temporada2_Grupo3_LM\\img\\escudos\\";
+    private boolean hayCambiosNoGuardados = false; // Indicador de cambios no guardados
 
     /**
      * Launch the applicationa
@@ -43,7 +44,8 @@ public class EquiposWindow extends JFrame {
      */
     public EquiposWindow() {
         setTitle("Gestion Equipos - Txurdi Liga");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(this);
         setBounds(100, 100, 600, 400);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -105,9 +107,28 @@ public class EquiposWindow extends JFrame {
 
         JButton btnAtras = new JButton("Atrás");
         btnAtras.addActionListener(e -> {
-        	 gestionAdmin ventanaAdmin = new gestionAdmin();  // Ventana gestión de equipos
-             ventanaAdmin.setVisible(true);  // Mostrar la ventana
-             dispose();  // Cerrar la ventana
+        	if (hayCambiosNoGuardados) {
+                int opcion = JOptionPane.showConfirmDialog(
+                    EquiposWindow.this,
+                    "Hay cambios no guardados. ¿Desea guardar antes de salir?",
+                    "Cambios no guardados",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+
+                if (opcion == JOptionPane.YES_OPTION) {
+                    guardarEquipos();
+                } else if (opcion == JOptionPane.NO_OPTION) {
+                    gestionAdmin ventanaAdmin = new gestionAdmin();
+                    ventanaAdmin.setVisible(true);
+                    dispose();
+                }
+                // Si elige CANCELAR, no se hace nada (no se cierra la ventana)
+            } else {
+                gestionAdmin ventanaAdmin = new gestionAdmin();
+                ventanaAdmin.setVisible(true);
+                dispose();
+            } // Cerrar la ventana
         });
         panel_6.add(btnAtras);
 
@@ -175,6 +196,29 @@ public class EquiposWindow extends JFrame {
                 String ciudad = ciudadField.getText().trim();
                 if (nombre.isEmpty() || anio.isEmpty() || ciudad.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+             // Validar que el año sea un número entero de 4 dígitos
+                String anioTexto = anio;
+                try {
+                    int anioo = Integer.parseInt(anioTexto); // Intenta convertir el texto a un número
+
+                    // Verificar que el año tenga 4 dígitos
+                    if (anioTexto.length() != 4) {
+                        JOptionPane.showMessageDialog(this, "El año debe tener 4 dígitos.", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    // Verificar que el año esté dentro de un rango razonable
+                    int añoActual = java.time.Year.now().getValue(); // Obtiene el año actual
+                    if (anioo < 1900 || anioo > añoActual) {
+                        JOptionPane.showMessageDialog(this, "El año debe estar entre 1900 y " + añoActual + ".", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } catch (NumberFormatException e1) {
+                    // Si no se puede convertir a número, mostrar un mensaje de error
+                    JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", "Error", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 
@@ -350,6 +394,7 @@ public class EquiposWindow extends JFrame {
                 }
                 temporadaSeleccionada.agregarEquipo(nuevoEquipo);
                 mostrarEquipos();
+                hayCambiosNoGuardados = true;
                 JOptionPane.showMessageDialog(this, "Equipo añadido exitosamente!");
             }
         });
@@ -447,10 +492,34 @@ public class EquiposWindow extends JFrame {
                             JOptionPane.showMessageDialog(this, "Los campos no pueden estar vacíos.", "Error", JOptionPane.WARNING_MESSAGE);
                             return;
                         }
+                        
+                     // Validar que el año sea un número entero de 4 dígitos
+                        String anioTexto = anioField.getText().trim();
+                        try {
+                            int anio = Integer.parseInt(anioTexto); // Intenta convertir el texto a un número
+
+                            // Verificar que el año tenga 4 dígitos
+                            if (anioTexto.length() != 4) {
+                                JOptionPane.showMessageDialog(this, "El año debe tener 4 dígitos.", "Error", JOptionPane.WARNING_MESSAGE);
+                                return;
+                            }
+
+                            // Verificar que el año esté dentro de un rango razonable
+                            int añoActual = java.time.Year.now().getValue(); // Obtiene el año actual
+                            if (anio < 1900 || anio > añoActual) {
+                                JOptionPane.showMessageDialog(this, "El año debe estar entre 1900 y " + añoActual + ".", "Error", JOptionPane.WARNING_MESSAGE);
+                                return;
+                            }
+                        } catch (NumberFormatException e1) {
+                            // Si no se puede convertir a número, mostrar un mensaje de error
+                            JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", "Error", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
 
                         equipoAEditar.setAnoFundacion(anioField.getText().trim());
                         equipoAEditar.setCiudad(ciudadField.getText().trim());
                         mostrarEquipos();
+                        hayCambiosNoGuardados = true;
                         JOptionPane.showMessageDialog(this, "Equipo actualizado correctamente.");
                     }
                 }
@@ -499,6 +568,7 @@ public class EquiposWindow extends JFrame {
                     // Eliminar el equipo de la temporada
                     temporadaSeleccionada.eliminarEquipo(equipoEncontrado);
                     mostrarEquipos();
+                    hayCambiosNoGuardados = true;
                     JOptionPane.showMessageDialog(this, "Equipo eliminado exitosamente.");
                 }
             }
@@ -636,6 +706,90 @@ public class EquiposWindow extends JFrame {
      * Guardar los equipos en el archivo o base de datos.
      */
     private void guardarEquipos() {
+    	
+    	
+    	 int selectedIndex = comboBoxTemporada.getSelectedIndex();
+         if (selectedIndex == -1) {
+             JOptionPane.showMessageDialog(this, "Seleccione una temporada.", "Error", JOptionPane.WARNING_MESSAGE);
+             return;
+         }
+         Temporada temporadaSeleccionada = temporadas.get(selectedIndex);
+         ArrayList<Equipo> equipos = temporadaSeleccionada.getListEquipos();
+
+         if (equipos.size() < 6) {
+             JOptionPane.showMessageDialog(this, "tienen que ser 6  por equipo temporada.", "Error", JOptionPane.WARNING_MESSAGE);
+             return;
+         }else {
         Temporada.guardarTemporadas(temporadas); // Llama al método de guardar
+        
+
+        gestionAdmin ventanaAdmin = new gestionAdmin();
+        ventanaAdmin.setVisible(true);
+        dispose();
+        //System.exit(0);
+         }
     }
+    
+    
+    @Override
+	 public void windowClosing(WindowEvent e) {
+		    if (hayCambiosNoGuardados) {
+		    int opcion = JOptionPane.showConfirmDialog(this,(String) "Ha modificado datos. ¿Desea guardarlos?", "Info",  JOptionPane.YES_NO_CANCEL_OPTION);
+		    switch (opcion) {
+		    case JOptionPane.YES_OPTION:
+		    // si pulsa si
+		    // guardo los datos en racionales.ser
+		    	guardarEquipos();
+		    break;
+		     case JOptionPane.NO_OPTION:
+		    	  gestionAdmin ventanaAdmin = new gestionAdmin();
+		          ventanaAdmin.setVisible(true);
+		          dispose();
+		     break;
+		    case JOptionPane.CANCEL_OPTION:
+		    case JOptionPane.CLOSED_OPTION:
+		    // si pulsa cancelar o X
+		    return;
+		    }
+
+		    }
+		    // salgo de la aplicación
+		    //System.exit(0);
+		    }
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -314,7 +314,7 @@ public class Temporada implements Serializable {
                 jugadorNum++;
             }
 
-            // Asignar 3 porteros
+            // Asignar 3 poprteo
             for (int i = 0; i < 3; i++) {
                 String nombreJugador = "Jugador_" + jugadorNum;
                 String rutaImagen = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/" + equipo.getNombre().toLowerCase().replaceAll("\\s+", "_") + "/Jugador_" + jugadorNum + ".png";
