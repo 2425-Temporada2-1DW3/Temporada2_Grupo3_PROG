@@ -132,7 +132,9 @@ public class TemporadasWindow extends JFrame {
                     Temporada temporadaSeleccionada = temporadas.get(selectedIndex);
                     JOptionPane.showMessageDialog(TemporadasWindow.this,
                         "Nombre: " + temporadaSeleccionada.getNombre() + "\n" +
-                        "Estado: " + temporadaSeleccionada.getEstado(),
+                        "Estado: " + temporadaSeleccionada.getEstado() + "\n" +
+                         "Equipos: " + temporadaSeleccionada.getListEquipos().size() + "\n" +
+                         "Jornadas: " + temporadaSeleccionada.getListJornadas().size(),
                         "Detalles de la Temporada",
                         JOptionPane.INFORMATION_MESSAGE);
                 } else {
