@@ -12,10 +12,11 @@ public class Equipo implements Serializable {
     private String ciudad;
     private ArrayList<Jugador> jugadores;
     private int puntos;
+    private int partidosJugados;
     private ImageIcon imagen;  // Campo para almacenar la imagen del equipo
 
     // Constructor completo
-    public Equipo(String nombre, String anoFundacion, String ciudad, ArrayList<Jugador> jugadores, int puntos, ImageIcon imagen) {
+    public Equipo(String nombre, String anoFundacion, String ciudad, ArrayList<Jugador> jugadores, int puntos, int partidosJugados, ImageIcon imagen) {
         this.nombre = nombre;
         this.anoFundacion = anoFundacion;
         this.ciudad = ciudad;
@@ -31,6 +32,7 @@ public class Equipo implements Serializable {
         this.ciudad = otroEquipo.ciudad;
         this.jugadores = new ArrayList<>(otroEquipo.jugadores); // Se crea una nueva lista con los mismos jugadores
         this.puntos = otroEquipo.puntos;
+        this.puntos = otroEquipo.partidosJugados;
         this.imagen = otroEquipo.imagen;
     }
 
@@ -112,4 +114,12 @@ public class Equipo implements Serializable {
             jugadores.remove(jugador);
         }
     }
+
+	public int getPartidosJugados() {
+		return partidosJugados;
+	}
+
+	public void setPartidosJugados(int partidosJugados) {
+		this.partidosJugados = partidosJugados;
+	}
 }

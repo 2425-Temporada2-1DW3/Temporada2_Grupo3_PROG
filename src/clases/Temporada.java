@@ -87,6 +87,15 @@ public class Temporada implements Serializable {
     public void agregarJornada(Jornada jornada) {
         this.listJornadas.add(jornada);
     }
+    
+    public boolean isActiva() {
+    	if (estado == "Activa") {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+    }
 
     // Método para agregar un equipo a la temporada
     public void agregarEquipo(Equipo equipoOriginal) {
@@ -97,6 +106,7 @@ public class Temporada implements Serializable {
             equipoOriginal.getCiudad(),
             new ArrayList<>(), // Lista vacía de jugadores (se llenará con copias)
             equipoOriginal.getPuntos(),
+            equipoOriginal.getPartidosJugados(),
             equipoOriginal.getImagen()
         );
 
@@ -150,6 +160,28 @@ public class Temporada implements Serializable {
         return temporadas;
     }
     
+    public Jugador obtenerJugadorDeEquipo(String nombreEquipo, String nombreJugador) {
+
+    	
+    	  // Buscar el equipo en la lista de equipos de esta temporada
+        for (Equipo equipo : listEquipos) {
+            if (equipo.getNombre().equalsIgnoreCase(nombreEquipo)) {
+                // Buscar el jugador dentro del equipo
+                for (Jugador jugador : equipo.getJugadores()) {
+                    if (jugador.getNombre().equalsIgnoreCase(nombreJugador)) {
+                        equipo.getJugadores();
+                        System.out.println("Jugador " + nombreJugador + this.nombre);
+                        return jugador; // Salimos del método una vez eliminado
+                    }
+                }
+                System.out.println("No se encontró al jugador " + nombreJugador + " en el equipo " + nombreEquipo + " en la temporada " + this.nombre);
+            }
+        }
+         System.out.println("No se encontró el equipo " + nombreEquipo + " en la temporada " + this.nombre);
+		return null;
+	}
+    
+    
     
     public void agregarJugadorAEquipo(String nombreEquipo, Jugador jugador) {
         boolean equipoEncontrado = false;
@@ -198,12 +230,12 @@ public class Temporada implements Serializable {
         // Cargar la imagen predeterminada
         ImageIcon logoPredeterminado = new ImageIcon("C:\\xampp\\htdocs\\Temporada2_Grupo3_LM\\img\\escudos\\escudo.png");
         // Crear equipos y asignarles la imagen renombrada
-        Equipo equipo1 = new Equipo("Real Madrid", "1909", "madrid", jugadores, 0, cambiarNombreImagen(logoPredeterminado, "real_madrid"));
-        Equipo equipo2 = new Equipo("Barcelona", "1989", "barcelona", jugadores, 0, cambiarNombreImagen(logoPredeterminado, "barcelona"));
-        Equipo equipo3 = new Equipo("Atletico Madrid", "1979", "madrid", jugadores, 0, cambiarNombreImagen(logoPredeterminado, "atletico_madrid"));
-        Equipo equipo4 = new Equipo("Valencia", "1969", "valencia", jugadores, 0, cambiarNombreImagen(logoPredeterminado, "valencia"));
-        Equipo equipo5 = new Equipo("Betis", "1999", "sevilla", jugadores, 0, cambiarNombreImagen(logoPredeterminado, "betis"));
-        Equipo equipo6 = new Equipo("Athletic Club", "1959", "bilbao", jugadores, 0, cambiarNombreImagen(logoPredeterminado, "athletic_club"));
+        Equipo equipo1 = new Equipo("Real Madrid", "1909", "madrid", jugadores, 0, 0,cambiarNombreImagen(logoPredeterminado, "real_madrid"));
+        Equipo equipo2 = new Equipo("Barcelona", "1989", "barcelona", jugadores, 0, 0, cambiarNombreImagen(logoPredeterminado, "barcelona"));
+        Equipo equipo3 = new Equipo("Atletico Madrid", "1979", "madrid", jugadores, 0, 0, cambiarNombreImagen(logoPredeterminado, "atletico_madrid"));
+        Equipo equipo4 = new Equipo("Valencia", "1969", "valencia", jugadores, 0, 0,cambiarNombreImagen(logoPredeterminado, "valencia"));
+        Equipo equipo5 = new Equipo("Betis", "1999", "sevilla", jugadores, 0,0, cambiarNombreImagen(logoPredeterminado, "betis"));
+        Equipo equipo6 = new Equipo("Athletic Club", "1959", "bilbao", jugadores, 0, 0,cambiarNombreImagen(logoPredeterminado, "athletic_club"));
 
         // Crear jugadores y asignarlos a los equipos con posiciones específicas
         for (Equipo equipo : new Equipo[]{equipo1, equipo2, equipo3, equipo4, equipo5, equipo6}) {
@@ -363,6 +395,13 @@ public class Temporada implements Serializable {
             temporada2023.agregarEquipo(equipo);
         }
 
+        
+        //  Agregar la generación de jornadas correctamente**
+        temporada2025.crearJornadasRobin();
+        temporada2024.crearJornadasRobin();
+        temporada2023.crearJornadasRobin();
+
+
         // Agregar temporadas a la lista
         temporadas.add(temporada2025);
         temporadas.add(temporada2024);
@@ -372,6 +411,10 @@ public class Temporada implements Serializable {
     }
 
     
+    @Override
+    public String toString() {
+        return this.nombre;  // Retorna solo el nombre de la temporada
+    }
 
     
     // Método para verificar si la imagen del jugador existe en el sistema de archivos
@@ -453,30 +496,32 @@ public class Temporada implements Serializable {
         }
 
         int numEquipos = listEquipos.size();
-        int numJornadas = 10;
-
+        int numJornadas = numEquipos - 1;  // Número correcto de jornadas en una liga de ida
         ArrayList<Partido> partidosIda = new ArrayList<>();
 
-        for (int i = 0; i < numJornadas / 2; i++) {
+        // 🔹 Generar las jornadas de IDA correctamente
+        for (int i = 0; i < numJornadas; i++) {
             Jornada jornada = new Jornada(i + 1);
             for (int j = 0; j < numEquipos / 2; j++) {
                 Equipo local = listEquipos.get((i + j) % numEquipos);
                 Equipo visitante = listEquipos.get((i + numEquipos - j - 1) % numEquipos);
 
-                Partido partidoIda = new Partido(local, visitante, 0, 0);
+                Partido partidoIda = new Partido(local, visitante);
                 jornada.agregarPartido(partidoIda);
                 partidosIda.add(partidoIda);
             }
             listJornadas.add(jornada);
         }
 
-        for (int i = numJornadas / 2; i < numJornadas; i++) {
-            Jornada jornada = new Jornada(i + 1);
-            for (Partido partidoIda : partidosIda) {
+        // 🔹 Generar las jornadas de VUELTA correctamente
+        for (int i = 0; i < numJornadas; i++) {
+            Jornada jornada = new Jornada(numJornadas + i + 1);
+            for (int j = 0; j < numEquipos / 2; j++) {
+                Partido partidoIda = partidosIda.get(i * (numEquipos / 2) + j);
                 Equipo local = partidoIda.getEquipoVisitante();
                 Equipo visitante = partidoIda.getEquipoLocal();
 
-                Partido partidoVuelta = new Partido(local, visitante, 0, 0);
+                Partido partidoVuelta = new Partido(local, visitante);
                 jornada.agregarPartido(partidoVuelta);
             }
             listJornadas.add(jornada);
@@ -484,6 +529,8 @@ public class Temporada implements Serializable {
 
         System.out.println("Jornadas creadas exitosamente.");
     }
+
+
 	
  
 }

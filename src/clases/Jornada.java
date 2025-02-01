@@ -9,7 +9,7 @@ public class Jornada implements Serializable{
 	 */
 	private static final long serialVersionUID = -8928583620187840055L;
 	private int numero; // Número de la jornada
-    private ArrayList<Partido> listPartidos; // Lista de partidos de la jornadas
+    private ArrayList<Partido> listPartidos; // Lista de partidos de la jornada
 
     // Constructor
     public Jornada(int numero) {
@@ -34,7 +34,14 @@ public class Jornada implements Serializable{
         this.listPartidos = partidos;
     }
     
- // Método para agregar un partido a la jornada
+    
+    
+ @Override
+	public String toString() {
+		return "" + numero;
+	}
+
+	// Método para agregar un partido a la jornada
     public void agregarPartido(Partido partido) {
     	listPartidos.add(partido);
     }

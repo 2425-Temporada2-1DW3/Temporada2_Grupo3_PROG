@@ -246,7 +246,7 @@ public class EquiposWindow extends JFrame  implements WindowListener{
                 }
                 
                 // Crear el nuevo equipo
-                Equipo nuevoEquipo = new Equipo(nombre, anio, ciudad, new ArrayList<>(), 0, new ImageIcon(rutaLogo));
+                Equipo nuevoEquipo = new Equipo(nombre, anio, ciudad, new ArrayList<>(), 0,0, new ImageIcon(rutaLogo));
                 
                 // Crear jugadores y asignarlos a los equipos con posiciones específicas
                 for (Equipo equipo : new Equipo[]{nuevoEquipo}) {
