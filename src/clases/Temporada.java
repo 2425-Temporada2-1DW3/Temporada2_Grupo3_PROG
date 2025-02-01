@@ -76,6 +76,15 @@ public class Temporada implements Serializable {
         this.listJornadas = listJornadas;
     }
     
+    public boolean isActiva() {
+    	if (estado == "Activa") {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+    }
+    
     @Override
     public String toString() {
         return this.nombre;  // Retorna solo el nombre de la temporada
@@ -138,7 +147,7 @@ public class Temporada implements Serializable {
         Equipo equipo6 = new Equipo("Sevilla");
 
         // Crear la temporada y agregar equipos
-        Temporada temporada = new Temporada(1, "Temporada 202555");
+        Temporada temporada = new Temporada(1, "Temporada 202555", "Activa");
 
         // Agregar equipos a la temporada
         temporada.agregarEquipo(equipo1);
@@ -201,5 +210,6 @@ public class Temporada implements Serializable {
         System.out.println("Jornadas creadas exitosamente.");
     }
 
+    
  
 }
