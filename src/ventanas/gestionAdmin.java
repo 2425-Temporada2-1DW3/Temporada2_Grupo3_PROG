@@ -5,8 +5,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import clases.Gestion;
+import clases.Temporada;
+import clases.Xml;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class gestionAdmin extends JFrame {
@@ -177,6 +180,17 @@ public class gestionAdmin extends JFrame {
         JButton btnXml = new JButton("Xmlexp");
         btnXml.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		
+        		ArrayList<Temporada> temporadas = new Temporada(0, "").cargarTemporadas();
+        		
+
+        		for (Temporada t : temporadas) {
+        		    System.out.println(t.mostrarDetalles());
+        		}
+
+
+        		Temporada.generarXMLDesdeListaTemporadas(temporadas, "temporada");
+
         	}
         });
         GridBagConstraints gbc_btnXml = new GridBagConstraints();

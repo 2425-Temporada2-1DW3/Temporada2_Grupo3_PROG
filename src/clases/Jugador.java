@@ -58,6 +58,9 @@ public class Jugador implements Serializable, Cloneable {
         return imagen;
     }
 
+    public String getRutaImagen() {
+        return (imagen != null) ? imagen.getDescription() : "sin_imagen.png";
+    }
     public void setImagen(ImageIcon imagen) {
         this.imagen = imagen;
     }
