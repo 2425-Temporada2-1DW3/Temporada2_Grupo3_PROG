@@ -199,6 +199,12 @@ public class UsuariosWindow extends JFrame implements ActionListener {
             } else {
                 usuario usuarioSeleccionado = dlm.getElementAt(indices[0]);
 
+                // Verificar si el usuario seleccionado es un administrador (rol 1)
+                if (usuarioSeleccionado.getRol() == 1) {
+                    JOptionPane.showMessageDialog(this, "No tienes permisos para editar a otro administrador.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return; // Detener la ejecución para evitar la edición
+                }
+
                 // Crear ventana de edición con los datos actuales del usuario
                 JTextField txtContraseña = new JTextField(usuarioSeleccionado.getContrasena());
                 JComboBox<String> comboBoxRol = new JComboBox<>(new String[]{"Administrador", "Árbitro", "Usuario", "Invitado"});
@@ -238,5 +244,6 @@ public class UsuariosWindow extends JFrame implements ActionListener {
                 }
             }
         }
+
     }
 }

@@ -1,26 +1,26 @@
 package clases;
 
 import java.io.Serializable;
+import javax.swing.ImageIcon;
 
-public class Jugador implements Serializable{
+public class Jugador implements Serializable, Cloneable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3594324243356090829L;
-	private String nombre;          // Nombre del jugador
+    private static final long serialVersionUID = -3594324243356090829L;
+    private String nombre;          // Nombre del jugador
     private int edad;              // Edad del jugador
-    private String posicion;       // Posición (delantero, defensa, mediocampista, etc.)
+    private String posicion;       // Posición (4 delantero, 4 defensa, 4 mediocampista, 3 portero)
     private Equipo equipo;         // El equipo al que pertenece el jugador
-    
- // Constructor de la clase Jugador
-    public Jugador(String nombre, int edad, String posicion, Equipo equipo) {
+    private ImageIcon imagen;      // Imagen del jugador
+
+    // Constructor de la clase Jugador
+    public Jugador(String nombre, int edad, String posicion, Equipo equipo, ImageIcon imagen) {
         this.nombre = nombre;
         this.edad = edad;
         this.posicion = posicion;
         this.equipo = equipo;
+        this.imagen = imagen;
     }
-    
+
     // Métodos Getters y Setters
     public String getNombre() {
         return nombre;
@@ -46,12 +46,35 @@ public class Jugador implements Serializable{
         this.posicion = posicion;
     }
 
-    public Equipo getEquipo() {
-        return equipo;
+    public String getEquipo() {
+        return equipo.getNombre(); // Devuelve el nombre del equipo, no el objeto Equipo
     }
 
     public void setEquipo(Equipo equipo) {
         this.equipo = equipo;
     }
 
+    public ImageIcon getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(ImageIcon imagen) {
+        this.imagen = imagen;
+    }
+
+    // Sobrescribir el método clone() para permitir la clonación de jugadores
+    @Override
+    public Jugador clone() {
+        try {
+            // Clonar el objeto Jugador
+            Jugador clon = (Jugador) super.clone();
+            // Clonar la imagen (ImageIcon no es clonable, por lo que se crea una nueva instancia)
+            if (this.imagen != null) {
+                clon.imagen = new ImageIcon(this.imagen.getImage());
+            }
+            return clon;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Error al clonar el jugador", e);
+        }
+    }
 }
