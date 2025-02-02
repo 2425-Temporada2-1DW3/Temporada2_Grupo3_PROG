@@ -445,7 +445,7 @@ public class Temporada implements Serializable {
 
 
     // Método para cambiar el nombre de la imagen, borrar el archivo anterior si existe, y guardarla con el nombre del equipo en su caprta de equipo
-    private static ImageIcon cambiarNombreImagen(ImageIcon logoPredeterminado, String nombreEquipo) {
+    public static ImageIcon cambiarNombreImagen(ImageIcon logoPredeterminado, String nombreEquipo) {
         try {
             // Ruta del archivo original
             File archivoOriginal = new File("C:/xampp/htdocs/Temporada2_Grupo3_LM/img/escudos/escudo.png");
