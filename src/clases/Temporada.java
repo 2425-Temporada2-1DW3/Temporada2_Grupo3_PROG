@@ -415,6 +415,17 @@ public class Temporada implements Serializable {
     public String toString() {
         return this.nombre;  // Retorna solo el nombre de la temporada
     }
+    
+    
+    public String mostrarDetalles() {
+        return "ID: " + id_temporada +
+               ", Nombre: " + nombre +
+               ", Estado: " + estado +
+               ", Equipos: " + listEquipos.size() +
+               ", Jornadas: " + listJornadas.size();
+    }
+
+
 
     
     // Método para verificar si la imagen del jugador existe en el sistema de archivos
@@ -531,6 +542,9 @@ public class Temporada implements Serializable {
     }
 
 
-	
+    public static void generarXMLDesdeListaTemporadas(ArrayList<Temporada> temporadas, String nombreArchivo) {
+        Xml xml = new Xml();
+        xml.generarXMLDesdeListaTemporadas(temporadas, nombreArchivo);
+    }	
  
 }
