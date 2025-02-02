@@ -64,6 +64,8 @@ public class Jugador implements Serializable, Cloneable {
     public void setImagen(ImageIcon imagen) {
         this.imagen = imagen;
     }
+    
+    
 
     // Sobrescribir el método clone() para permitir la clonación de jugadores
     @Override

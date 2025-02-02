@@ -383,7 +383,7 @@ public class Temporada implements Serializable {
         }
 
         // Crear temporadas y agregar equipos
-        Temporada temporada2025 = new Temporada(1, "Temporada 2025", "En Curso");
+        Temporada temporada2025 = new Temporada(1, "2025", "En Curso");
         Temporada temporada2024 = new Temporada(2, "Temporada 2024", "Inactiva");
         Temporada temporada2023 = new Temporada(3, "Temporada 2023", "Finalizada");
 
