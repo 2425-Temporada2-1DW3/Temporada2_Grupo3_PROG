@@ -4,6 +4,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.io.FileOutputStream;
+
 import clases.Equipo;
 import clases.Jornada;
 import clases.Partido;
@@ -32,6 +38,7 @@ public class JornadasWindow extends JFrame implements Serializable {
     private JLabel lblVisitante_3;
     
     private JButton btnGuardar;
+    private JButton btnExportarPDF;
     private DefaultTableModel modelClasificacion;
     
     private JTable tablaClasificacion;
@@ -228,9 +235,12 @@ public class JornadasWindow extends JFrame implements Serializable {
         mostrarPartidosDeJornada(); // Mostrar los partidos de la jornada seleccionada
         verificarJornadaJugados(); // Verificar si la jornada está jugada
 		
+		JButton btnNewButton = new JButton("Exportar XML");
+		panel_13.add(btnNewButton);
+		
 		btnGuardar = new JButton("Guardar");
 		panel_13.add(btnGuardar);
-
+		
 		btnGuardar.addActionListener(e -> {
 		    Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
 		    if (temporadaSeleccionada != null) {
@@ -278,10 +288,21 @@ public class JornadasWindow extends JFrame implements Serializable {
 		            }
 		    }
 		});
+		
+		
+		btnExportarPDF = new JButton("Exportar a PDF");
+		panel_13.add(btnExportarPDF);
+		btnExportarPDF.addActionListener(e -> {
+		    exportarClasificacionAPDF(modelClasificacion);
+		});
 
 
+	
+		
 
 
+		
+		
 
 
 
@@ -558,7 +579,57 @@ public class JornadasWindow extends JFrame implements Serializable {
     }
 
     
-    
+    public void exportarClasificacionAPDF(DefaultTableModel modelClasificacion) {
+        try {
+            Document documento = new Document();
+            PdfWriter.getInstance(documento, new FileOutputStream("clasificacion.pdf"));
+            documento.open();
+
+            // Metadata
+            documento.addTitle("Clasificación de Equipos");
+            documento.addSubject("Exportación a PDF");
+            documento.addKeywords("Java, PDF, iText, Clasificación, Fútbol");
+            documento.addAuthor("Tu Nombre");
+            documento.addCreator("Tu Aplicación");
+
+            // Título
+            Paragraph titulo = new Paragraph("Clasificación de Equipos", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16));
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            titulo.add(new Paragraph(" ")); // Espacio
+            documento.add(titulo);
+
+            // Tabla con 5 columnas
+            PdfPTable tabla = new PdfPTable(4);
+            tabla.setWidthPercentage(100);
+
+            // Encabezados
+            String[] columnas = {"Posición", "Equipo", "Puntos", "PJ"};
+            for (String columna : columnas) {
+                PdfPCell cell = new PdfPCell(new Phrase(columna, FontFactory.getFont(FontFactory.HELVETICA_BOLD)));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                tabla.addCell(cell);
+            }
+
+            // Datos de la tabla
+            for (int fila = 0; fila < modelClasificacion.getRowCount(); fila++) {
+                tabla.addCell(modelClasificacion.getValueAt(fila, 0).toString()); // Posición
+                tabla.addCell(modelClasificacion.getValueAt(fila, 1).toString()); // Equipo
+                
+                // Aquí podrías insertar una imagen si los escudos son accesibles como URLs o rutas locales
+                //tabla.addCell("(Escudo)"); // Marcador de imagen
+                
+                tabla.addCell(modelClasificacion.getValueAt(fila, 2).toString()); // Partidos Jugados
+                tabla.addCell(modelClasificacion.getValueAt(fila, 3).toString()); // Puntos
+            }
+
+            documento.add(tabla);
+            documento.close();
+
+            JOptionPane.showMessageDialog(null, "El documento PDF se ha generado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     
 }
