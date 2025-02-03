@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import clases.Temporada;
+import clases.log;
 import clases.Equipo;
 import clases.Jugador;
 
@@ -24,6 +25,8 @@ public class EquiposWindow extends JFrame  implements WindowListener{
     private ArrayList<Temporada> temporadas; // Lista de temporadas cargadas
     private final String RUTA_IMAGENES = "C:\\xampp\\htdocs\\Temporada2_Grupo3_LM\\img\\escudos\\";
     private boolean hayCambiosNoGuardados = false; // Indicador de cambios no guardados
+    private log log = new log();
+
 
     /**
      * Launch the applicationa
@@ -42,7 +45,8 @@ public class EquiposWindow extends JFrame  implements WindowListener{
     /**
      * Create the frame.
      */
-    public EquiposWindow() {
+    @SuppressWarnings("static-access")
+	public EquiposWindow() {
         setTitle("Gestion Equipos - Txurdi Liga");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
@@ -395,6 +399,7 @@ public class EquiposWindow extends JFrame  implements WindowListener{
                 temporadaSeleccionada.agregarEquipo(nuevoEquipo);
                 mostrarEquipos();
                 hayCambiosNoGuardados = true;
+                log.add("Equipo: "+ nuevoEquipo + " a sido Añadido.", 3);
                 JOptionPane.showMessageDialog(this, "Equipo añadido exitosamente!");
             }
         });
@@ -520,6 +525,7 @@ public class EquiposWindow extends JFrame  implements WindowListener{
                         equipoAEditar.setCiudad(ciudadField.getText().trim());
                         mostrarEquipos();
                         hayCambiosNoGuardados = true;
+                        log.add("Equipo: "+ equipoAEditar + " a sido Modificado.", 1);
                         JOptionPane.showMessageDialog(this, "Equipo actualizado correctamente.");
                     }
                 }
@@ -569,6 +575,7 @@ public class EquiposWindow extends JFrame  implements WindowListener{
                     temporadaSeleccionada.eliminarEquipo(equipoEncontrado);
                     mostrarEquipos();
                     hayCambiosNoGuardados = true;
+                    log.add("Equipo: "+ equipoEncontrado + " a sido Eliminado.", 1);
                     JOptionPane.showMessageDialog(this, "Equipo eliminado exitosamente.");
                 }
             }

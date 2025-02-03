@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import clases.log;
 import clases.usuario;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -31,6 +33,7 @@ public class UsuariosWindow extends JFrame implements ActionListener {
     public static ArrayList<usuario> listaUsuarios;
     private JList<usuario> usuariosList;
     private DefaultListModel<usuario> dlm;
+    private log log = new log();
 
     private JButton btnAnadir, btnEliminar, btnAtras, btnEditar;
 
@@ -143,7 +146,8 @@ public class UsuariosWindow extends JFrame implements ActionListener {
     }
 
     // actionPerformed
-    @Override
+    @SuppressWarnings({ "static-access", "static-access" })
+	@Override
     public void actionPerformed(ActionEvent ae) {
 
         // obtengo sobre que componente se ha realizado la acción
@@ -180,6 +184,8 @@ public class UsuariosWindow extends JFrame implements ActionListener {
                             // Si no es "Itxiar", lo eliminamos
                             listaUsuarios.remove(indices[i]);
                             dlm.remove(indices[i]);
+                            
+                            log.add("Usurio: "+indices[i] + " a sido Eliminado.", 1);
                         }
                         // Guardar los usuarios en el archivo
                         usuario.guardarUsuarios(listaUsuarios);
@@ -241,6 +247,7 @@ public class UsuariosWindow extends JFrame implements ActionListener {
 
                     // Actualizar la lista en la interfaz
                     dlm.setElementAt(usuarioSeleccionado, indices[0]);
+                    log.add(usuarioSeleccionado + "a sido modificado.", 1);
                 }
             }
         }

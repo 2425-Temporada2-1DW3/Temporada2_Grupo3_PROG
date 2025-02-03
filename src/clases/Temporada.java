@@ -145,6 +145,7 @@ public class Temporada implements Serializable {
         if (!file.exists()) {
         	 // Si el archivo no existe, creamos la temporada con datos predeterminados
             System.out.println("Archivo no encontrado. Se cargarán datos predeterminados.");
+            log.add("Archivo no encontrado. Se cargarán datos predeterminados.", 3);
             // Crear datos predeterminados
             temporadas = crearDatosPredeterminados();
             // Guardar los datos predeterminados

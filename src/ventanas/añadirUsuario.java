@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import clases.log;
 import clases.usuario;
 
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ public class añadirUsuario extends JFrame {
     private ArrayList<usuario> listaUsuarios; // Modelo para la lista de usuarios
     private JPasswordField leerContra;
     private JPasswordField leerContra2;
+    private log log = new log();
 
     /**
      * Launch the application.
@@ -157,7 +159,8 @@ public class añadirUsuario extends JFrame {
 
         JButton btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @SuppressWarnings("static-access")
+			public void actionPerformed(ActionEvent e) {
                 String nomusuario = leerUsuario.getText();
                 String contra = new String(leerContra.getPassword()); // Usar getPassword()
                 String contra2 = new String(leerContra2.getPassword()); // Usar getPassword()
@@ -190,6 +193,8 @@ public class añadirUsuario extends JFrame {
                         usuario u = new usuario(nomusuario, contra, tipo);
                         listaUsuarios.add(u);
                         // Guardar el usuario en el archivo
+                        
+                        log.add("Usurio: "+ u + " a sido agregado.", 1);
                         usuario.guardarUsuarios(listaUsuarios);
                         JOptionPane.showMessageDialog(null, "Usuario guardado correctamente.");
                         leerUsuario.setText("");

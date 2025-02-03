@@ -1,7 +1,7 @@
 package ventanas;
 import clases.Gestion;
 import clases.usuario;
-
+import clases.log;
 import java.awt.EventQueue;
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +9,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
+
 public class LoginWindow extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JTextField textUsuario;      // Campo de texto para ingresar el nombre de usuario
     private JTextField textContrasena;   // Campo de texto para ingresar la contraseña
     private ArrayList<usuario> listaUsuarios; // Modelo para la lista de usuarios
+    private log log = new log();
 
     // Método principal que lanza la ventana de inicio de sesión
     public static void main(String[] args) {
@@ -29,9 +31,10 @@ public class LoginWindow extends JFrame {
     }
 
     // Constructor de la clase LoginWindow
-    public LoginWindow() {
+    @SuppressWarnings("static-access")
+	public LoginWindow() {
 
-
+ 
         // Crear algunos usuarios de ejemplo si el archivo está vacío
         listaUsuarios = usuario.cargarUsuarios();  // Intentar cargar los usuarios desde el archivo
 
@@ -52,6 +55,8 @@ public class LoginWindow extends JFrame {
             listaUsuarios.add(usuario6);
 
             // Guardar los usuarios predeterminados en el archivo
+            
+            log.add("Archivo no encontrado. Se cargarán datos predeterminados de usuarios.", 3);
             usuario.guardarUsuarios(listaUsuarios);
         }
         // Configuración de la ventana
@@ -149,10 +154,18 @@ public class LoginWindow extends JFrame {
         btnIngresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Obtener los datos de los campos de texto
-                String nombreUsuario = textUsuario.getText();
+                String nombreUsuario = textUsuario.getText().trim();
                 String contraseña = textContrasena.getText();
 
-                nombreUsuario = nombreUsuario.substring(0, 1).toUpperCase() + nombreUsuario.substring(1).toLowerCase();
+                if (!nombreUsuario.isEmpty()) {
+                    nombreUsuario = nombreUsuario.substring(0, 1).toUpperCase() + nombreUsuario.substring(1).toLowerCase();
+                } else {
+                	
+                	log.add("ingreso Mal un nombre de usuario.", 1);
+                    JOptionPane.showMessageDialog(null, "Por favor, ingrese un nombre de usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return; // Exit the method if no username is entered
+                }
+
                 
                 // Validar las credenciales y obtener el rol
                 int rol = usuario.validarCredenciales(listaUsuarios, nombreUsuario, contraseña);
@@ -188,9 +201,11 @@ public class LoginWindow extends JFrame {
                         break;
 
                     case 0:
+                    	log.add("Usuario o contraseña incorrectos.", 1);
                         JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
                         break;
                     case -1:
+                    	log.add("Error en los datos del usuario.", 1);
                         JOptionPane.showMessageDialog(null, "Error en los datos del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
                         break;
                 }

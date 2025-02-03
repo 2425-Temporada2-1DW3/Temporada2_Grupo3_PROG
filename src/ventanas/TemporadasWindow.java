@@ -3,6 +3,8 @@ package ventanas;
 import clases.Equipo;
 import clases.Jugador;
 import clases.Temporada;
+import clases.log;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -21,6 +23,7 @@ public class TemporadasWindow extends JFrame {
     private ArrayList<Temporada> temporadas;
     private DefaultListModel<String> listModel;
     private JList<String> list;
+    private log log = new log();
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -149,7 +152,8 @@ public class TemporadasWindow extends JFrame {
     }
     
     // Método para agregar nueva temporada
-    private void agregarTemporada() {
+    @SuppressWarnings("static-access")
+	private void agregarTemporada() {
 
         // Crear equipos
         ArrayList<Jugador> jugadores = new ArrayList<>();
@@ -341,6 +345,8 @@ public class TemporadasWindow extends JFrame {
             
             Temporada.guardarTemporadas(temporadas);
             actualizarListaTemporadas();
+            
+            log.add("Se creo una temporada" + nuevaTemporada, 3);
             JOptionPane.showMessageDialog(this, "Temporada agregada exitosamente!");
         } else {
             JOptionPane.showMessageDialog(this, 
@@ -351,7 +357,8 @@ public class TemporadasWindow extends JFrame {
     }
 
     // Método para modificar temporada existente
-    private void modificarTemporada() {
+    @SuppressWarnings("static-access")
+	private void modificarTemporada() {
         int selectedIndex = list.getSelectedIndex();
         
         if (selectedIndex == -1) {
@@ -416,13 +423,15 @@ public class TemporadasWindow extends JFrame {
             // Guardar cambios y actualizar la lista
             Temporada.guardarTemporadas(temporadas);
             actualizarListaTemporadas();
+            log.add("Se Modifico una temporada" + tempSeleccionada, 3);
             JOptionPane.showMessageDialog(this, "Temporada modificada exitosamente!");
         }
     }
 
 
     // Método para eliminar temporada
-    private void eliminarTemporada() {
+    @SuppressWarnings("static-access")
+	private void eliminarTemporada() {
         int selectedIndex = list.getSelectedIndex();
         
         if (selectedIndex == -1) {
@@ -444,6 +453,7 @@ public class TemporadasWindow extends JFrame {
             temporadas.remove(selectedIndex);
             Temporada.guardarTemporadas(temporadas);
             actualizarListaTemporadas();
+            log.add("Se Elimeno una temporada" + selectedIndex, 1);
             JOptionPane.showMessageDialog(this, "Temporada eliminada exitosamente!");
         }
     }
