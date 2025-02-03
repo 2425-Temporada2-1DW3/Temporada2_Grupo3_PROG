@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -156,6 +157,13 @@ public class Temporada implements Serializable {
             log.add("Archivo no encontrado. Se cargarán datos predeterminados.", 3);
             // Crear datos predeterminados
             temporadas = crearDatosPredeterminados();
+            
+            for (Temporada temporada : temporadas) {
+                if (temporada.getEstado().equals("Finalizada")) {
+                    temporada.simularResultadosJornadas();
+                }
+            }
+            
             // Guardar los datos predeterminados
             guardarTemporadas(temporadas);
         } else {
@@ -191,6 +199,29 @@ public class Temporada implements Serializable {
 	}
     
     
+    public void simularResultadosJornadas() {
+        Random random = new Random();
+
+        for (Jornada jornada : listJornadas) {
+            for (Partido partido : jornada.getPartidos()) {
+                // Generar goles aleatorios para el equipo local y visitante
+                int golesLocal = random.nextInt(5); // Máximo 4 goles
+                int golesVisitante = random.nextInt(5); // Máximo 4 goles
+
+                // Asignar los goles al partido
+                partido.setGolesLocal(golesLocal);
+                partido.setGolesVisitante(golesVisitante);
+                
+             // Obtener los equipos del partido
+                Equipo equipoLocal = partido.getEquipoLocal();
+                Equipo equipoVisitante = partido.getEquipoVisitante();
+
+                // Incrementar el contador de partidos jugados para ambos equipos
+                equipoLocal.setPartidosJugados(equipoLocal.getPartidosJugados() + 1);
+                equipoVisitante.setPartidosJugados(equipoVisitante.getPartidosJugados() + 1);
+            }
+        }
+    }
     
     public void agregarJugadorAEquipo(String nombreEquipo, Jugador jugador) {
         boolean equipoEncontrado = false;

@@ -263,46 +263,100 @@ public void actionPerformed(ActionEvent e) {
 		    if (temporadaSeleccionada != null) {
 		        Jornada jornadaSeleccionada = (Jornada) comboBoxJornada.getSelectedItem();
 		        if (jornadaSeleccionada != null) {
-		                ArrayList<Partido> partidos = jornadaSeleccionada.getPartidos();
+		            ArrayList<Partido> partidos = jornadaSeleccionada.getPartidos();
 
-		                try {
-		                    if (partidos.size() >= 1) {
-		                        String gL1 = golLocal_1.getText();
-		                        String gV1 = golVisitante_1.getText();
-		                        if (!gL1.isEmpty() && !gV1.isEmpty()) {
-		                            partidos.get(0).setGolesLocal(Integer.parseInt(gL1));
-		                            partidos.get(0).setGolesVisitante(Integer.parseInt(gV1));
+		            try {
+		                // Procesar cada partido individualmente
+		                if (partidos.size() >= 1) {
+		                    String gL1 = golLocal_1.getText();
+		                    String gV1 = golVisitante_1.getText();
+		                    if (!gL1.isEmpty() && !gV1.isEmpty()) {
+		                        Partido partido = partidos.get(0);
+		                        partido.setGolesLocal(Integer.parseInt(gL1));
+		                        partido.setGolesVisitante(Integer.parseInt(gV1));
+		                        
+		                        // Actualizar estadísticas del partido 1
+		                        Equipo local = partido.getEquipoLocal();
+		                        Equipo visitante = partido.getEquipoVisitante();
+		                        local.setPartidosJugados(local.getPartidosJugados() + 1);
+		                        visitante.setPartidosJugados(visitante.getPartidosJugados() + 1);
+		                        
+		                        // Actualizar puntos
+		                        if (partido.getGolesLocal() > partido.getGolesVisitante()) {
+		                            local.setPuntos(local.getPuntos() + 3);
+		                        } else if (partido.getGolesLocal() < partido.getGolesVisitante()) {
+		                            visitante.setPuntos(visitante.getPuntos() + 3);
+		                        } else {
+		                            local.setPuntos(local.getPuntos() + 1);
+		                            visitante.setPuntos(visitante.getPuntos() + 1);
 		                        }
 		                    }
-		                    if (partidos.size() >= 2) {
-		                        String gL2 = golLocal_2.getText();
-		                        String gV2 = golVisitante_2.getText();
-		                        if (!gL2.isEmpty() && !gV2.isEmpty()) {
-		                            partidos.get(1).setGolesLocal(Integer.parseInt(gL2));
-		                            partidos.get(1).setGolesVisitante(Integer.parseInt(gV2));
-		                        }
-		                    }
-		                    if (partidos.size() >= 3) {
-		                        String gL3 = golLocal_3.getText();
-		                        String gV3 = golVisitante_3.getText();
-		                        if (!gL3.isEmpty() && !gV3.isEmpty()) {
-		                            partidos.get(2).setGolesLocal(Integer.parseInt(gL3));
-		                            partidos.get(2).setGolesVisitante(Integer.parseInt(gV3));
-		                        }
-		                    }
-
-		                    // Guardar las temporadas actualizadas
-		                    Temporada.guardarTemporadas(listaTemporadas);
-		                    JOptionPane.showMessageDialog(null, "Resultados guardados correctamente.");
-
-		                    // Recalcular clasificación
-		                    calcularClasificacion(temporadaSeleccionada);
-		                    actualizarTablaClasificacion(temporadaSeleccionada.getListEquipos());
-
-		                } catch (NumberFormatException ex) {
-		                    JOptionPane.showMessageDialog(null, "Error: Asegúrate de ingresar solo números en los goles.", "Error", JOptionPane.ERROR_MESSAGE);
 		                }
+
+		                if (partidos.size() >= 2) {
+		                    String gL2 = golLocal_2.getText();
+		                    String gV2 = golVisitante_2.getText();
+		                    if (!gL2.isEmpty() && !gV2.isEmpty()) {
+		                        Partido partido = partidos.get(1);
+		                        partido.setGolesLocal(Integer.parseInt(gL2));
+		                        partido.setGolesVisitante(Integer.parseInt(gV2));
+		                        
+		                        // Actualizar estadísticas del partido 2
+		                        Equipo local = partido.getEquipoLocal();
+		                        Equipo visitante = partido.getEquipoVisitante();
+		                        local.setPartidosJugados(local.getPartidosJugados() + 1);
+		                        visitante.setPartidosJugados(visitante.getPartidosJugados() + 1);
+		                        
+		                        // Actualizar puntos
+		                        if (partido.getGolesLocal() > partido.getGolesVisitante()) {
+		                            local.setPuntos(local.getPuntos() + 3);
+		                        } else if (partido.getGolesLocal() < partido.getGolesVisitante()) {
+		                            visitante.setPuntos(visitante.getPuntos() + 3);
+		                        } else {
+		                            local.setPuntos(local.getPuntos() + 1);
+		                            visitante.setPuntos(visitante.getPuntos() + 1);
+		                        }
+		                    }
+		                }
+
+		                if (partidos.size() >= 3) {
+		                    String gL3 = golLocal_3.getText();
+		                    String gV3 = golVisitante_3.getText();
+		                    if (!gL3.isEmpty() && !gV3.isEmpty()) {
+		                        Partido partido = partidos.get(2);
+		                        partido.setGolesLocal(Integer.parseInt(gL3));
+		                        partido.setGolesVisitante(Integer.parseInt(gV3));
+		                        
+		                        // Actualizar estadísticas del partido 3
+		                        Equipo local = partido.getEquipoLocal();
+		                        Equipo visitante = partido.getEquipoVisitante();
+		                        local.setPartidosJugados(local.getPartidosJugados() + 1);
+		                        visitante.setPartidosJugados(visitante.getPartidosJugados() + 1);
+		                        
+		                        // Actualizar puntos
+		                        if (partido.getGolesLocal() > partido.getGolesVisitante()) {
+		                            local.setPuntos(local.getPuntos() + 3);
+		                        } else if (partido.getGolesLocal() < partido.getGolesVisitante()) {
+		                            visitante.setPuntos(visitante.getPuntos() + 3);
+		                        } else {
+		                            local.setPuntos(local.getPuntos() + 1);
+		                            visitante.setPuntos(visitante.getPuntos() + 1);
+		                        }
+		                    }
+		                }
+
+		                // Guardar las temporadas actualizadas
+		                Temporada.guardarTemporadas(listaTemporadas);
+		                JOptionPane.showMessageDialog(null, "Resultados guardados correctamente.");
+
+		                // Recalcular clasificación
+		                calcularClasificacion(temporadaSeleccionada);
+		                actualizarTablaClasificacion(temporadaSeleccionada.getListEquipos());
+
+		            } catch (NumberFormatException ex) {
+		                JOptionPane.showMessageDialog(null, "Error: Ingresa solo números en los goles.", "Error", JOptionPane.ERROR_MESSAGE);
 		            }
+		        }
 		    }
 		});
 		

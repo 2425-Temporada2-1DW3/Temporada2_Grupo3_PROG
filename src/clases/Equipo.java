@@ -22,6 +22,7 @@ public class Equipo implements Serializable {
         this.ciudad = ciudad;
         this.jugadores = (jugadores != null) ? new ArrayList<>(jugadores) : new ArrayList<>(); // Se crea una copia para evitar referencias compartidas
         this.puntos = puntos;
+        this.partidosJugados = partidosJugados;
         this.imagen = imagen;
     }
     
