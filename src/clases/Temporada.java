@@ -24,6 +24,7 @@ public class Temporada implements Serializable {
     private ArrayList<Jornada> listJornadas; // Lista de jornadas de la temporada
     private ArrayList<Equipo> listEquipos; // Lista de equipos de la temporada
     private ArrayList<Temporada> temporadas;
+    private boolean Finalizada;
 
     // Constructor
     public Temporada(int id_temporada, String nombre, String estado) {
@@ -95,6 +96,13 @@ public class Temporada implements Serializable {
     	else {
     		return false;
     	}
+    }
+    public boolean isFinalizada() {
+        return Finalizada;
+    }
+
+    public void setFinalizada(boolean Finalizada) {
+        this.Finalizada = Finalizada;
     }
 
     // Método para agregar un equipo a la temporada

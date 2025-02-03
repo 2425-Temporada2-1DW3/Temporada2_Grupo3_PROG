@@ -77,6 +77,10 @@ public class JornadasWindow extends JFrame implements Serializable {
     	// Agregar la tabla a un JScrollPane
     	JScrollPane scrollPane = new JScrollPane(tablaClasificacion);
     	
+    	   // 1. Inicializar componentes críticos primero
+        btnGuardar = new JButton("Guardar");
+        btnExportarPDF = new JButton("Exportar a PDF");
+    	
         setTitle("Gestion Jornadas - Txurdi Liga");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 757, 450);
@@ -120,35 +124,28 @@ public class JornadasWindow extends JFrame implements Serializable {
         panel_5.add(comboBoxJornada);
        
         
-     // Agregar un ActionListener para actualizar las jornadas cuando se selecciona una temporada
+     // En el ActionListener de comboBoxTemporada
         comboBoxTemporada.addActionListener(e -> {
-            cargarJornadas(); // Cargar las jornadas de la temporada seleccionada
+            cargarJornadas();
             Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
             if (temporadaSeleccionada != null) {
-                // Obtener la lista de equipos de la temporada seleccionada
                 ArrayList<Equipo> equipos = temporadaSeleccionada.getListEquipos();
-                // Actualizar la tabla de clasificación con los equipos
                 actualizarTablaClasificacion(equipos);
             }
+            actualizarEstadoUI(); // Actualizar UI al cambiar temporada
         });
-        
-     // Agregar un ActionListener para mostrar los partidos cuando se seleccione una jornada
-        comboBoxJornada.addActionListener(e -> {
-            mostrarPartidosDeJornada(); // Mostrar los partidos de la jornada seleccionada
-            verificarJornadaJugados(); // Verificar si la jornada está jugada
 
-            // Obtener la temporada seleccionada
+        // En el ActionListener de comboBoxJornada
+        comboBoxJornada.addActionListener(e -> {
+            mostrarPartidosDeJornada();
+            verificarJornadaJugados();
             Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
             if (temporadaSeleccionada != null) {
-                // Recalcular la clasificación basada en todas las jornadas jugadas
                 calcularClasificacion(temporadaSeleccionada);
-
-                // Obtener la lista de equipos de la temporada seleccionada
                 ArrayList<Equipo> equipos = temporadaSeleccionada.getListEquipos();
-
-                // Actualizar la tabla de clasificación con los equipos
                 actualizarTablaClasificacion(equipos);
             }
+            actualizarEstadoUI(); // Actualizar UI al cambiar jornada
         });
         
         
@@ -314,18 +311,6 @@ public void actionPerformed(ActionEvent e) {
 		});
 
 
-	
-		
-
-
-		
-		
-
-
-
-
-
-
 
 
 		
@@ -356,9 +341,8 @@ public void actionPerformed(ActionEvent e) {
 		panel_2.add(tablaClasificacion, BorderLayout.CENTER);
 		
 		
-		
+		actualizarEstadoUI(); 
     }
-
  // Método para cargar temporadas
  // Cargar las temporadas desde el archivo .ser y agregar los objetos Temporada al JComboBox
     private void cargarTemporadasCombo() {
@@ -405,6 +389,8 @@ public void actionPerformed(ActionEvent e) {
     private void mostrarPartidosDeJornada() {
         // Obtener la temporada seleccionada como objeto completo
         Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+        
+        
 
         if (temporadaSeleccionada != null) {
             // Obtener la jornada seleccionada
@@ -465,6 +451,8 @@ public void actionPerformed(ActionEvent e) {
                 }
             }
         }
+        
+        
     }
 
 
@@ -486,6 +474,8 @@ public void actionPerformed(ActionEvent e) {
                 System.out.println("Agregando jornada: " + jornada.getNumero());
                 comboBoxJornada.addItem(jornada);  // Agregar el objeto Jornada completo
             }
+            
+            
         } else {
             System.out.println("No se seleccionó ninguna temporada.");
         }
@@ -651,6 +641,25 @@ public void actionPerformed(ActionEvent e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+
+    private void actualizarEstadoUI() {
+        Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+        String estado = temporadaSeleccionada.getEstado();
+        
+        // Corrected the comparison operator (== instead of =)
+        if (estado != null && estado.equals("Finalizado")) {
+
+            // Deshabilitar campos de texto y botón Guardar si la temporada está finalizada
+            golLocal_1.setEditable(false);
+            golVisitante_1.setEditable(false);
+            golLocal_2.setEditable(false);
+            golVisitante_2.setEditable(false);
+            golLocal_3.setEditable(false);
+            golVisitante_3.setEditable(false);
+            btnGuardar.setEnabled(false);
+        }
+}
     
     
 }
