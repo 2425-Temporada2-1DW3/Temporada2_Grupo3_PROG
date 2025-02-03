@@ -47,7 +47,7 @@ public class Jugador implements Serializable, Cloneable {
     }
 
     public String getEquipo() {
-        return equipo.getNombre(); // Devuelve el nombre del equipo, no el objeto Equipo
+        return equipo.getNombre(); // Devuelve el nombre del equipo, no el objeto Equipos
     }
 
     public void setEquipo(Equipo equipo) {

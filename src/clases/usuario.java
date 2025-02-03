@@ -20,7 +20,7 @@ public class usuario implements Serializable {
     Integer rol;        // Rol del usuario (1 = Admin, 2 = Árbitro, 3 = Usuario  4 = Invitado)
 
     /*
-     * Roles:
+     * Rol:
      * Admin = 1
      * Árbitro = 2
      * Usuario = 3

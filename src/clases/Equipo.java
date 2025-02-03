@@ -15,7 +15,7 @@ public class Equipo implements Serializable {
     private int partidosJugados;
     private ImageIcon imagen;  // Campo para almacenar la imagen del equipo
 
-    // Constructor completo
+    // Constructor s
     public Equipo(String nombre, String anoFundacion, String ciudad, ArrayList<Jugador> jugadores, int puntos, int partidosJugados, ImageIcon imagen) {
         this.nombre = nombre;
         this.anoFundacion = anoFundacion;

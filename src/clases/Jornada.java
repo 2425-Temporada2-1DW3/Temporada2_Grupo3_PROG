@@ -9,7 +9,7 @@ public class Jornada implements Serializable{
 	 */
 	private static final long serialVersionUID = -8928583620187840055L;
 	private int numero; // Número de la jornada
-    private ArrayList<Partido> listPartidos; // Lista de partidos de la jornada
+    private ArrayList<Partido> listPartidos; // Lista de partidos de la jornadas
 
     // Constructor
     public Jornada(int numero) {

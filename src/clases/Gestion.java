@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Gestion {
-    // Lista para almacenar los nombres de los usuarios
+    // Lista para almacenar los nombres de los usuarioss
     private static List<String> nombresUsuarios = new ArrayList<>();
 
     // Método para agregar un nombre de usuario a la lista

@@ -324,7 +324,7 @@ public class Temporada implements Serializable {
                     System.out.println("Creado: " + nombreJugador + " en " + equipo.getNombre());
                     System.out.println("Ruta: " + nombreJugador + " en " + rutaImagen);
                 } else {
-                    // Si no existe la imagen, coger la imagen por defecto y copiarla
+                    // Si no existe la imagen, coger la imagen por defecto y copiarlas
                     String rutaImagenPredeterminada = "C:/xampp/htdocs/Temporada2_Grupo3_LM/img/jugadores/Jugador_" + jugadorNum + ".png";
                     if (verificarExistenciaImagen(rutaImagenPredeterminada)) {
                         try {

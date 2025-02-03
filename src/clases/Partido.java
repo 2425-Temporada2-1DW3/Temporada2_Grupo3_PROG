@@ -12,7 +12,7 @@ public class Partido implements Serializable{
     private int golesLocal; // Goles marcados por el equipo local
     private int golesVisitante; // Goles marcados por el equipo visitante
 
- // Constructor cuando el partido ya tiene un resultado
+ // Constructor cuando el partido ya tiene un resultados
     public Partido(Equipo equipoLocal, Equipo equipoVisitante, int golesLocal, int golesVisitante) {
         this.equipoLocal = equipoLocal;
         this.equipoVisitante = equipoVisitante;
