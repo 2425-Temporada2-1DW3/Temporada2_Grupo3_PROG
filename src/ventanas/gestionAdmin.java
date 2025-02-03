@@ -174,38 +174,5 @@ public class gestionAdmin extends JFrame {
         gbc_btnGestAdm.gridx = 2;
         gbc_btnGestAdm.gridy = 4;
         contentPane.add(btnGestAdm, gbc_btnGestAdm);
-        
-        JButton btnXml = new JButton("Xmlexp");
-        btnXml.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		ArrayList<Temporada> temporadas = new Temporada(0, "").cargarTemporadas();
-        		
-
-        		for (Temporada t : temporadas) {
-        		    System.out.println(t.mostrarDetalles());
-        		}
-
-
-        		Temporada.generarXMLDesdeListaTemporadas(temporadas, "temporada");
-
-        	}
-        });
-        GridBagConstraints gbc_btnXml = new GridBagConstraints();
-        gbc_btnXml.insets = new Insets(0, 0, 5, 5);
-        gbc_btnXml.gridx = 1;
-        gbc_btnXml.gridy = 5;
-        contentPane.add(btnXml, gbc_btnXml);
-        
-        JButton btnPdfexp = new JButton("Pdfexp");
-        btnPdfexp.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
-        GridBagConstraints gbc_btnPdfexp = new GridBagConstraints();
-        gbc_btnPdfexp.insets = new Insets(0, 0, 0, 5);
-        gbc_btnPdfexp.gridx = 1;
-        gbc_btnPdfexp.gridy = 6;
-        contentPane.add(btnPdfexp, gbc_btnPdfexp);
     }
 }

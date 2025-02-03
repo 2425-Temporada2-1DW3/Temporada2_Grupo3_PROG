@@ -18,6 +18,8 @@ import clases.Temporada;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class JornadasWindow extends JFrame implements Serializable {
 
@@ -235,8 +237,23 @@ public class JornadasWindow extends JFrame implements Serializable {
         mostrarPartidosDeJornada(); // Mostrar los partidos de la jornada seleccionada
         verificarJornadaJugados(); // Verificar si la jornada está jugada
 		
-		JButton btnNewButton = new JButton("Exportar XML");
-		panel_13.add(btnNewButton);
+		JButton btnExportarXML = new JButton("Exportar XML");
+		btnExportarXML.addActionListener(new ActionListener() {
+public void actionPerformed(ActionEvent e) {
+        		
+        		ArrayList<Temporada> temporadas = new Temporada(0, "").cargarTemporadas();
+        		
+
+        		for (Temporada t : temporadas) {
+        		    System.out.println(t.mostrarDetalles());
+        		}
+
+
+        		Temporada.generarXMLDesdeListaTemporadas(temporadas, "temporada");
+
+        	}
+		});
+		panel_13.add(btnExportarXML);
 		
 		btnGuardar = new JButton("Guardar");
 		panel_13.add(btnGuardar);
