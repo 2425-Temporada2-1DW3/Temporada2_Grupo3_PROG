@@ -332,11 +332,15 @@ public void actionPerformed(ActionEvent e) {
 		JPanel panel_16 = new JPanel();
 		panel_12.add(panel_16, BorderLayout.SOUTH);
 		
-		JLabel lblNewLabel_6 = new JLabel("Cerrar Sesion");
-		panel_16.add(lblNewLabel_6);
-		
-		JLabel lblNewLabel_8 = new JLabel("Atras");
-		panel_16.add(lblNewLabel_8);
+		JButton btnAtras = new JButton("Atras");
+		btnAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 gestionAdmin ventanaAdmin = new gestionAdmin();
+                 ventanaAdmin.setVisible(true);
+                 dispose();
+			}
+		});
+		panel_16.add(btnAtras);
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
