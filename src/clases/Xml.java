@@ -4,72 +4,82 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class Xml {
 	
-    private ArrayList<String> elementosXML; // List to store the XML content
-    private ArrayList<String> contenidoXMLFormateado; // List to store the XML content
+	  private ArrayList<String> elementosXML;
+	    private ArrayList<String> contenidoXMLFormateado;
 
-    public Xml() {
-    	elementosXML = new ArrayList<>(); // Initialize the list
-        contenidoXMLFormateado = new ArrayList<>(); // Initialize the list
+	    public Xml() {
+	        elementosXML = new ArrayList<>();
+	        contenidoXMLFormateado = new ArrayList<>();
+	    }
+	    
+	    public void add(String contenido, boolean esDato, int indentacion) {
+	        String indentacionString = "    ".repeat(indentacion);
+	        String contenidoFormateado;
+	        
+	        if (esDato) {
+	            contenidoFormateado = indentacionString + contenido;
+	        } else {
+	            int count = Collections.frequency(elementosXML, contenido);
+	            
+	            if (count % 2 != 0) {
+	                contenidoFormateado = indentacionString + "</" + contenido + ">";
+	            } else {
+	                contenidoFormateado = indentacionString + "<" + contenido + ">";
+	            }
+	            elementosXML.add(contenido);
+	        }
+	        
+	        contenidoXMLFormateado.add(contenidoFormateado);
+	    }
 
-    }
-    
-    public void add(String contenido, boolean esDato, int indentacion) {
-    	String indentacionString = "	".repeat(indentacion);
-    	String contenidoFormateado = null;
-    	
-        if (esDato) {
-        	contenidoFormateado = indentacionString + contenido;
-        	
-        } else {
-            // Add opening tags
-            int count = Collections.frequency(elementosXML, contenido);
-            
-            if (count % 2 != 0) {
-            	contenidoFormateado = indentacionString+"</" + contenido + ">";
-            } else {
-            	contenidoFormateado = indentacionString+"<" + contenido + ">";
-            }
-            elementosXML.add(contenido);
-            
-        }
-        
-    	contenidoXMLFormateado.add(contenidoFormateado);
-    	
-    }
+	    public void file(String archivo) {
+	        String nombreArchivo = "C:\\xampp\\htdocs\\Temporada2_Grupo3_LM\\xmlPrueba\\" + archivo + ".xml";
+	        File file = new File(nombreArchivo);
 
-    public void file(String archivo) {
-        String nombreArchivo = "C:\\xampp\\htdocs\\Temporada2_Grupo3_LM\\xmlPrueba\\" + archivo + ".xml";
+	        // Depuración: Verificar si el archivo existe ANTES de intentar eliminarlo
+	        if (file.exists()) {
+	            System.out.println("🔍 El archivo EXISTE antes de intentar eliminarlo: " + nombreArchivo);
+	            if (file.delete()) {
+	                System.out.println("✅ Archivo eliminado correctamente: " + nombreArchivo);
+	            } else {
+	                System.err.println("❌ No se pudo eliminar el archivo.");
+	                return;
+	            }
+	        } else {
+	            System.out.println("⚠️ El archivo NO EXISTE antes de crearlo: " + nombreArchivo);
+	        }
 
-        try (FileWriter fichero = new FileWriter(nombreArchivo);
-                BufferedWriter bw = new BufferedWriter(fichero)) {
-            
-            // Agregar las declaraciones XML al inicio del archivo
-            bw.write("<?xml version='1.0' encoding='utf-8'?>");
-            bw.newLine();
-            bw.write("<?xml-model href='temporada.xsd'?>");
-            bw.newLine();
+	        try (FileWriter fichero = new FileWriter(nombreArchivo);
+	             BufferedWriter bw = new BufferedWriter(fichero)) {
+	            
+	            bw.write("<?xml version='1.0' encoding='utf-8'?>");
+	            bw.newLine();
+	            bw.write("<?xml-model href='temporada.xsd'?>");
+	            bw.newLine();
 
-            // Escribir el contenido formateado del XML
-            for (int i = 0; i < contenidoXMLFormateado.size(); i++) {
-                bw.write(contenidoXMLFormateado.get(i));
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            // Manejo de errores
-            System.err.println("Error al crear el archivo: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+	            for (String linea : contenidoXMLFormateado) {
+	                bw.write(linea);
+	                bw.newLine();
+	            }
+
+	            System.out.println("📁 Archivo XML creado con éxito: " + nombreArchivo);
+	        } catch (IOException e) {
+	            System.err.println("🚨 Error al crear el archivo: " + e.getMessage());
+	            e.printStackTrace();
+	        }
+	    }
+
 
     
     public void generarXMLDesdeListaTemporadas(ArrayList<Temporada> temporadas, String nombreArchivo) {
         this.clear();
-        this.add("temporadas", false, 0); // Etiqueta raíz
+        this.add("Temporadas", false, 0); // Etiqueta raíz
 
         for (Temporada temporada : temporadas) {
             this.add("Temporada", false, 1);
@@ -110,29 +120,31 @@ public class Xml {
 
                     this.add("Edad", false, 6);
                     this.add(String.valueOf(jugador.getEdad()), true, 7);
-                    this.add("edad", false, 6);
+                    this.add("Edad", false, 6);
 
                     this.add("Posicion", false, 6);
                     this.add(jugador.getPosicion(), true, 7);
                     this.add("Posicion", false, 6);
                     
-                    
-                  
-                        this.add("Imagen", false, 6);
-                        this.add(jugador.getNombre()+".png", true, 7);
-                        this.add("Imagen", false, 6);
+                     this.add("Imagen", false, 6);
+                     this.add(jugador.getNombre()+".png", true, 7);
+                     this.add("Imagen", false, 6);
 
 
                     this.add("Jugador", false, 5);
                 }
                 this.add("Jugadores", false, 4);
 
+                
+                this.add("Imagen", false, 6);
+                this.add(equipo.getNombre().toLowerCase().replaceAll("\\s+", "_")+".png", true, 7);
+                this.add("Imagen", false, 6);
                 this.add("Equipo", false, 3);
             }
             this.add("Equipos", false, 2);
 
             // 🔹 **Jornadas**
-            this.add("jornadas", false, 2);
+            this.add("Jornadas", false, 2);
             for (Jornada jornada : temporada.getListJornadas()) {
                 this.add("Jornada", false, 3);
 

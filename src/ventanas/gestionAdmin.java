@@ -6,8 +6,6 @@ import javax.swing.border.EmptyBorder;
 
 import clases.Gestion;
 import clases.Temporada;
-import clases.Xml;
-
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
