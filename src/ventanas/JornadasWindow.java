@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.io.FileOutputStream;
 
 import clases.Equipo;
+import clases.Gestion;
 import clases.Jornada;
 import clases.Partido;
 import clases.Temporada;
@@ -41,6 +42,8 @@ public class JornadasWindow extends JFrame implements Serializable {
     
     private JButton btnGuardar;
     private JButton btnExportarPDF;
+    
+    private JButton btnExportarXML;
     private DefaultTableModel modelClasificacion;
     
     private JTable tablaClasificacion;
@@ -67,15 +70,28 @@ public class JornadasWindow extends JFrame implements Serializable {
 
     public JornadasWindow() {
     	
-    	// Crear la tabla y el modelo
-    	modelClasificacion = new DefaultTableModel(
-    	    new Object[][] {}, // Datos iniciales (vacíos)
-    	    new String[] {"Posición", "Equipo", "Puntos", "Partidos Jugados"} // Encabezados de la tabla
-    	);
-    	tablaClasificacion = new JTable(modelClasificacion);
+    	  // Inicializar el modelo de la tabla
+        modelClasificacion = new DefaultTableModel(
+            new Object[][] {}, // Datos iniciales (vacíos)
+            new String[] {"Posición", "Equipo", "Puntos", "Partidos Jugados"} // Encabezados de la tabla
+        ) {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 7887721763974002784L;
 
-    	// Agregar la tabla a un JScrollPane
-    	JScrollPane scrollPane = new JScrollPane(tablaClasificacion);
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                // Hacer que ninguna celda sea editable
+                return false;
+            }
+        };
+
+        // Crear la tabla con el modelo
+        tablaClasificacion = new JTable(modelClasificacion);
+
+        // Agregar la tabla a un JScrollPane
+        JScrollPane scrollPane = new JScrollPane(tablaClasificacion);
     	
         setTitle("Gestion Jornadas - Txurdi Liga");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -130,6 +146,8 @@ public class JornadasWindow extends JFrame implements Serializable {
                 // Actualizar la tabla de clasificación con los equipos
                 actualizarTablaClasificacion(equipos);
             }
+            
+            verificarTemporadaFinalizada();
         });
         
      // Agregar un ActionListener para mostrar los partidos cuando se seleccione una jornada
@@ -237,7 +255,7 @@ public class JornadasWindow extends JFrame implements Serializable {
         mostrarPartidosDeJornada(); // Mostrar los partidos de la jornada seleccionada
         verificarJornadaJugados(); // Verificar si la jornada está jugada
 		
-		JButton btnExportarXML = new JButton("Exportar XML");
+	    btnExportarXML = new JButton("Exportar XML");
 		btnExportarXML.addActionListener(new ActionListener() {
 public void actionPerformed(ActionEvent e) {
         		
@@ -411,6 +429,39 @@ public void actionPerformed(ActionEvent e) {
 		
 		
 		
+		
+		
+		String username = Gestion.obtenerUltimoUsuario();
+		
+
+		// Verificar si el usuario es "invitado"
+		if ("Invitado".equals(username)) {
+		    // Deshabilitar los campos de texto para los goles
+		    golLocal_1.setEnabled(false);
+		    golVisitante_1.setEnabled(false);
+		    golLocal_2.setEnabled(false);
+		    golVisitante_2.setEnabled(false);
+		    golLocal_3.setEnabled(false);
+		    golVisitante_3.setEnabled(false);
+
+		    // Deshabilitar los botones de guardar y exportar
+		    btnGuardar.setEnabled(false);
+		    btnExportarPDF.setEnabled(false);
+		    btnExportarXML.setEnabled(false);
+
+		    // Deshabilitar los JComboBox
+		    comboBoxTemporada.setEnabled(true);
+		    comboBoxJornada.setEnabled(true);
+
+		    
+		 // Hacer la tabla de solo lectura
+		    tablaClasificacion.setEnabled(false); // Deshabilita la interacción con la tabla
+		    tablaClasificacion.setRowSelectionAllowed(false); // Evita que se seleccionen filas
+		    tablaClasificacion.setCellSelectionEnabled(false); // Evita que se seleccionen celdas
+
+		    // Mostrar un mensaje informativo
+		    JOptionPane.showMessageDialog(null, "Modo invitado: No puedes modificar datos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
     }
 
  // Método para cargar temporadas
@@ -453,7 +504,40 @@ public void actionPerformed(ActionEvent e) {
 
 
 
+    private void verificarTemporadaFinalizada() {
+        Temporada temporadaSeleccionada = (Temporada) comboBoxTemporada.getSelectedItem();
+        
+        System.out.println(temporadaSeleccionada.getEstado());
+        if (temporadaSeleccionada != null && temporadaSeleccionada.isFinalizada()) {
+            // Deshabilitar los campos de texto para los goles
+            golLocal_1.setEnabled(false);
+            golVisitante_1.setEnabled(false);
+            golLocal_2.setEnabled(false);
+            golVisitante_2.setEnabled(false);
+            golLocal_3.setEnabled(false);
+            golVisitante_3.setEnabled(false);
 
+            // Deshabilitar los botones de guardar y exportar
+            btnGuardar.setEnabled(false);
+            btnExportarPDF.setEnabled(false);
+            btnExportarXML.setEnabled(false);
+
+            // Deshabilitar los JComboBox
+            comboBoxTemporada.setEnabled(false);
+            comboBoxJornada.setEnabled(false);
+
+            // Hacer la tabla de solo lectura
+            tablaClasificacion.setEnabled(false); // Deshabilita la interacción con la tabla
+            tablaClasificacion.setRowSelectionAllowed(false); // Evita que se seleccionen filas
+            tablaClasificacion.setCellSelectionEnabled(false); // Evita que se seleccionen celdas
+
+            // Mostrar un mensaje informativo
+            JOptionPane.showMessageDialog(null, "La temporada está finalizada. No se pueden modificar datos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }else {
+        	 System.out.println("No finalizada");
+        }
+    }
+    
     // Método para mostrar los partidos de la jornada seleccionada
  // Método para mostrar los partidos de la jornada seleccionada
     private void mostrarPartidosDeJornada() {
@@ -540,6 +624,10 @@ public void actionPerformed(ActionEvent e) {
                 System.out.println("Agregando jornada: " + jornada.getNumero());
                 comboBoxJornada.addItem(jornada);  // Agregar el objeto Jornada completo
             }
+            
+            
+            
+            
         } else {
             System.out.println("No se seleccionó ninguna temporada.");
         }
@@ -704,7 +792,12 @@ public void actionPerformed(ActionEvent e) {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+        
+        
     }
+    
+    
     
     
 }

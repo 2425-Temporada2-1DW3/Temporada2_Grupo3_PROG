@@ -99,7 +99,12 @@ public class Temporada implements Serializable {
     	}
     }
     public boolean isFinalizada() {
-        return Finalizada;
+    	if (estado == "Finalizada") {
+    		return false;
+    	}
+    	else {
+    		return true;
+    	}
     }
 
     public void setFinalizada(boolean Finalizada) {
