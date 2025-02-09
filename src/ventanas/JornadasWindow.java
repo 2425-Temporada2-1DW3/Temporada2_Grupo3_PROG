@@ -448,6 +448,7 @@ public void actionPerformed(ActionEvent e) {
 		    btnGuardar.setEnabled(false);
 		    btnExportarPDF.setEnabled(false);
 		    btnExportarXML.setEnabled(false);
+		    btnAtras.setEnabled(false);
 
 		    // Deshabilitar los JComboBox
 		    comboBoxTemporada.setEnabled(true);
